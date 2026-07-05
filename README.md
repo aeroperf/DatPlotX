@@ -9,7 +9,7 @@
 [![Latest release](https://img.shields.io/github/v/release/aeroperf/DatPlotX?include_prereleases&sort=semver)](https://github.com/aeroperf/DatPlotX/releases)
 [![Platforms](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)](#download)
 
-<img src="DatPlotX.Website/public/screenshots/hero.png" alt="DatPlotX showing a multi-curve time-series plot" width="820">
+<img src="Images/screenshots/hero.png" alt="DatPlotX showing a multi-curve time-series plot" width="820">
 
 </div>
 
@@ -33,8 +33,8 @@ chosen at project creation and locked for the life of the project.
 | **Grouped Parameter Plot** | One line per unique combination of input parameters — parametric arrays, lookup tables | ScottPlot 5 |
 
 <div align="center">
-<img src="DatPlotX.Website/public/screenshots/stacked-panes.png" alt="Stacked Panes mode" width="400">
-<img src="DatPlotX.Website/public/screenshots/compact-plot.png" alt="Compact Plot Surface mode" width="400">
+<img src="Images/screenshots/stacked-panes.png" alt="Stacked Panes mode" width="400">
+<img src="Images/screenshots/compact-plot.png" alt="Compact Plot Surface mode" width="400">
 </div>
 
 ## Features
