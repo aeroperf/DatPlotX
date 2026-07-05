@@ -1,0 +1,133 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:DatPlotX.ViewModels"
+        xmlns:content="using:DatPlotX.Content"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="650"
+        x:Class="DatPlotX.Views.HelpWindow"
+        x:DataType="vm:HelpWindowViewModel"
+        x:CompileBindings="True"
+        Title="DatPlotX User Guide"
+        Width="940" Height="660"
+        MinWidth="640" MinHeight="420"
+        Classes="dpx"
+        Background="{StaticResource DpxBg}"
+        WindowStartupLocation="CenterOwner"
+        Icon="/Assets/icon.png">
+
+    <Design.DataContext>
+        <vm:HelpWindowViewModel/>
+    </Design.DataContext>
+
+    <Grid ColumnDefinitions="240,8,*" Margin="16">
+
+        <!-- Section list -->
+        <Border Grid.Column="0"
+                Background="{StaticResource DpxSurface}"
+                BorderBrush="{StaticResource DpxBorder}"
+                BorderThickness="1"
+                CornerRadius="8"
+                Padding="4">
+            <ListBox ItemsSource="{Binding Sections}"
+                     SelectedItem="{Binding SelectedSection}"
+                     SelectionMode="Single"
+                     Background="Transparent"
+                     BorderThickness="0">
+                <ListBox.ItemTemplate>
+                    <DataTemplate x:DataType="content:HelpSection">
+                        <TextBlock Text="{Binding Title}"
+                                   FontSize="12.5"
+                                   Foreground="{StaticResource DpxText}"
+                                   Padding="6,6"
+                                   TextTrimming="CharacterEllipsis"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Border>
+
+        <GridSplitter Grid.Column="1" Width="8" Background="Transparent"/>
+
+        <!-- Content -->
+        <Border Grid.Column="2"
+                Background="{StaticResource DpxSurface}"
+                BorderBrush="{StaticResource DpxBorder}"
+                BorderThickness="1"
+                CornerRadius="8">
+            <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+                <StackPanel Spacing="4" Margin="20,16,20,28"
+                            IsVisible="{Binding SelectedSection,
+                                        Converter={x:Static ObjectConverters.IsNotNull}}">
+
+                    <TextBlock Text="{Binding SelectedSection.Title}"
+                               FontSize="20" FontWeight="SemiBold"
+                               Foreground="{StaticResource DpxText}"
+                               Margin="0,0,0,12"/>
+
+                    <ItemsControl ItemsSource="{Binding SelectedSection.Blocks}">
+                        <ItemsControl.DataTemplates>
+
+                            <DataTemplate DataType="content:ParagraphBlock">
+                                <TextBlock Text="{Binding Text}"
+                                           TextWrapping="Wrap"
+                                           FontSize="13"
+                                           LineHeight="21"
+                                           Foreground="{StaticResource DpxText}"
+                                           Margin="0,4"/>
+                            </DataTemplate>
+
+                            <DataTemplate DataType="content:SubHeadingBlock">
+                                <TextBlock Text="{Binding Text}"
+                                           FontSize="14" FontWeight="SemiBold"
+                                           Foreground="{StaticResource DpxText}"
+                                           Margin="0,16,0,4"/>
+                            </DataTemplate>
+
+                            <DataTemplate DataType="content:BulletListBlock">
+                                <ItemsControl ItemsSource="{Binding Items}" Margin="12,4,0,4">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal" Margin="0,2">
+                                                <TextBlock Text="•  "
+                                                           FontSize="13"
+                                                           Foreground="{StaticResource DpxText3}"
+                                                           VerticalAlignment="Top"
+                                                           Margin="0,0,4,0"/>
+                                                <TextBlock Text="{Binding}"
+                                                           TextWrapping="Wrap"
+                                                           FontSize="13"
+                                                           LineHeight="20"
+                                                           Foreground="{StaticResource DpxText}"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </DataTemplate>
+
+                            <DataTemplate DataType="content:TableBlock">
+                                <Border Background="{StaticResource DpxSunken}"
+                                        BorderBrush="{StaticResource DpxBorder}"
+                                        BorderThickness="1"
+                                        Padding="14,10"
+                                        CornerRadius="6"
+                                        Margin="0,6">
+                                    <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                                                  VerticalScrollBarVisibility="Disabled">
+                                        <TextBlock Text="{Binding FormattedText}"
+                                                   FontFamily="{StaticResource DpxMonoFamily}"
+                                                   FontSize="11.5"
+                                                   LineHeight="18"
+                                                   Foreground="{StaticResource DpxText}"/>
+                                    </ScrollViewer>
+                                </Border>
+                            </DataTemplate>
+
+                        </ItemsControl.DataTemplates>
+                    </ItemsControl>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+
+    </Grid>
+
+</Window>

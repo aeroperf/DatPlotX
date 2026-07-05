@@ -1,0 +1,83 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="DatPlotX.Views.PlotModePickerDialog"
+        x:CompileBindings="True"
+        Title="New Project — Choose Plot Style"
+        Width="560" Height="540"
+        Classes="dpx"
+        Background="{StaticResource DpxBg}"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False">
+
+    <Window.Styles>
+        <Style Selector="Border.dpx-mode-card">
+            <Setter Property="Background" Value="{StaticResource DpxSurface}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource DpxBorder}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="16,14"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <Style Selector="Border.dpx-mode-card:pointerover">
+            <Setter Property="Background" Value="{StaticResource DpxRaised}"/>
+        </Style>
+        <Style Selector="Border.dpx-mode-card.selected">
+            <Setter Property="BorderBrush" Value="{StaticResource DpxAccent}"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="Padding" Value="15,13"/>
+        </Style>
+    </Window.Styles>
+
+    <Grid RowDefinitions="*,Auto">
+
+        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="20,16,20,14">
+
+                <TextBlock Classes="dpx-h1" Text="Choose a plot style"/>
+                <TextBlock Classes="dpx-subtitle"
+                           Text="The choice is permanent — switching styles requires a new project and a fresh CSV import."/>
+
+                <StackPanel Spacing="10" Margin="0,4,0,0">
+
+                    <Border x:Name="PanesCard" Classes="dpx-mode-card">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="Stacked Panes"
+                                       FontSize="13" FontWeight="SemiBold"
+                                       Foreground="{StaticResource DpxText}"/>
+                            <TextBlock Text="Multiple plot panes sharing the X axis. Best for grouping related signals; supports per-pane Y1/Y2 axes, event lines, and annotations."
+                                       Classes="dpx-hint"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border x:Name="CompactCard" Classes="dpx-mode-card">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="Compact Plot Surface"
+                                       FontSize="13" FontWeight="SemiBold"
+                                       Foreground="{StaticResource DpxText}"/>
+                            <TextBlock Text="Single plot surface with banded Y axes (one per parameter), alternating left/right. Matches the typical Flight Data Analysis (FDA) or Flight Data Monitoring (FDM) layout, but works for any time-series data with a shared X axis."
+                                       Classes="dpx-hint"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border x:Name="GroupedCard" Classes="dpx-mode-card">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="Grouped Parameter Plot"
+                                       FontSize="13" FontWeight="SemiBold"
+                                       Foreground="{StaticResource DpxText}"/>
+                            <TextBlock Text="Single plot surface that draws one line per unique combination of selected input-parameter values. Best for tabular/array-style data where each row is one experimental point (e.g. parametric performance arrays). Each input column gets a sidebar dropdown with its distinct values plus an &quot;All&quot; choice."
+                                       Classes="dpx-hint"/>
+                        </StackPanel>
+                    </Border>
+
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+
+        <Border Grid.Row="1" Classes="dpx-footer">
+            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                <Button Grid.Column="1" x:Name="CancelButton" Classes="dpx ghost" Content="Cancel"/>
+                <Button Grid.Column="2" x:Name="OkButton" Classes="dpx primary" Content="Create"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

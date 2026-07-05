@@ -1,0 +1,87 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:DatPlotX.ViewModels"
+        x:Class="DatPlotX.Views.ManageMetricsDialog"
+        x:DataType="vm:ManageMetricsDialogViewModel"
+        x:CompileBindings="True"
+        Title="Statistics Columns"
+        Height="500" Width="560"
+        Classes="dpx"
+        Background="{StaticResource DpxBg}"
+        WindowStartupLocation="CenterOwner">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <!-- Header band -->
+        <StackPanel Grid.Row="0" Margin="20,16,20,12" Spacing="2">
+            <TextBlock Classes="dpx-h1" Text="Statistics columns" Margin="0"/>
+            <TextBlock Classes="dpx-subtitle"
+                       Text="Pick the statistics shown as columns in the panel. Use Up / Down to set their order."
+                       Margin="0"/>
+        </StackPanel>
+
+        <!-- List + reorder buttons -->
+        <Grid Grid.Row="1" Margin="20,0,20,12" ColumnDefinitions="*,Auto" ColumnSpacing="10">
+            <Border Grid.Column="0"
+                    Background="{StaticResource DpxSurface}"
+                    BorderBrush="{StaticResource DpxBorder}"
+                    BorderThickness="1"
+                    CornerRadius="8">
+                <DataGrid ItemsSource="{Binding Rows}"
+                          SelectedItem="{Binding SelectedRow}"
+                          AutoGenerateColumns="False"
+                          CanUserReorderColumns="False"
+                          CanUserSortColumns="False"
+                          CanUserResizeColumns="True"
+                          SelectionMode="Single"
+                          GridLinesVisibility="Horizontal"
+                          HeadersVisibility="Column"
+                          Background="Transparent"
+                          BorderThickness="0">
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Header="Show" Width="64">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate x:DataType="vm:MetricRowViewModel">
+                                    <CheckBox Margin="10,0"
+                                              IsChecked="{Binding IsEnabled, Mode=TwoWay}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTextColumn Header="Metric"
+                                            Binding="{Binding DisplayName}"
+                                            IsReadOnly="True"
+                                            Width="*"/>
+
+                        <DataGridTextColumn Header="Group"
+                                            Binding="{Binding Category}"
+                                            IsReadOnly="True"
+                                            Width="140"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
+
+            <StackPanel Grid.Column="1" Spacing="8" VerticalAlignment="Top">
+                <Button Classes="dpx ghost" Content="▲ Up"
+                        MinWidth="72"
+                        Command="{Binding MoveUpCommand}"
+                        ToolTip.Tip="Move the selected metric earlier in the column order"/>
+                <Button Classes="dpx ghost" Content="▼ Down"
+                        MinWidth="72"
+                        Command="{Binding MoveDownCommand}"
+                        ToolTip.Tip="Move the selected metric later in the column order"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- Footer -->
+        <Border Grid.Row="2" Classes="dpx-footer">
+            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                <Button Grid.Column="1" Classes="dpx ghost" Content="Cancel"
+                        Click="Cancel_Click"/>
+                <Button Grid.Column="2" Classes="dpx primary" Content="Apply"
+                        IsEnabled="{Binding HasAnyEnabled}"
+                        Click="Apply_Click"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

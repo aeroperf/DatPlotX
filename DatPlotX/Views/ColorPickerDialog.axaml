@@ -1,0 +1,117 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:views="clr-namespace:DatPlotX.Views"
+        x:Class="DatPlotX.Views.ColorPickerDialog"
+        x:CompileBindings="True"
+        Title="Choose Color"
+        Height="460" Width="460"
+        Classes="dpx"
+        Background="{StaticResource DpxBg}"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False">
+
+    <Window.Styles>
+        <Style Selector="Button.dpx-swatch">
+            <Setter Property="Width" Value="32"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Margin" Value="3"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#22000000"/>
+            <Setter Property="CornerRadius" Value="4"/>
+        </Style>
+        <Style Selector="Button.dpx-swatch.selected">
+            <Setter Property="BorderBrush" Value="{StaticResource DpxText}"/>
+            <Setter Property="BorderThickness" Value="2"/>
+        </Style>
+        <Style Selector="Button.dpx-swatch:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="Transparent"/>
+        </Style>
+    </Window.Styles>
+
+    <Grid RowDefinitions="*,Auto">
+
+        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="20,16,20,14">
+
+                <TextBlock Classes="dpx-h1" Text="Choose color"/>
+
+                <!-- Palette section -->
+                <Border Classes="dpx-section first">
+                    <StackPanel Spacing="8">
+                        <TextBlock Classes="dpx-section-title upper" Text="PRESETS"/>
+                        <ItemsControl x:Name="ColorPalette">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="views:ColorPickerDialog+ColorItem">
+                                    <Button Classes="dpx-swatch"
+                                            Background="{Binding ColorBrush}"
+                                            Tag="{Binding ColorHex}"
+                                            Click="ColorButton_Click">
+                                        <ToolTip.Tip>
+                                            <TextBlock Text="{Binding ColorName}"/>
+                                        </ToolTip.Tip>
+                                    </Button>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
+
+                <!-- Hex input section -->
+                <Border Classes="dpx-section">
+                    <StackPanel Spacing="10">
+                        <TextBlock Classes="dpx-section-title upper" Text="CUSTOM"/>
+
+                        <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                            <TextBlock Grid.Column="0" Classes="dpx-label" Text="Hex"/>
+                            <Grid Grid.Column="1" ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                <TextBox Grid.Column="0" x:Name="HexInputBox"
+                                         Classes="dpx mono"
+                                         Text="#0078D4"
+                                         KeyDown="HexInputBox_KeyDown"/>
+                                <Button Grid.Column="1" Classes="dpx" Content="Apply"
+                                        Click="ApplyHex_Click"/>
+                            </Grid>
+                        </Grid>
+
+                        <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                            <TextBlock Grid.Column="0" Classes="dpx-label" Text="Selected"/>
+                            <Grid Grid.Column="1" ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                <Border Grid.Column="0"
+                                        Width="32" Height="28"
+                                        BorderBrush="{StaticResource DpxBorder}"
+                                        BorderThickness="1"
+                                        CornerRadius="{StaticResource DpxControlRadius}">
+                                    <Border x:Name="SelectedColorPreview"
+                                            Background="#0078D4"
+                                            CornerRadius="{StaticResource DpxControlRadius}"/>
+                                </Border>
+                                <TextBlock Grid.Column="1" x:Name="SelectedColorText"
+                                           Classes="dpx-mono"
+                                           Foreground="{StaticResource DpxText2}"
+                                           VerticalAlignment="Center"
+                                           Text="#0078D4"/>
+                            </Grid>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Footer -->
+        <Border Grid.Row="1" Classes="dpx-footer">
+            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                <Button Grid.Column="1" Classes="dpx ghost" Content="Cancel"
+                        Click="Cancel_Click"/>
+                <Button Grid.Column="2" Classes="dpx primary" Content="OK"
+                        Click="OK_Click"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

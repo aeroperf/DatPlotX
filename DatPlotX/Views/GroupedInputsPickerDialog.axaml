@@ -1,0 +1,111 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:DatPlotX.ViewModels"
+        x:Class="DatPlotX.Views.GroupedInputsPickerDialog"
+        x:DataType="vm:GroupedInputsPickerDialogViewModel"
+        x:CompileBindings="True"
+        Title="Configure Grouped Inputs"
+        Width="560" Height="640"
+        Classes="dpx"
+        Background="{StaticResource DpxBg}"
+        WindowStartupLocation="CenterOwner">
+
+    <Grid RowDefinitions="Auto,*,Auto,Auto">
+
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Margin="20,16,20,8" Spacing="6">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <TextBlock Classes="dpx-h1" Text="Configure inputs" Margin="0"/>
+                <Border Classes="dpx-h1-tag" VerticalAlignment="Center">
+                    <TextBlock Text="{Binding SelectionSummary}"/>
+                </Border>
+            </StackPanel>
+            <TextBlock Classes="dpx-subtitle"
+                       Text="Pick the columns whose discrete values control grouping. Each input gets a dropdown in the left sidebar with all distinct values plus an &quot;All&quot; choice. Optionally override the display label."/>
+        </StackPanel>
+
+        <!-- Candidate columns table -->
+        <Border Grid.Row="1" Classes="dpx-card" Margin="20,4,20,8">
+            <Grid RowDefinitions="Auto,*">
+                <Border Grid.Row="0"
+                        Background="{StaticResource DpxSunken}"
+                        BorderBrush="{StaticResource DpxDivider}"
+                        BorderThickness="0,0,0,1">
+                    <Grid ColumnDefinitions="44,1.6*,80,1.6*">
+                        <TextBlock Grid.Column="0" Classes="dpx-section-title upper" Text=""           Margin="10,8" FontSize="10.5"/>
+                        <TextBlock Grid.Column="1" Classes="dpx-section-title upper" Text="COLUMN"     Margin="10,8" FontSize="10.5"/>
+                        <TextBlock Grid.Column="2" Classes="dpx-section-title upper" Text="DISTINCT"   Margin="10,8" FontSize="10.5"/>
+                        <TextBlock Grid.Column="3" Classes="dpx-section-title upper" Text="DISPLAY LABEL" Margin="10,8" FontSize="10.5"/>
+                    </Grid>
+                </Border>
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                    <ItemsControl ItemsSource="{Binding Candidates}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="vm:GroupedInputCandidate">
+                                <Border BorderBrush="{StaticResource DpxDivider}"
+                                        BorderThickness="0,0,0,1"
+                                        Padding="0,4">
+                                    <Grid ColumnDefinitions="44,1.6*,80,1.6*">
+                                        <CheckBox Grid.Column="0" Classes="dpx"
+                                                  IsChecked="{Binding IsSelected}"
+                                                  IsEnabled="{Binding !Ineligible}"
+                                                  HorizontalAlignment="Center"
+                                                  ToolTip.Tip="{Binding IneligibleReason}"
+                                                  ToolTip.ShowOnDisabled="True"/>
+                                        <TextBlock Grid.Column="1"
+                                                   Text="{Binding ColumnName}"
+                                                   VerticalAlignment="Center"
+                                                   Margin="10,0"
+                                                   FontSize="12.5"/>
+                                        <TextBlock Grid.Column="2"
+                                                   Text="{Binding DistinctCount}"
+                                                   VerticalAlignment="Center"
+                                                   Margin="10,0"
+                                                   FontSize="12"
+                                                   Foreground="{StaticResource DpxText2}"/>
+                                        <TextBox Grid.Column="3" Classes="dpx"
+                                                 Text="{Binding DisplayLabel}"
+                                                 Margin="6,0"
+                                                 IsEnabled="{Binding IsSelected}"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
+        </Border>
+
+        <!-- X / Y picker -->
+        <Border Grid.Row="2" Classes="dpx-card" Margin="20,4,20,8" Padding="14,12">
+            <Grid ColumnDefinitions="Auto,*,Auto,*" RowDefinitions="Auto,Auto" ColumnSpacing="10" RowSpacing="6">
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="X Axis"
+                           VerticalAlignment="Center" FontWeight="SemiBold"/>
+                <ComboBox  Grid.Row="0" Grid.Column="1"
+                           ItemsSource="{Binding AvailableXColumns}"
+                           SelectedItem="{Binding SelectedXColumn}"
+                           HorizontalAlignment="Stretch"/>
+                <TextBlock Grid.Row="0" Grid.Column="2" Text="Y Axis"
+                           VerticalAlignment="Center" FontWeight="SemiBold" Margin="14,0,0,0"/>
+                <ComboBox  Grid.Row="0" Grid.Column="3"
+                           ItemsSource="{Binding AvailableYColumns}"
+                           SelectedItem="{Binding SelectedYColumn}"
+                           HorizontalAlignment="Stretch"/>
+                <TextBlock Grid.Row="1" Grid.ColumnSpan="4"
+                           Text="{Binding ValidationMessage}"
+                           Foreground="#C62828"
+                           FontSize="12"
+                           IsVisible="{Binding !IsValid}"/>
+            </Grid>
+        </Border>
+
+        <!-- Footer -->
+        <Border Grid.Row="3" Classes="dpx-footer">
+            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                <Button Grid.Column="1" x:Name="CancelButton" Classes="dpx ghost" Content="Cancel"/>
+                <Button Grid.Column="2" x:Name="ApplyButton"  Classes="dpx primary" Content="Apply"
+                        IsEnabled="{Binding IsValid}"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

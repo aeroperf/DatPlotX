@@ -1,0 +1,135 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:dpx="clr-namespace:DatPlotX.Views.Controls.Dpx"
+        x:Class="DatPlotX.Views.TextAnnotationDialog"
+        x:CompileBindings="True"
+        Title="Text Annotation"
+        Height="780" Width="460"
+        Classes="dpx"
+        Background="{StaticResource DpxBg}"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False">
+
+    <Grid RowDefinitions="*,Auto">
+        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="20,16,20,14">
+                <TextBlock Classes="dpx-h1" Text="Text Annotation"/>
+
+                <!-- Text + style -->
+                <Border Classes="dpx-section first">
+                    <StackPanel Spacing="10">
+                        <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                            <TextBlock Grid.Column="0" Classes="dpx-label" Text="Text"
+                                       VerticalAlignment="Top" Margin="0,4,0,0"/>
+                            <TextBox Grid.Column="1" x:Name="TextContentBox"
+                                     Classes="dpx multiline"
+                                     MinHeight="60"/>
+                        </Grid>
+                        <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                            <TextBlock Grid.Column="0" Classes="dpx-label" Text="Style"/>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+                                <dpx:NumberStepper x:Name="FontSizeStepper"
+                                                   Minimum="8" Maximum="48" Step="1" Suffix="px"/>
+                                <dpx:ChipGroup x:Name="StyleChips"/>
+                            </StackPanel>
+                        </Grid>
+                        <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                            <TextBlock Grid.Column="0" Classes="dpx-label" Text="Alignment"/>
+                            <dpx:ChipGroup Grid.Column="1" x:Name="AlignChips" HorizontalAlignment="Left"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Colors -->
+                <Border Classes="dpx-section">
+                    <StackPanel Spacing="10">
+                        <TextBlock Classes="dpx-section-title upper" Text="COLORS"/>
+                        <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                            <TextBlock Grid.Column="0" Classes="dpx-label" Text="Text"/>
+                            <dpx:ColorPill Grid.Column="1" x:Name="FontColorPill"/>
+                        </Grid>
+                        <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                            <TextBlock Grid.Column="0" Classes="dpx-label" Text="Background"
+                                       VerticalAlignment="Top" Margin="0,4,0,0"/>
+                            <StackPanel Grid.Column="1" Spacing="6">
+                                <dpx:ColorPill x:Name="BackgroundColorPill"/>
+                                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                                    <TextBlock Grid.Column="0" Text="Opacity" FontSize="11"
+                                               Foreground="{StaticResource DpxText3}"
+                                               VerticalAlignment="Center"/>
+                                    <Slider Grid.Column="1" x:Name="OpacitySlider"
+                                            Classes="dpx" Minimum="0" Maximum="100"
+                                            VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Column="2" x:Name="OpacityText"
+                                               Classes="dpx-mono"
+                                               MinWidth="30"
+                                               Foreground="{StaticResource DpxText2}"
+                                               VerticalAlignment="Center"/>
+                                </Grid>
+                            </StackPanel>
+                        </Grid>
+                        <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                            <TextBlock Grid.Column="0" Classes="dpx-label" Text="Border"/>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+                                <dpx:ColorPill x:Name="BorderColorPill"/>
+                                <dpx:NumberStepper x:Name="BorderWidthStepper"
+                                                   Minimum="0" Maximum="6" Step="1" Suffix="px"/>
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Layout (anchor removed — annotations are draggable on the plot; alignment is
+                     always center on the (X, Y) point so dragging behaves consistently) -->
+                <Border Classes="dpx-section">
+                    <StackPanel Spacing="10">
+                        <TextBlock Classes="dpx-section-title upper" Text="LAYOUT"/>
+                        <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                            <TextBlock Grid.Column="0" Classes="dpx-label" Text="Rotation"/>
+                            <Grid Grid.Column="1" ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                <Slider Grid.Column="0" x:Name="RotationSlider"
+                                        Classes="dpx" Minimum="0" Maximum="360"
+                                        TickFrequency="45"
+                                        VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="1" x:Name="RotationText"
+                                           Classes="dpx-mono"
+                                           MinWidth="40"
+                                           Foreground="{StaticResource DpxText2}"
+                                           VerticalAlignment="Center"/>
+                            </Grid>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Preview -->
+                <Border Classes="dpx-section">
+                    <StackPanel Spacing="10">
+                        <TextBlock Classes="dpx-section-title upper" Text="PREVIEW"/>
+                        <Border Background="{StaticResource DpxSunken}"
+                                BorderBrush="{StaticResource DpxBorder}"
+                                BorderThickness="1"
+                                CornerRadius="7"
+                                Height="100"
+                                ClipToBounds="True">
+                            <Canvas x:Name="PreviewCanvas">
+                                <!-- Padding 4 matches ScottPlot's LabelPadding=4 in the annotation
+                                     managers so the preview box reflects on-plot proportions. -->
+                                <Border x:Name="PreviewBorder" Canvas.Left="20" Canvas.Top="20" Padding="4">
+                                    <TextBlock x:Name="PreviewText" Text="Annotation"
+                                               HorizontalAlignment="Stretch"/>
+                                </Border>
+                            </Canvas>
+                        </Border>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <Border Grid.Row="1" Classes="dpx-footer">
+            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                <Button Grid.Column="1" x:Name="CancelButton" Classes="dpx ghost" Content="Cancel"/>
+                <Button Grid.Column="2" x:Name="OkButton"     Classes="dpx primary" Content="OK"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

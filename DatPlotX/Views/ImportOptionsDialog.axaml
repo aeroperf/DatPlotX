@@ -1,0 +1,144 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:DatPlotX.ViewModels"
+        xmlns:conv="clr-namespace:DatPlotX.Converters"
+        x:Class="DatPlotX.Views.ImportOptionsDialog"
+        x:DataType="vm:ImportOptionsDialogViewModel"
+        x:CompileBindings="True"
+        Title="Import Options"
+        Width="820" Height="560"
+        Classes="dpx"
+        Background="{StaticResource DpxBg}"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False">
+
+    <Window.Resources>
+        <conv:PreviewRowBackgroundConverter x:Key="PreviewBgConv"/>
+        <conv:PreviewRowForegroundConverter x:Key="PreviewFgConv"/>
+        <conv:PreviewRowBorderThicknessConverter x:Key="PreviewBorderConv"/>
+    </Window.Resources>
+
+    <Grid RowDefinitions="*,Auto">
+
+        <Grid Grid.Row="0" Margin="20,16,20,8" RowDefinitions="Auto,Auto,*" ColumnDefinitions="*,260" ColumnSpacing="20">
+
+            <!-- Header -->
+            <StackPanel Grid.Row="0" Grid.ColumnSpan="2">
+                <TextBlock Classes="dpx-h1" Text="Import options"/>
+                <TextBlock Classes="dpx-subtitle"
+                           Text="{Binding FileName, StringFormat='Configure how \{0\} should be parsed.'}"/>
+            </StackPanel>
+
+            <!-- Left column: file preview -->
+            <TextBlock Grid.Row="1" Grid.Column="0" Classes="dpx-section-title upper"
+                       Text="PREVIEW (FIRST 100 LINES)"/>
+
+            <Border Grid.Row="2" Grid.Column="0" Classes="dpx-card" Padding="0">
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                    <ItemsControl ItemsSource="{Binding PreviewLines}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="vm:PreviewLineViewModel">
+                                <Border Background="{Binding Kind, Converter={StaticResource PreviewBgConv}}"
+                                        BorderBrush="{StaticResource DpxDivider}"
+                                        BorderThickness="{Binding Kind, Converter={StaticResource PreviewBorderConv}}"
+                                        Padding="0">
+                                    <Grid ColumnDefinitions="44,*">
+                                        <TextBlock Grid.Column="0"
+                                                   Text="{Binding Number}"
+                                                   FontFamily="{StaticResource DpxMonoFamily}"
+                                                   FontSize="11.5"
+                                                   Foreground="{StaticResource DpxText3}"
+                                                   TextAlignment="Right"
+                                                   Padding="0,2,8,2"/>
+                                        <TextBlock Grid.Column="1"
+                                                   Text="{Binding Text}"
+                                                   FontFamily="{StaticResource DpxMonoFamily}"
+                                                   FontSize="11.5"
+                                                   Foreground="{Binding Kind, Converter={StaticResource PreviewFgConv}}"
+                                                   TextWrapping="NoWrap"
+                                                   Padding="0,2,12,2"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Border>
+
+            <!-- Right column: settings -->
+            <ScrollViewer Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <TextBlock Classes="dpx-section-title upper" Text="FORMAT"/>
+                    <Border Classes="dpx-section first">
+                        <StackPanel Spacing="10">
+                            <Grid ColumnDefinitions="100,*" ColumnSpacing="10">
+                                <TextBlock Grid.Column="0" Classes="dpx-label" Text="Delimiter"/>
+                                <ComboBox Grid.Column="1" Classes="dpx"
+                                          HorizontalAlignment="Stretch"
+                                          ItemsSource="{Binding Delimiters}"
+                                          SelectedItem="{Binding SelectedDelimiter}"/>
+                            </Grid>
+                            <Grid ColumnDefinitions="100,*" ColumnSpacing="10"
+                                  IsEnabled="{Binding IsDecimalFormatEnabled}">
+                                <TextBlock Grid.Column="0" Classes="dpx-label" Text="Decimal"/>
+                                <ComboBox Grid.Column="1" Classes="dpx"
+                                          HorizontalAlignment="Stretch"
+                                          ItemsSource="{Binding DecimalFormats}"
+                                          SelectedItem="{Binding SelectedDecimalFormat}"/>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <TextBlock Classes="dpx-section-title upper" Text="LINES"/>
+                    <Border Classes="dpx-section first" IsEnabled="{Binding AreLineSelectorsEnabled}">
+                        <StackPanel Spacing="10">
+                            <Grid ColumnDefinitions="100,*" ColumnSpacing="10">
+                                <TextBlock Grid.Column="0" Classes="dpx-label" Text="Header line"/>
+                                <NumericUpDown Grid.Column="1"
+                                               Value="{Binding HeaderLine}"
+                                               Minimum="0" Maximum="100"
+                                               Increment="1"
+                                               FormatString="0"
+                                               Height="28"/>
+                            </Grid>
+                            <Grid ColumnDefinitions="100,*" ColumnSpacing="10">
+                                <TextBlock Grid.Column="0" Classes="dpx-label" Text="Unit line"/>
+                                <NumericUpDown Grid.Column="1"
+                                               Value="{Binding UnitLine}"
+                                               Minimum="0" Maximum="100"
+                                               Increment="1"
+                                               FormatString="0"
+                                               Height="28"/>
+                            </Grid>
+                            <Grid ColumnDefinitions="100,*" ColumnSpacing="10">
+                                <TextBlock Grid.Column="0" Classes="dpx-label" Text="Data starts"/>
+                                <NumericUpDown Grid.Column="1"
+                                               Value="{Binding DataStartLine}"
+                                               Minimum="1" Maximum="100"
+                                               Increment="1"
+                                               FormatString="0"
+                                               Height="28"/>
+                            </Grid>
+                            <TextBlock Classes="dpx-hint"
+                                       Text="Line numbers are 1-based. Use 0 for header or unit when not present."/>
+                            <TextBlock Classes="dpx-hint"
+                                       Foreground="{StaticResource DpxDanger}"
+                                       Text="{Binding ValidationHint}"
+                                       IsVisible="{Binding !CanImport}"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+
+        <Border Grid.Row="1" Classes="dpx-footer">
+            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                <Button Grid.Column="1" Classes="dpx ghost" Content="Cancel"
+                        Click="CancelButton_Click"/>
+                <Button Grid.Column="2" Classes="dpx primary" Content="Import"
+                        Click="OkButton_Click"
+                        IsEnabled="{Binding CanImport}"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

@@ -1,0 +1,419 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:dpx="clr-namespace:DatPlotX.Views.Controls.Dpx"
+        xmlns:vm="clr-namespace:DatPlotX.ViewModels"
+        x:Class="DatPlotX.Views.FormatPaneDialog"
+        x:DataType="vm:FormatPaneDialogViewModel"
+        x:CompileBindings="True"
+        Title="Format Pane"
+        Height="640" Width="560"
+        Classes="dpx"
+        Background="{StaticResource DpxBg}"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False">
+
+    <Grid RowDefinitions="*,Auto">
+
+        <Grid Grid.Row="0" RowDefinitions="Auto,*">
+
+            <!-- Header band -->
+            <StackPanel Grid.Row="0" Margin="20,16,20,8" Orientation="Horizontal" Spacing="8">
+                <TextBlock Classes="dpx-h1" Text="Pane Settings" Margin="0"/>
+                <TextBlock Text="· Stacked Panes"
+                           FontSize="11.5" FontWeight="Medium"
+                           Foreground="{StaticResource DpxText3}"
+                           VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <TabControl Grid.Row="1" Classes="dpx" Margin="20,0">
+
+                <!-- ── Labels tab ───────────────────────────────────── -->
+                <TabItem Header="Labels">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="0,8,0,0">
+
+                            <Border Classes="dpx-section first">
+                                <StackPanel Spacing="10">
+                                    <TextBlock Classes="dpx-section-title upper" Text="TITLE"/>
+                                    <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                                        <TextBlock Grid.Column="0" Classes="dpx-label" Text="Text"/>
+                                        <TextBox Grid.Column="1" Classes="dpx"
+                                                 Text="{Binding TitleText, Mode=TwoWay}"/>
+                                    </Grid>
+                                    <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                                        <TextBlock Grid.Column="0" Classes="dpx-label" Text="Font size"/>
+                                        <TextBox Grid.Column="1"
+                                                 Classes="dpx mono"
+                                                 HorizontalAlignment="Left" Width="100"
+                                                 Text="{Binding TitleFontSizeText, Mode=TwoWay}"/>
+                                    </Grid>
+                                    <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                                        <TextBlock Grid.Column="0" Classes="dpx-label" Text="Style"/>
+                                        <ComboBox Grid.Column="1"
+                                                  Classes="dpx"
+                                                  HorizontalAlignment="Left" Width="180"
+                                                  ItemsSource="{Binding TitleFontStyleOptions}"
+                                                  SelectedItem="{Binding TitleFontStyle, Mode=TwoWay}"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Classes="dpx-section">
+                                <StackPanel Spacing="10">
+                                    <TextBlock Classes="dpx-section-title upper" Text="AXIS LABELS"/>
+                                    <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                                        <TextBlock Grid.Column="0" Classes="dpx-label" Text="X axis"/>
+                                        <TextBox Grid.Column="1" Classes="dpx"
+                                                 Text="{Binding XAxisLabel, Mode=TwoWay}"/>
+                                    </Grid>
+                                    <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                                        <TextBlock Grid.Column="0" Classes="dpx-label" Text="Y1 (left)"/>
+                                        <TextBox Grid.Column="1" Classes="dpx"
+                                                 Text="{Binding Y1AxisLabel, Mode=TwoWay}"/>
+                                    </Grid>
+                                    <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                                        <TextBlock Grid.Column="0" Classes="dpx-label" Text=""/>
+                                        <CheckBox Grid.Column="1"
+                                                  Classes="dpx" Content="Show Y2 axis (right)"
+                                                  IsChecked="{Binding ShowY2Axis, Mode=TwoWay}"/>
+                                    </Grid>
+                                    <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                                        <TextBlock Grid.Column="0" Classes="dpx-label" Text="Y2 (right)"/>
+                                        <TextBox Grid.Column="1" Classes="dpx"
+                                                 IsEnabled="{Binding ShowY2Axis}"
+                                                 Text="{Binding Y2AxisLabel, Mode=TwoWay}"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Classes="dpx-section">
+                                <StackPanel Spacing="10">
+                                    <TextBlock Classes="dpx-section-title upper" Text="LABEL FONT"/>
+                                    <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                                        <TextBlock Grid.Column="0" Classes="dpx-label" Text="Font size"/>
+                                        <TextBox Grid.Column="1"
+                                                 Classes="dpx mono"
+                                                 HorizontalAlignment="Left" Width="100"
+                                                 Text="{Binding AxisLabelFontSizeText, Mode=TwoWay}"/>
+                                    </Grid>
+                                    <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                                        <TextBlock Grid.Column="0" Classes="dpx-label" Text=""/>
+                                        <CheckBox Grid.Column="1"
+                                                  Classes="dpx" Content="Bold labels"
+                                                  IsChecked="{Binding AxisLabelBold, Mode=TwoWay}"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Classes="dpx-section">
+                                <StackPanel Spacing="10">
+                                    <TextBlock Classes="dpx-section-title upper" Text="TICK LABEL FONT"/>
+                                    <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                                        <TextBlock Grid.Column="0" Classes="dpx-label" Text="Font size"/>
+                                        <TextBox Grid.Column="1"
+                                                 Classes="dpx mono"
+                                                 HorizontalAlignment="Left" Width="100"
+                                                 Text="{Binding TickLabelFontSizeText, Mode=TwoWay}"/>
+                                    </Grid>
+                                    <TextBlock Classes="dpx-hint"
+                                               Text="Applies to X, Y1, and Y2 tick labels."/>
+                                </StackPanel>
+                            </Border>
+
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+
+                <!-- ── Grid tab ──────────────────────────────────────── -->
+                <TabItem Header="Grid">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="0,8,0,0">
+
+                            <Border Classes="dpx-section first">
+                                <StackPanel Spacing="9">
+                                    <TextBlock Classes="dpx-section-title upper" Text="VISIBILITY"/>
+                                    <CheckBox Classes="dpx"
+                                              IsChecked="{Binding ShowMajorGrid, Mode=TwoWay}">
+                                        <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                                            <TextBlock Text="Major gridlines"/>
+                                            <Border Width="30" Height="14"
+                                                    Background="{StaticResource DpxSunken}"
+                                                    BorderBrush="{StaticResource DpxBorder}"
+                                                    BorderThickness="1" CornerRadius="3">
+                                                <Canvas>
+                                                    <Line StartPoint="0,7" EndPoint="30,7"
+                                                          Stroke="{StaticResource DpxText3}" StrokeThickness="1"/>
+                                                    <Line StartPoint="10,0" EndPoint="10,14"
+                                                          Stroke="{StaticResource DpxText3}" StrokeThickness="1"/>
+                                                    <Line StartPoint="20,0" EndPoint="20,14"
+                                                          Stroke="{StaticResource DpxText3}" StrokeThickness="1"/>
+                                                </Canvas>
+                                            </Border>
+                                        </StackPanel>
+                                    </CheckBox>
+                                    <CheckBox Classes="dpx"
+                                              IsChecked="{Binding ShowMinorGrid, Mode=TwoWay}">
+                                        <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                                            <TextBlock Text="Minor gridlines"/>
+                                            <Border Width="30" Height="14"
+                                                    Background="{StaticResource DpxSunken}"
+                                                    BorderBrush="{StaticResource DpxBorder}"
+                                                    BorderThickness="1" CornerRadius="3">
+                                                <Canvas>
+                                                    <Line StartPoint="0,7" EndPoint="30,7"
+                                                          Stroke="{StaticResource DpxText3}" StrokeThickness="0.8"
+                                                          StrokeDashArray="3,2"/>
+                                                </Canvas>
+                                            </Border>
+                                        </StackPanel>
+                                    </CheckBox>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Classes="dpx-section">
+                                <StackPanel Spacing="10">
+                                    <TextBlock Classes="dpx-section-title upper" Text="APPEARANCE"/>
+                                    <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                                        <TextBlock Grid.Column="0" Classes="dpx-label" Text="Color"/>
+                                        <dpx:ColorPill Grid.Column="1" x:Name="GridColorPill"
+                                                       Color="{Binding GridColor, Mode=TwoWay}"/>
+                                    </Grid>
+                                    <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                                        <TextBlock Grid.Column="0" Classes="dpx-label" Text="Line width"/>
+                                        <ComboBox Grid.Column="1"
+                                                  Classes="dpx"
+                                                  HorizontalAlignment="Left" Width="120"
+                                                  ItemsSource="{Binding GridLineWidthOptions}"
+                                                  SelectedItem="{Binding GridLineWidth, Mode=TwoWay}"/>
+                                    </Grid>
+                                    <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                                        <TextBlock Grid.Column="0" Classes="dpx-label" Text="Line style"/>
+                                        <ComboBox Grid.Column="1"
+                                                  Classes="dpx"
+                                                  HorizontalAlignment="Left" Width="160"
+                                                  ItemsSource="{Binding GridLineStyleOptions}"
+                                                  SelectedItem="{Binding GridLineStyle, Mode=TwoWay}"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+
+                <!-- ── X-Axis tab ────────────────────────────────────── -->
+                <TabItem Header="X-Axis">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="0,8,0,0">
+
+                            <Border Classes="dpx-section first">
+                                <StackPanel Spacing="10">
+                                    <TextBlock Classes="dpx-section-title upper" Text="RANGE"/>
+                                    <CheckBox Classes="dpx" Content="Auto-scale to data"
+                                              IsChecked="{Binding XAutoScale, Mode=TwoWay}"/>
+                                    <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                                        <TextBlock Grid.Column="0" Classes="dpx-label" Text="Min · Max"/>
+                                        <dpx:RangeInputs Grid.Column="1"
+                                                         MinText="{Binding XMinText, Mode=TwoWay}"
+                                                         MaxText="{Binding XMaxText, Mode=TwoWay}"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Classes="dpx-section">
+                                <StackPanel Spacing="10">
+                                    <TextBlock Classes="dpx-section-title upper" Text="TICK FORMAT"/>
+                                    <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                                        <TextBlock Grid.Column="0" Classes="dpx-label" Text="Format"/>
+                                        <ComboBox Grid.Column="1"
+                                                  Classes="dpx"
+                                                  HorizontalAlignment="Left" Width="160"
+                                                  ItemsSource="{Binding TickNumberFormatOptions}"
+                                                  SelectedItem="{Binding TickNumberFormat, Mode=TwoWay}"/>
+                                    </Grid>
+                                    <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                                        <TextBlock Grid.Column="0" Classes="dpx-label" Text="Decimals"/>
+                                        <ComboBox Grid.Column="1"
+                                                  Classes="dpx"
+                                                  HorizontalAlignment="Left" Width="100"
+                                                  ItemsSource="{Binding DecimalsOptions}"
+                                                  SelectedItem="{Binding XAxisDecimalPlaces, Mode=TwoWay}"/>
+                                    </Grid>
+                                    <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                                        <TextBlock Grid.Column="0" Classes="dpx-label" Text="Preview"/>
+                                        <TextBlock Grid.Column="1"
+                                                   Classes="dpx-mono"
+                                                   Foreground="{StaticResource DpxText2}"
+                                                   VerticalAlignment="Center"
+                                                   Text="{Binding XAxisFormatPreview}"/>
+                                    </Grid>
+                                    <TextBlock Classes="dpx-hint"
+                                               Text="X-axis decimals affect every pane in the project."/>
+                                </StackPanel>
+                            </Border>
+
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+
+                <!-- ── Y1-Axis tab ───────────────────────────────────── -->
+                <TabItem Header="Y1-Axis">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="0,8,0,0">
+                            <Border Classes="dpx-section first">
+                                <StackPanel Spacing="10">
+                                    <TextBlock Classes="dpx-section-title upper" Text="RANGE"/>
+                                    <CheckBox Classes="dpx" Content="Auto-scale to data"
+                                              IsChecked="{Binding Y1AutoScale, Mode=TwoWay}"/>
+                                    <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                                        <TextBlock Grid.Column="0" Classes="dpx-label" Text="Min · Max"/>
+                                        <dpx:RangeInputs Grid.Column="1"
+                                                         MinText="{Binding Y1MinText, Mode=TwoWay}"
+                                                         MaxText="{Binding Y1MaxText, Mode=TwoWay}"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Classes="dpx-section">
+                                <StackPanel Spacing="10">
+                                    <TextBlock Classes="dpx-section-title upper" Text="TICK FORMAT"/>
+                                    <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                                        <TextBlock Grid.Column="0" Classes="dpx-label" Text="Decimals"/>
+                                        <ComboBox Grid.Column="1"
+                                                  Classes="dpx"
+                                                  HorizontalAlignment="Left" Width="100"
+                                                  ItemsSource="{Binding DecimalsOptions}"
+                                                  SelectedItem="{Binding Y1AxisDecimalPlaces, Mode=TwoWay}"/>
+                                    </Grid>
+                                    <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                                        <TextBlock Grid.Column="0" Classes="dpx-label" Text="Preview"/>
+                                        <TextBlock Grid.Column="1"
+                                                   Classes="dpx-mono"
+                                                   Foreground="{StaticResource DpxText2}"
+                                                   VerticalAlignment="Center"
+                                                   Text="{Binding Y1AxisFormatPreview}"/>
+                                    </Grid>
+                                    <TextBlock Classes="dpx-hint"
+                                               Text="Per-pane setting; does not affect other panes."/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+
+                <!-- ── Y2-Axis tab ───────────────────────────────────── -->
+                <TabItem Header="Y2-Axis">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="0,8,0,0">
+                            <Border Classes="dpx-section first">
+                                <StackPanel Spacing="10">
+                                    <TextBlock Classes="dpx-section-title upper" Text="RANGE"/>
+                                    <CheckBox Classes="dpx" Content="Auto-scale to data"
+                                              IsChecked="{Binding Y2AutoScale, Mode=TwoWay}"/>
+                                    <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                                        <TextBlock Grid.Column="0" Classes="dpx-label" Text="Min · Max"/>
+                                        <dpx:RangeInputs Grid.Column="1"
+                                                         MinText="{Binding Y2MinText, Mode=TwoWay}"
+                                                         MaxText="{Binding Y2MaxText, Mode=TwoWay}"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Classes="dpx-section">
+                                <StackPanel Spacing="10">
+                                    <TextBlock Classes="dpx-section-title upper" Text="TICK FORMAT"/>
+                                    <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                                        <TextBlock Grid.Column="0" Classes="dpx-label" Text="Decimals"/>
+                                        <ComboBox Grid.Column="1"
+                                                  Classes="dpx"
+                                                  HorizontalAlignment="Left" Width="100"
+                                                  ItemsSource="{Binding DecimalsOptions}"
+                                                  SelectedItem="{Binding Y2AxisDecimalPlaces, Mode=TwoWay}"/>
+                                    </Grid>
+                                    <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                                        <TextBlock Grid.Column="0" Classes="dpx-label" Text="Preview"/>
+                                        <TextBlock Grid.Column="1"
+                                                   Classes="dpx-mono"
+                                                   Foreground="{StaticResource DpxText2}"
+                                                   VerticalAlignment="Center"
+                                                   Text="{Binding Y2AxisFormatPreview}"/>
+                                    </Grid>
+                                    <TextBlock Classes="dpx-hint"
+                                               Text="Per-pane setting; does not affect other panes."/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+
+                <!-- ── Background tab ────────────────────────────────── -->
+                <TabItem Header="Background">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="0,8,0,0">
+                            <Border Classes="dpx-section first">
+                                <StackPanel Spacing="10">
+                                    <TextBlock Classes="dpx-section-title upper" Text="PLOT BACKGROUND"/>
+                                    <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                                        <TextBlock Grid.Column="0" Classes="dpx-label" Text="Color"/>
+                                        <dpx:ColorPill Grid.Column="1" x:Name="PlotBgColorPill"
+                                                       Color="{Binding BackgroundColor, Mode=TwoWay}"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+                            <Border Classes="dpx-section">
+                                <StackPanel Spacing="10">
+                                    <TextBlock Classes="dpx-section-title upper" Text="DATA AREA"/>
+                                    <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                                        <TextBlock Grid.Column="0" Classes="dpx-label" Text="Color"/>
+                                        <dpx:ColorPill Grid.Column="1" x:Name="DataBgColorPill"
+                                                       Color="{Binding DataBackgroundColor, Mode=TwoWay}"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+
+                <!-- ── Legend tab ────────────────────────────────────── -->
+                <TabItem Header="Legend">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="0,8,0,0">
+                            <Border Classes="dpx-section first">
+                                <StackPanel Spacing="10">
+                                    <TextBlock Classes="dpx-section-title upper" Text="LEGEND"/>
+                                    <Grid ColumnDefinitions="96,*" ColumnSpacing="12" RowDefinitions="Auto,Auto" RowSpacing="8">
+                                        <TextBlock Grid.Row="0" Grid.Column="0" Classes="dpx-label" Text="Position"/>
+                                        <ComboBox Grid.Row="0" Grid.Column="1"
+                                                  Classes="dpx"
+                                                  HorizontalAlignment="Left" Width="200"
+                                                  ItemsSource="{Binding LegendPositionOptions}"
+                                                  SelectedItem="{Binding LegendPosition, Mode=TwoWay}"/>
+                                        <TextBlock Grid.Row="1" Grid.Column="0" Classes="dpx-label" Text="Font size"/>
+                                        <TextBox Grid.Row="1" Grid.Column="1"
+                                                 Classes="dpx mono"
+                                                 HorizontalAlignment="Left" Width="100"
+                                                 Text="{Binding LegendFontSizeText, Mode=TwoWay}"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+
+            </TabControl>
+        </Grid>
+
+        <!-- Footer -->
+        <Border Grid.Row="1" Classes="dpx-footer">
+            <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="8">
+                <TextBlock Grid.Column="0" Classes="dpx-hint"
+                           Text="Changes apply when you click OK"
+                           VerticalAlignment="Center"/>
+                <Button Grid.Column="2" Classes="dpx ghost" Content="Cancel"
+                        Click="Cancel_Click"/>
+                <Button Grid.Column="3" Classes="dpx primary" Content="OK"
+                        Click="OK_Click"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

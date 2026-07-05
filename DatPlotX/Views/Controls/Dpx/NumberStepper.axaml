@@ -1,0 +1,52 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="DatPlotX.Views.Controls.Dpx.NumberStepper">
+
+    <UserControl.Styles>
+        <Style Selector="Button.step">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="CornerRadius" Value="0"/>
+            <Setter Property="Width" Value="26"/>
+            <Setter Property="Height" Value="26"/>
+            <Setter Property="MinHeight" Value="26"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Foreground" Value="{StaticResource DpxText2}"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+        <Style Selector="Button.step:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{StaticResource DpxRaised}"/>
+        </Style>
+    </UserControl.Styles>
+
+    <Border Background="{StaticResource DpxSurface}"
+            BorderBrush="{StaticResource DpxBorder}"
+            BorderThickness="1"
+            CornerRadius="6"
+            Height="28"
+            ClipToBounds="True"
+            HorizontalAlignment="Left">
+        <StackPanel Orientation="Horizontal">
+            <Button x:Name="MinusBtn" Classes="step" Content="−"/>
+            <Border BorderBrush="{StaticResource DpxBorder}" BorderThickness="1,0">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center"
+                            HorizontalAlignment="Center" Spacing="3"
+                            Margin="10,0">
+                    <TextBlock x:Name="ValueText" Text="0"
+                               FontFamily="{StaticResource DpxMonoFamily}"
+                               FontSize="12"
+                               Foreground="{StaticResource DpxText}"
+                               VerticalAlignment="Center"/>
+                    <TextBlock x:Name="SuffixText" Text=""
+                               FontSize="10.5"
+                               Foreground="{StaticResource DpxText3}"
+                               VerticalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+            <Button x:Name="PlusBtn" Classes="step" Content="+"/>
+        </StackPanel>
+    </Border>
+</UserControl>

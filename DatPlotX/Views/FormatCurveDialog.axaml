@@ -1,0 +1,173 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:dpx="clr-namespace:DatPlotX.Views.Controls.Dpx"
+        xmlns:views="clr-namespace:DatPlotX.Views"
+        x:Class="DatPlotX.Views.FormatCurveDialog"
+        x:CompileBindings="True"
+        Title="Manage Curve"
+        Height="640" Width="460"
+        Classes="dpx"
+        Background="{StaticResource DpxBg}"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False">
+
+    <Grid RowDefinitions="*,Auto">
+
+        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="20,16,20,14">
+
+                <!-- H1 with index tag -->
+                <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,0,0,12">
+                    <TextBlock Classes="dpx-h1" Text="Manage Curve" Margin="0"/>
+                    <Border Classes="dpx-h1-tag" VerticalAlignment="Center">
+                        <TextBlock x:Name="IndexTag" Text="—"/>
+                    </Border>
+                </StackPanel>
+
+                <!-- Curve picker -->
+                <StackPanel Spacing="8" Margin="0,0,0,4">
+                    <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                        <TextBlock Grid.Column="0" Classes="dpx-label" Text="Curve"/>
+                        <ComboBox Grid.Column="1" x:Name="CurveSelector"
+                                  Classes="dpx"
+                                  HorizontalAlignment="Stretch"
+                                  SelectionChanged="CurveSelector_SelectionChanged">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate x:DataType="views:FormatCurveDialog+CurveEntry">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <Ellipse Width="10" Height="10"
+                                                 Fill="{Binding ColorBrush}"/>
+                                        <TextBlock Text="{Binding DisplayName}" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </Grid>
+                </StackPanel>
+
+                <!-- Label & Unit section -->
+                <Border Classes="dpx-section">
+                    <StackPanel Spacing="10">
+                        <TextBlock Classes="dpx-section-title upper" Text="LABEL &amp; UNIT"/>
+                        <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                            <TextBlock Grid.Column="0" Classes="dpx-label" Text="Name"
+                                       VerticalAlignment="Center"/>
+                            <TextBox Grid.Column="1" x:Name="NameTextBox"
+                                     Classes="dpx"
+                                     Watermark="Parameter / curve label"
+                                     HorizontalAlignment="Stretch"
+                                     ToolTip.Tip="Display name shown in the legend and Statistics panel. Defaults to the column name; rename freely (e.g. GLoad → GNorml)."/>
+                        </Grid>
+                        <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                            <TextBlock Grid.Column="0" Classes="dpx-label" Text="Unit"
+                                       VerticalAlignment="Center"/>
+                            <TextBox Grid.Column="1" x:Name="UnitTextBox"
+                                     Classes="dpx"
+                                     Watermark="e.g. ft, kt, °C"
+                                     HorizontalAlignment="Left" Width="160"
+                                     ToolTip.Tip="Shown in the Statistics panel and used to derive rate units (e.g. ft/min for a slope). Auto-parsed from the column header; clear or edit if it makes labels read oddly (e.g. drop 'ratio')."/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Stroke section -->
+                <Border Classes="dpx-section">
+                    <StackPanel Spacing="10">
+                        <TextBlock Classes="dpx-section-title upper" Text="STROKE"/>
+
+                        <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                            <TextBlock Grid.Column="0" Classes="dpx-label" Text="Color"
+                                       VerticalAlignment="Top" Margin="0,4,0,0"/>
+                            <StackPanel Grid.Column="1" Spacing="6">
+                                <dpx:ColorSwatches x:Name="ColorSwatchPicker"/>
+                                <dpx:ColorPill x:Name="ColorPickerPill"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                            <TextBlock Grid.Column="0" Classes="dpx-label" Text="Line style"/>
+                            <dpx:LineStyleChips Grid.Column="1" x:Name="LineStylePicker"/>
+                        </Grid>
+
+                        <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                            <TextBlock Grid.Column="0" Classes="dpx-label" Text="Width"/>
+                            <Grid Grid.Column="1" ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                <Slider Grid.Column="0" x:Name="WidthSlider"
+                                        Classes="dpx"
+                                        Minimum="0.5" Maximum="5"
+                                        TickFrequency="0.5" IsSnapToTickEnabled="False"
+                                        VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="1" x:Name="WidthValue"
+                                           Classes="dpx-mono"
+                                           Foreground="{StaticResource DpxText2}"
+                                           VerticalAlignment="Center"
+                                           MinWidth="46"/>
+                            </Grid>
+                        </Grid>
+
+                        <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                            <TextBlock Grid.Column="0" Classes="dpx-label" Text=""/>
+                            <CheckBox Grid.Column="1" x:Name="ShowLineCheckBox"
+                                      Classes="dpx" Content="Show connecting line"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Markers section -->
+                <Border Classes="dpx-section">
+                    <StackPanel Spacing="10">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBlock Grid.Column="0" Classes="dpx-section-title upper" Text="MARKERS"
+                                       VerticalAlignment="Center"/>
+                            <CheckBox Grid.Column="1" x:Name="ShowMarkersCheckBox"
+                                      Classes="dpx" Content="Show markers"/>
+                        </Grid>
+
+                        <Grid ColumnDefinitions="96,*" ColumnSpacing="12" x:Name="MarkerShapeRow">
+                            <TextBlock Grid.Column="0" Classes="dpx-label" Text="Shape"/>
+                            <dpx:MarkerChips Grid.Column="1" x:Name="MarkerShapePicker"/>
+                        </Grid>
+
+                        <Grid ColumnDefinitions="96,*" ColumnSpacing="12" x:Name="MarkerSizeRow">
+                            <TextBlock Grid.Column="0" Classes="dpx-label" Text="Size"/>
+                            <Grid Grid.Column="1" ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                <Slider Grid.Column="0" x:Name="MarkerSizeSlider"
+                                        Classes="dpx"
+                                        Minimum="3" Maximum="20"
+                                        TickFrequency="1" IsSnapToTickEnabled="True"
+                                        VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="1" x:Name="MarkerSizeValue"
+                                           Classes="dpx-mono"
+                                           Foreground="{StaticResource DpxText2}"
+                                           VerticalAlignment="Center"
+                                           MinWidth="46"/>
+                            </Grid>
+                        </Grid>
+
+                        <Grid ColumnDefinitions="96,*" ColumnSpacing="12" x:Name="MarkerColorRow">
+                            <TextBlock Grid.Column="0" Classes="dpx-label" Text="Color"
+                                       VerticalAlignment="Top" Margin="0,4,0,0"/>
+                            <StackPanel Grid.Column="1" Spacing="6">
+                                <dpx:ColorSwatches x:Name="MarkerSwatchPicker"/>
+                                <CheckBox x:Name="MatchCurveColor"
+                                          Classes="dpx" Content="Match curve color"/>
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Footer -->
+        <Border Grid.Row="1" Classes="dpx-footer">
+            <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="8">
+                <Button Grid.Column="0" x:Name="DeleteButton" Classes="dpx danger"
+                        Content="Delete curve" Click="Delete_Click" IsEnabled="False"/>
+                <Button Grid.Column="2" x:Name="CancelButton" Classes="dpx ghost"
+                        Content="Cancel" Click="Cancel_Click"/>
+                <Button Grid.Column="3" x:Name="ApplyButton"  Classes="dpx primary"
+                        Content="Apply" Click="Apply_Click" IsEnabled="False"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

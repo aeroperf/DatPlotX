@@ -1,0 +1,126 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:dpx="clr-namespace:DatPlotX.Views.Controls.Dpx"
+        x:Class="DatPlotX.Views.ArrowAnnotationDialog"
+        x:CompileBindings="True"
+        Title="Arrow Annotation"
+        Height="780" Width="460"
+        Classes="dpx"
+        Background="{StaticResource DpxBg}"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False">
+
+    <Grid RowDefinitions="*,Auto">
+        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="20,16,20,14">
+                <TextBlock Classes="dpx-h1" Text="Arrow Annotation"/>
+
+                <!-- Stroke -->
+                <Border Classes="dpx-section first">
+                    <StackPanel Spacing="10">
+                        <TextBlock Classes="dpx-section-title upper" Text="STROKE"/>
+                        <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                            <TextBlock Grid.Column="0" Classes="dpx-label" Text="Color"/>
+                            <dpx:ColorPill Grid.Column="1" x:Name="ArrowColorPill"/>
+                        </Grid>
+                        <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                            <TextBlock Grid.Column="0" Classes="dpx-label" Text="Width"/>
+                            <dpx:NumberStepper Grid.Column="1" x:Name="LineWidthStepper"
+                                               Minimum="1" Maximum="10" Step="1" Suffix="px"
+                                               HorizontalAlignment="Left"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Arrowhead -->
+                <Border Classes="dpx-section">
+                    <StackPanel Spacing="10">
+                        <TextBlock Classes="dpx-section-title upper" Text="ARROWHEAD"/>
+                        <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                            <TextBlock Grid.Column="0" Classes="dpx-label" Text="Style"/>
+                            <dpx:ChipGroup Grid.Column="1" x:Name="ArrowheadStyleChips"/>
+                        </Grid>
+                        <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                            <TextBlock Grid.Column="0" Classes="dpx-label" Text="Size"/>
+                            <dpx:NumberStepper Grid.Column="1" x:Name="ArrowheadSizeStepper"
+                                               Minimum="5" Maximum="40" Step="1" Suffix="px"
+                                               HorizontalAlignment="Left"/>
+                        </Grid>
+                        <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                            <TextBlock Grid.Column="0" Classes="dpx-label" Text="Ends"/>
+                            <dpx:ChipGroup Grid.Column="1" x:Name="ArrowEndsChips"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Label -->
+                <Border Classes="dpx-section">
+                    <StackPanel Spacing="10">
+                        <TextBlock Classes="dpx-section-title upper" Text="LABEL"/>
+                        <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                            <TextBlock Grid.Column="0" Classes="dpx-label" Text="Text"/>
+                            <TextBox Grid.Column="1" x:Name="LabelTextBox"
+                                     Classes="dpx" Watermark="e.g. Stall onset"/>
+                        </Grid>
+                        <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                            <TextBlock Grid.Column="0" Classes="dpx-label" Text="Position"/>
+                            <dpx:ChipGroup Grid.Column="1" x:Name="LabelPositionChips"/>
+                        </Grid>
+                        <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                            <TextBlock Grid.Column="0" Classes="dpx-label" Text="Align"/>
+                            <dpx:ChipGroup Grid.Column="1" x:Name="LabelAlignChips"/>
+                        </Grid>
+                        <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                            <TextBlock Grid.Column="0" Classes="dpx-label" Text="Font"/>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="6">
+                                <dpx:NumberStepper x:Name="LabelFontSizeStepper"
+                                                   Minimum="8" Maximum="48" Step="1" Suffix="px"/>
+                                <dpx:ColorPill x:Name="LabelColorPill"/>
+                            </StackPanel>
+                        </Grid>
+                        <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                            <TextBlock Grid.Column="0" Classes="dpx-label" Text=""/>
+                            <CheckBox x:Name="LabelRotateCheckBox" Classes="dpx" Content="Rotate with arrow"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Preview -->
+                <Border Classes="dpx-section">
+                    <StackPanel Spacing="10">
+                        <TextBlock Classes="dpx-section-title upper" Text="PREVIEW"/>
+                        <Border Background="{StaticResource DpxSunken}"
+                                BorderBrush="{StaticResource DpxBorder}"
+                                BorderThickness="1"
+                                CornerRadius="7"
+                                Height="100"
+                                ClipToBounds="True">
+                            <Canvas x:Name="PreviewCanvas">
+                                <Line x:Name="PreviewArrowLine" StartPoint="30,80" EndPoint="370,30"
+                                      Stroke="#333333" StrokeThickness="1"/>
+                                <Polygon x:Name="PreviewArrowHead"
+                                         Points="370,30 360,24 360,36"
+                                         Fill="#333333"/>
+                                <Polygon x:Name="PreviewArrowHeadBase"
+                                         Points="30,80 40,74 40,86"
+                                         Fill="#333333"
+                                         IsVisible="False"/>
+                                <TextBlock x:Name="PreviewLabel" Text=""
+                                           Canvas.Left="180" Canvas.Top="40"
+                                           FontSize="12"
+                                           RenderTransformOrigin="0,0"/>
+                            </Canvas>
+                        </Border>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <Border Grid.Row="1" Classes="dpx-footer">
+            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                <Button Grid.Column="1" x:Name="CancelButton" Classes="dpx ghost" Content="Cancel"/>
+                <Button Grid.Column="2" x:Name="OkButton"     Classes="dpx primary" Content="OK"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

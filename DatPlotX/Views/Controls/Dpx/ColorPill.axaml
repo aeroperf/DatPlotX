@@ -1,0 +1,43 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="DatPlotX.Views.Controls.Dpx.ColorPill">
+
+    <Button x:Name="RootButton"
+            Background="{StaticResource DpxSurface}"
+            BorderBrush="{StaticResource DpxBorder}"
+            BorderThickness="1"
+            CornerRadius="6"
+            Height="28"
+            MinHeight="28"
+            Padding="3"
+            HorizontalContentAlignment="Stretch"
+            VerticalContentAlignment="Center"
+            HorizontalAlignment="Stretch">
+        <Grid ColumnDefinitions="Auto,*,Auto" VerticalAlignment="Center">
+            <Border Grid.Column="0"
+                    x:Name="ColorFill"
+                    Width="22" Height="22"
+                    CornerRadius="4"
+                    Background="#0078D4"
+                    BorderBrush="#22000000"
+                    BorderThickness="1"/>
+            <TextBlock Grid.Column="1"
+                       x:Name="HexText"
+                       Text="#0078D4"
+                       Margin="8,0,0,0"
+                       VerticalAlignment="Center"
+                       FontFamily="{StaticResource DpxMonoFamily}"
+                       FontSize="11.5"
+                       Foreground="{StaticResource DpxText2}"/>
+            <Border Grid.Column="2"
+                    Background="{StaticResource DpxRaised}"
+                    CornerRadius="4"
+                    Padding="8,3"
+                    Margin="0,0,2,0">
+                <TextBlock Text="Pick"
+                           FontSize="11"
+                           Foreground="{StaticResource DpxText3}"/>
+            </Border>
+        </Grid>
+    </Button>
+</UserControl>

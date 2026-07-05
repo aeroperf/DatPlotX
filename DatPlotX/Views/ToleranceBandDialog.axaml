@@ -1,0 +1,67 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="DatPlotX.Views.ToleranceBandDialog"
+        Title="Tolerance Band"
+        Width="420"
+        SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False">
+
+    <StackPanel Margin="18" Spacing="14">
+
+        <StackPanel Spacing="4">
+            <TextBlock Text="Curve" FontWeight="SemiBold" FontSize="11"/>
+            <ComboBox x:Name="CurveCombo" HorizontalAlignment="Stretch"/>
+        </StackPanel>
+
+        <StackPanel Spacing="4">
+            <TextBlock Text="Center" FontWeight="SemiBold" FontSize="11"/>
+            <StackPanel Orientation="Horizontal" Spacing="14">
+                <RadioButton x:Name="CenterMean" GroupName="Center" Content="Mean" IsChecked="True"/>
+                <RadioButton x:Name="CenterMedian" GroupName="Center" Content="Median"/>
+                <RadioButton x:Name="CenterNominal" GroupName="Center" Content="Nominal"/>
+            </StackPanel>
+            <StackPanel x:Name="NominalRow" Orientation="Horizontal" Spacing="8" IsEnabled="False">
+                <TextBlock Text="Nominal value:" VerticalAlignment="Center"/>
+                <TextBox x:Name="NominalBox" Width="120" Text="0"/>
+            </StackPanel>
+        </StackPanel>
+
+        <StackPanel Spacing="4">
+            <TextBlock Text="Tolerance (±)" FontWeight="SemiBold" FontSize="11"/>
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <TextBox x:Name="ToleranceBox" Width="120" Text="1"/>
+                <ToggleButton x:Name="UnitToggle"
+                              Width="110"
+                              Content="absolute"
+                              ToolTip.Tip="Toggle between absolute (curve units) and percent of center"/>
+            </StackPanel>
+        </StackPanel>
+
+        <StackPanel Spacing="4">
+            <TextBlock Text="Scope" FontWeight="SemiBold" FontSize="11"/>
+            <StackPanel Orientation="Horizontal" Spacing="14">
+                <RadioButton x:Name="ScopeSegment" GroupName="Scope" Content="Active segment" IsChecked="True"/>
+                <RadioButton x:Name="ScopeWhole" GroupName="Scope" Content="Whole curve"/>
+            </StackPanel>
+        </StackPanel>
+
+        <Border Background="{StaticResource DpxSurface}"
+                BorderBrush="{StaticResource DpxBorder}"
+                BorderThickness="1"
+                CornerRadius="4"
+                Padding="10,8">
+            <StackPanel Spacing="2">
+                <TextBlock Text="Preview" FontWeight="SemiBold" FontSize="10" Opacity="0.7"/>
+                <TextBlock x:Name="PreviewText"
+                           FontFamily="monospace"
+                           Text="—"/>
+            </StackPanel>
+        </Border>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+            <Button x:Name="CancelButton" Content="Cancel"/>
+            <Button x:Name="OkButton" Content="Apply Band" Classes="accent"/>
+        </StackPanel>
+    </StackPanel>
+</Window>

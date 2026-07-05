@@ -1,0 +1,98 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:DatPlotX.ViewModels"
+             xmlns:sp="clr-namespace:ScottPlot.Avalonia;assembly=ScottPlot.Avalonia"
+             x:Class="DatPlotX.Views.GroupedPlotControl"
+             x:DataType="vm:GroupedPlotViewModel"
+             x:CompileBindings="True">
+
+    <Grid ColumnDefinitions="260,Auto,*">
+
+        <!-- ── Sidebar ─────────────────────────────────────────────── -->
+        <Border Grid.Column="0"
+                Background="{StaticResource DpxSurface}"
+                BorderBrush="{StaticResource DpxBorder}"
+                BorderThickness="0,0,1,0"
+                Padding="14,12">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel Spacing="14">
+
+                    <!-- Inputs -->
+                    <ItemsControl ItemsSource="{Binding Inputs}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="vm:GroupedInputParameterViewModel">
+                                <StackPanel Spacing="4" Margin="0,0,0,6">
+                                    <TextBlock Text="{Binding DisplayLabel}"
+                                               FontWeight="SemiBold"
+                                               FontSize="13"/>
+                                    <ComboBox ItemsSource="{Binding Options}"
+                                              SelectedItem="{Binding SelectedOption}"
+                                              HorizontalAlignment="Stretch"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <!-- X axis -->
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="X Axis" FontWeight="SemiBold" FontSize="13"/>
+                        <ComboBox ItemsSource="{Binding AvailableXColumns}"
+                                  SelectedItem="{Binding SelectedXColumn}"
+                                  HorizontalAlignment="Stretch"/>
+                    </StackPanel>
+
+                    <!-- Y axis -->
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Y Axis" FontWeight="SemiBold" FontSize="13"/>
+                        <ComboBox ItemsSource="{Binding AvailableYColumns}"
+                                  SelectedItem="{Binding SelectedYColumn}"
+                                  HorizontalAlignment="Stretch"/>
+                    </StackPanel>
+
+                    <CheckBox Content="Show Legend"  IsChecked="{Binding ShowLegend}"/>
+                    <CheckBox Content="Show Markers" IsChecked="{Binding ShowMarkers}"/>
+
+                    <Button x:Name="ConfigureInputsButton"
+                            Classes="dpx"
+                            Content="Configure Inputs…"
+                            HorizontalAlignment="Stretch"
+                            Margin="0,6,0,0"/>
+
+                    <TextBlock Text="Import a data file first."
+                               IsVisible="{Binding !HasInputs}"
+                               Foreground="{StaticResource DpxText2}"
+                               FontSize="12"
+                               TextWrapping="Wrap"/>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+
+        <GridSplitter Grid.Column="1" Width="4" ResizeDirection="Columns"/>
+
+        <!-- ── Plot area ──────────────────────────────────────────── -->
+        <Grid Grid.Column="2" RowDefinitions="Auto,*">
+            <Border Grid.Row="0"
+                    Background="#FFF3CD"
+                    BorderBrush="#FFE69C"
+                    BorderThickness="0,0,0,1"
+                    Padding="10,6"
+                    IsVisible="{Binding TruncationWarningVisible}">
+                <TextBlock Text="{Binding TruncationWarningText}"
+                           FontSize="12"
+                           Foreground="#664D03"/>
+            </Border>
+            <Panel Grid.Row="1">
+                <sp:AvaPlot x:Name="PlotControl"/>
+                <Border x:Name="TooltipBorder"
+                        Background="{DynamicResource SystemControlPageBackgroundAltHighBrush}"
+                        BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                        BorderThickness="1" CornerRadius="4" Padding="7,5"
+                        IsVisible="False"
+                        IsHitTestVisible="False"
+                        HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <TextBlock x:Name="TooltipText" FontSize="12"/>
+                </Border>
+            </Panel>
+        </Grid>
+    </Grid>
+</UserControl>

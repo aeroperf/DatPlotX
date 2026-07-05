@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <!-- AVLN3001: XAML compiler warning about partial-class wiring; verified harmless for this project. -->
+    <!-- EnableGenerateDocumentationFile: enables IDE0005 build-time check; not needed (analyzers already run in IDE). -->
+    <NoWarn>$(NoWarn);AVLN3001;EnableGenerateDocumentationFile</NoWarn>
+    <ApplicationIcon>Assets\icon.ico</ApplicationIcon>
+    <AssemblyName>DatPlotX</AssemblyName>
+    <RootNamespace>DatPlotX</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AvaloniaResource Include="Assets\**"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.3.12" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.3.12" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.12" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.12" />
+    <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.3.12" />
+    <PackageReference Include="Avalonia.Diagnostics" Version="11.3.12" Condition="'$(Configuration)' == 'Debug'" />
+    <PackageReference Include="ScottPlot.Avalonia" Version="5.1.57" />
+    <!-- OxyPlot powers the Compact Plot Surface (single-area FDA-style stacked Y-axes).
+         OxyPlot.Avalonia 2.1.0-Avalonia11 is the only Avalonia 11 build available;
+         no stable release yet — see Docs/CompactPlotSurface-Research.md §4. -->
+    <PackageReference Include="OxyPlot.Core" Version="2.2.0" />
+    <PackageReference Include="OxyPlot.Avalonia" Version="2.1.0-Avalonia11" />
+    <!-- OxyPlot.SkiaSharp provides PNG/JPEG image exporters for the Compact Plot Surface. -->
+    <PackageReference Include="OxyPlot.SkiaSharp" Version="2.2.0" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="CsvHelper" Version="33.0.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.0" />
+    <!-- SECURITY PIN, not a direct dependency: Avalonia pulls in Tmds.DBus.Protocol
+         transitively at 0.21.2, which has a known high-severity advisory
+         (GHSA-xrw6-gwf8-vvr9). This explicit reference forces the patched 0.92.0.
+         Do NOT remove until Avalonia's transitive version is itself >= 0.92.0. -->
+    <PackageReference Include="Tmds.DBus.Protocol" Version="0.92.0" />
+  </ItemGroup>
+
+</Project>

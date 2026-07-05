@@ -1,0 +1,58 @@
+<UserControl x:Class="DatPlotX.Views.PlotPaneControl"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:ScottPlot="clr-namespace:ScottPlot.Avalonia;assembly=ScottPlot.Avalonia"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="800">
+    <Border x:Name="borderContainer"
+            BorderBrush="#CCCCCC"
+            BorderThickness="1"
+            Margin="5,0,5,0">
+        <Grid>
+            <ScottPlot:AvaPlot x:Name="avaPlot"
+                              Focusable="True">
+                <ScottPlot:AvaPlot.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Add Curves to This Pane..." x:Name="AddCurvesToPaneItem"/>
+                        <MenuItem Header="Manage Curve..." x:Name="FormatCurveItem"/>
+                        <MenuItem Header="Clear This Pane" x:Name="ClearPaneItem"/>
+                        <Separator/>
+                        <MenuItem Header="Add Event Line Here..." x:Name="AddEventLineHereItem"/>
+                        <MenuItem Header="Delete Event Line" x:Name="DeleteEventLineItem" IsVisible="False"/>
+                        <MenuItem Header="Use as Segment Boundary" x:Name="UseAsSegmentBoundaryItem" IsVisible="False"/>
+                        <MenuItem Header="Clear All Event Lines" x:Name="ClearEventLinesItem"/>
+                        <Separator/>
+                        <MenuItem Header="Add Text Annotation Here..." x:Name="AddTextAnnotationHereItem"/>
+                        <MenuItem Header="Add Arrow Annotation Here..." x:Name="AddArrowAnnotationHereItem"/>
+                        <MenuItem x:Name="EditTextMenuItem" Header="Edit Text Annotation..." IsVisible="False"/>
+                        <MenuItem x:Name="DeleteTextMenuItem" Header="Delete Text Annotation" IsVisible="False"/>
+                        <MenuItem x:Name="EditArrowMenuItem" Header="Edit Arrow Annotation..." IsVisible="False"/>
+                        <MenuItem x:Name="DeleteArrowMenuItem" Header="Delete Arrow Annotation" IsVisible="False"/>
+                        <Separator/>
+                        <MenuItem Header="Set Scale to Default" x:Name="SetScaleToDefaultItem"/>
+                        <Separator/>
+                        <MenuItem Header="Add Pane Below" x:Name="AddPaneItem"/>
+                        <MenuItem Header="Remove This Pane" x:Name="RemovePaneItem"/>
+                        <Separator/>
+                        <MenuItem Header="Format Pane..." x:Name="FormatPaneItem"/>
+                        <Separator/>
+                        <MenuItem Header="Export Image..." x:Name="ExportImageItem"/>
+                    </ContextMenu>
+                </ScottPlot:AvaPlot.ContextMenu>
+            </ScottPlot:AvaPlot>
+            <Canvas x:Name="overlayCanvas" IsHitTestVisible="False"/>
+            <!-- Hover tooltip overlay — positioned via Margin, never intercepts input -->
+            <Border x:Name="hoverTooltipBorder"
+                    Background="{DynamicResource SystemControlPageBackgroundAltHighBrush}"
+                    BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                    BorderThickness="1" CornerRadius="4" Padding="7,5"
+                    IsVisible="False"
+                    IsHitTestVisible="False"
+                    HorizontalAlignment="Left" VerticalAlignment="Top">
+                <TextBlock x:Name="hoverTooltipText" FontSize="12" FontFamily="Consolas"/>
+            </Border>
+        </Grid>
+    </Border>
+</UserControl>

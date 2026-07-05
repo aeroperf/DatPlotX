@@ -1,0 +1,70 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:DatPlotX.ViewModels"
+        xmlns:content="using:DatPlotX.Content"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="520"
+        x:Class="DatPlotX.Views.WhatsNewWindow"
+        x:DataType="vm:WhatsNewWindowViewModel"
+        x:CompileBindings="True"
+        Title="What's New in DatPlotX"
+        Width="720" Height="540"
+        MinWidth="520" MinHeight="380"
+        Classes="dpx"
+        Background="{StaticResource DpxBg}"
+        WindowStartupLocation="CenterOwner"
+        Icon="/Assets/icon.png">
+
+    <Design.DataContext>
+        <vm:WhatsNewWindowViewModel/>
+    </Design.DataContext>
+
+    <ScrollViewer Margin="16,12,16,16" HorizontalScrollBarVisibility="Disabled">
+        <ItemsControl ItemsSource="{Binding ChangelogEntries}" Margin="0,0,0,16">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="content:ChangelogEntry">
+                    <Border Margin="0,8" Padding="20,16" CornerRadius="8"
+                            Background="{StaticResource DpxSurface}"
+                            BorderBrush="{StaticResource DpxBorder}"
+                            BorderThickness="1"
+                            HorizontalAlignment="Stretch">
+                        <StackPanel Spacing="8">
+                            <StackPanel Orientation="Horizontal" Spacing="14">
+                                <TextBlock Text="{Binding Version, StringFormat='v{0}'}"
+                                           FontSize="16" FontWeight="SemiBold"
+                                           Foreground="{StaticResource DpxText}"/>
+                                <TextBlock Text="{Binding Date}"
+                                           FontSize="12"
+                                           Foreground="{StaticResource DpxText3}"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+
+                            <ItemsControl ItemsSource="{Binding Changes}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid ColumnDefinitions="Auto,*" Margin="2,3">
+                                            <TextBlock Grid.Column="0"
+                                                       Text="•  "
+                                                       FontSize="13"
+                                                       Foreground="{StaticResource DpxText3}"
+                                                       VerticalAlignment="Top"
+                                                       Margin="0,0,4,0"/>
+                                            <TextBlock Grid.Column="1"
+                                                       Text="{Binding}"
+                                                       TextWrapping="Wrap"
+                                                       FontSize="12.5"
+                                                       LineHeight="19"
+                                                       Foreground="{StaticResource DpxText}"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </ScrollViewer>
+
+</Window>

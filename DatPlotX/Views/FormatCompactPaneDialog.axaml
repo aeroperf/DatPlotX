@@ -1,0 +1,225 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:dpx="clr-namespace:DatPlotX.Views.Controls.Dpx"
+        x:Class="DatPlotX.Views.FormatCompactPaneDialog"
+        x:CompileBindings="True"
+        Title="Format Compact Pane"
+        Height="640" Width="520"
+        Classes="dpx"
+        Background="{StaticResource DpxBg}"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False">
+
+    <Grid RowDefinitions="*,Auto">
+        <Grid Grid.Row="0" RowDefinitions="Auto,Auto,*">
+            <StackPanel Grid.Row="0" Margin="20,16,20,8" Orientation="Horizontal" Spacing="8">
+                <TextBlock Classes="dpx-h1" Text="Pane Settings" Margin="0"/>
+                <TextBlock Text="· Compact Plot Surface"
+                           FontSize="11.5" FontWeight="Medium"
+                           Foreground="{StaticResource DpxText3}"
+                           VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <TabControl Grid.Row="2" x:Name="Tabs" Classes="dpx" Margin="20,0">
+                <!-- ── Grid tab ─────────────────────────────────────── -->
+                <TabItem Header="Grid">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="0,8,0,0">
+                            <Border Classes="dpx-section first">
+                                <StackPanel Spacing="9">
+                                    <TextBlock Classes="dpx-section-title upper" Text="VISIBILITY"/>
+                                    <CheckBox x:Name="ShowMajorGridCheckBox" Classes="dpx">
+                                        <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                                            <TextBlock Text="Major gridlines"/>
+                                            <Border Width="30" Height="14"
+                                                    Background="{StaticResource DpxSunken}"
+                                                    BorderBrush="{StaticResource DpxBorder}"
+                                                    BorderThickness="1" CornerRadius="3">
+                                                <Canvas>
+                                                    <Line StartPoint="0,7" EndPoint="30,7"
+                                                          Stroke="{StaticResource DpxText3}" StrokeThickness="1"/>
+                                                    <Line StartPoint="10,0" EndPoint="10,14"
+                                                          Stroke="{StaticResource DpxText3}" StrokeThickness="1"/>
+                                                    <Line StartPoint="20,0" EndPoint="20,14"
+                                                          Stroke="{StaticResource DpxText3}" StrokeThickness="1"/>
+                                                </Canvas>
+                                            </Border>
+                                        </StackPanel>
+                                    </CheckBox>
+                                    <CheckBox x:Name="ShowMinorGridCheckBox" Classes="dpx">
+                                        <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                                            <TextBlock Text="Minor gridlines"/>
+                                            <Border Width="30" Height="14"
+                                                    Background="{StaticResource DpxSunken}"
+                                                    BorderBrush="{StaticResource DpxBorder}"
+                                                    BorderThickness="1" CornerRadius="3">
+                                                <Canvas>
+                                                    <Line StartPoint="0,7" EndPoint="30,7"
+                                                          Stroke="{StaticResource DpxText3}" StrokeThickness="0.8"
+                                                          StrokeDashArray="3,2"/>
+                                                </Canvas>
+                                            </Border>
+                                        </StackPanel>
+                                    </CheckBox>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Classes="dpx-section">
+                                <StackPanel Spacing="10">
+                                    <TextBlock Classes="dpx-section-title upper" Text="MINOR LINES"/>
+                                    <Grid ColumnDefinitions="96,*" ColumnSpacing="12" x:Name="MinorStyleRow">
+                                        <TextBlock Grid.Column="0" Classes="dpx-label" Text="Style"/>
+                                        <dpx:ChipGroup Grid.Column="1" x:Name="MinorStyleChips"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+
+                <!-- ── X-Axis tab ───────────────────────────────────── -->
+                <TabItem Header="X-Axis">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="0,8,0,0">
+                            <Border Classes="dpx-section first">
+                                <StackPanel Spacing="10">
+                                    <TextBlock Classes="dpx-section-title upper" Text="LABEL"/>
+                                    <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                                        <TextBlock Grid.Column="0" Classes="dpx-label" Text="Override"
+                                                   VerticalAlignment="Top" Margin="0,4,0,0"/>
+                                        <StackPanel Grid.Column="1" Spacing="4">
+                                            <TextBox x:Name="XLabelTextBox" Classes="dpx" Watermark="Time (s)"/>
+                                            <TextBlock Classes="dpx-hint" Text="Blank uses the column name."/>
+                                        </StackPanel>
+                                    </Grid>
+                                    <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                                        <TextBlock Grid.Column="0" Classes="dpx-label" Text="Font size"/>
+                                        <dpx:NumberStepper Grid.Column="1" x:Name="XLabelFontSizeStepper"
+                                                           Minimum="6" Maximum="48" Step="1"
+                                                           Decimals="0"
+                                                           HorizontalAlignment="Left"/>
+                                    </Grid>
+                                    <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                                        <TextBlock Grid.Column="0" Classes="dpx-label" Text=""/>
+                                        <CheckBox Grid.Column="1" x:Name="XLabelBoldCheckBox"
+                                                  Classes="dpx" Content="Bold"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Classes="dpx-section">
+                                <StackPanel Spacing="10">
+                                    <TextBlock Classes="dpx-section-title upper" Text="FORMAT"/>
+                                    <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                                        <TextBlock Grid.Column="0" Classes="dpx-label" Text="Decimal places"/>
+                                        <dpx:NumberStepper Grid.Column="1" x:Name="DecimalsStepper"
+                                                           Minimum="0" Maximum="6" Step="1"
+                                                           Decimals="0"
+                                                           HorizontalAlignment="Left"/>
+                                    </Grid>
+                                    <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                                        <TextBlock Grid.Column="0" Classes="dpx-label" Text="Tick preview"/>
+                                        <Border Grid.Column="1"
+                                                Background="{StaticResource DpxSunken}"
+                                                BorderBrush="{StaticResource DpxBorder}"
+                                                BorderThickness="1"
+                                                CornerRadius="7"
+                                                Padding="10,8,10,6">
+                                            <Grid x:Name="TickPreviewHost"
+                                                  ColumnDefinitions="*,*,*,*,*">
+                                                <!-- Five tick stamps; populated in code-behind -->
+                                            </Grid>
+                                        </Border>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Classes="dpx-section">
+                                <StackPanel Spacing="10">
+                                    <TextBlock Classes="dpx-section-title upper" Text="RANGE"/>
+                                    <CheckBox x:Name="XAutoScaleCheckBox" Classes="dpx" Content="Auto-scale to data"/>
+                                    <Grid ColumnDefinitions="96,*" ColumnSpacing="12" x:Name="MinMaxRow">
+                                        <TextBlock Grid.Column="0" Classes="dpx-label" Text="Min · Max"/>
+                                        <dpx:RangeInputs Grid.Column="1" x:Name="RangeBox"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+
+                <!-- ── Y-Axis tab (stub) ────────────────────────────── -->
+                <TabItem Header="Y-Axis">
+                    <StackPanel Margin="0,12,0,0" Spacing="6">
+                        <TextBlock Classes="dpx-section-title upper" Text="PER-CURVE Y AXES"/>
+                        <TextBlock Classes="dpx-hint" Margin="0,2,0,0">
+                            Each Compact-mode Y axis is owned by its curve. Use Manage Curve to set
+                            color, line, marker, font size, boldness, and decimal places per curve.
+                        </TextBlock>
+                    </StackPanel>
+                </TabItem>
+
+                <!-- ── Background tab ───────────────────────────────── -->
+                <TabItem Header="Background">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="0,8,0,0">
+                            <Border Classes="dpx-section first">
+                                <StackPanel Spacing="10">
+                                    <TextBlock Classes="dpx-section-title upper" Text="PLOT BACKGROUND"/>
+                                    <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                                        <TextBlock Grid.Column="0" Classes="dpx-label" Text="Preset"/>
+                                        <Border Grid.Column="1"
+                                                Background="{StaticResource DpxSunken}"
+                                                BorderBrush="{StaticResource DpxBorder}"
+                                                BorderThickness="1"
+                                                CornerRadius="7"
+                                                Padding="5">
+                                            <UniformGrid Rows="1" Columns="5" x:Name="BgPresetHost"/>
+                                        </Border>
+                                    </Grid>
+                                    <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                                        <TextBlock Grid.Column="0" Classes="dpx-label" Text="Color"/>
+                                        <dpx:ColorPill Grid.Column="1" x:Name="BgColorPill"/>
+                                    </Grid>
+                                    <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                                        <TextBlock Grid.Column="0" Classes="dpx-label" Text=""/>
+                                        <TextBlock Classes="dpx-hint">
+                                            Hex (#FFFFFF) or named color. Use “transparent” for none.
+                                        </TextBlock>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Classes="dpx-section">
+                                <StackPanel Spacing="10">
+                                    <TextBlock Classes="dpx-section-title upper" Text="PREVIEW"/>
+                                    <Border x:Name="BgPreviewFrame"
+                                            Height="100"
+                                            CornerRadius="7"
+                                            BorderBrush="{StaticResource DpxBorder}"
+                                            BorderThickness="1"
+                                            Background="#FFFFFF"
+                                            ClipToBounds="True">
+                                        <Grid>
+                                            <Canvas x:Name="BgPreviewCanvas"/>
+                                        </Grid>
+                                    </Border>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+            </TabControl>
+        </Grid>
+
+        <Border Grid.Row="1" Classes="dpx-footer">
+            <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="8">
+                <TextBlock Grid.Column="0" Classes="dpx-hint"
+                           Text="Changes apply when you click OK"
+                           VerticalAlignment="Center"/>
+                <Button Grid.Column="2" x:Name="CancelButton" Classes="dpx ghost" Content="Cancel"/>
+                <Button Grid.Column="3" x:Name="OkButton"     Classes="dpx primary" Content="OK"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

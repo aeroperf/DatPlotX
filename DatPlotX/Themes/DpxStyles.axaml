@@ -1,0 +1,239 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- ── Window: tinted body, native titlebar ─────────────────────── -->
+    <Style Selector="Window.dpx">
+        <Setter Property="Background" Value="{DynamicResource DpxBg}"/>
+        <Setter Property="Foreground" Value="{DynamicResource DpxText}"/>
+        <Setter Property="FontSize" Value="{DynamicResource DpxBodyFontSize}"/>
+    </Style>
+
+    <!-- ── H1, subtitle, section titles, hints, labels ──────────────── -->
+    <Style Selector="TextBlock.dpx-h1">
+        <Setter Property="FontSize" Value="{DynamicResource DpxH1FontSize}"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Foreground" Value="{DynamicResource DpxText}"/>
+        <Setter Property="Margin" Value="0,0,0,12"/>
+    </Style>
+
+    <Style Selector="TextBlock.dpx-subtitle">
+        <Setter Property="FontSize" Value="12.5"/>
+        <Setter Property="Foreground" Value="{DynamicResource DpxText2}"/>
+        <Setter Property="Margin" Value="0,-6,0,12"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+    </Style>
+
+    <Style Selector="TextBlock.dpx-section-title">
+        <Setter Property="FontSize" Value="{DynamicResource DpxSectionTitleFontSize}"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Foreground" Value="{DynamicResource DpxText3}"/>
+        <Setter Property="Margin" Value="0,0,0,8"/>
+    </Style>
+
+    <Style Selector="TextBlock.dpx-section-title.upper">
+        <!-- Avalonia text doesn't have CSS uppercase; keep the look via letter-spacing only. -->
+        <Setter Property="LetterSpacing" Value="0.6"/>
+    </Style>
+
+    <Style Selector="TextBlock.dpx-label">
+        <Setter Property="FontSize" Value="{DynamicResource DpxLabelFontSize}"/>
+        <Setter Property="FontWeight" Value="Medium"/>
+        <Setter Property="Foreground" Value="{DynamicResource DpxText2}"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
+    <Style Selector="TextBlock.dpx-hint">
+        <Setter Property="FontSize" Value="{DynamicResource DpxHintFontSize}"/>
+        <Setter Property="Foreground" Value="{DynamicResource DpxText3}"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+    </Style>
+
+    <Style Selector="TextBlock.dpx-mono">
+        <Setter Property="FontFamily" Value="{DynamicResource DpxMonoFamily}"/>
+        <Setter Property="FontSize" Value="{DynamicResource DpxMonoFontSize}"/>
+    </Style>
+
+    <Style Selector="Border.dpx-section">
+        <Setter Property="BorderThickness" Value="0,1,0,0"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource DpxDivider}"/>
+        <Setter Property="Padding" Value="0,12,0,12"/>
+    </Style>
+
+    <Style Selector="Border.dpx-section.first">
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Padding" Value="0,0,0,12"/>
+    </Style>
+
+    <Style Selector="Border.dpx-titlebar-band">
+        <Setter Property="Background" Value="{DynamicResource DpxTitlebar}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource DpxDivider}"/>
+        <Setter Property="BorderThickness" Value="0,1,0,0"/>
+    </Style>
+
+    <Style Selector="Border.dpx-card">
+        <Setter Property="Background" Value="{DynamicResource DpxSurface}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource DpxBorder}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="8"/>
+    </Style>
+
+    <Style Selector="Border.dpx-h1-tag">
+        <Setter Property="Background" Value="{DynamicResource DpxAccentSoft}"/>
+        <Setter Property="CornerRadius" Value="4"/>
+        <Setter Property="Padding" Value="6,2"/>
+    </Style>
+    <Style Selector="Border.dpx-h1-tag > TextBlock">
+        <Setter Property="FontSize" Value="10.5"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="LetterSpacing" Value="0.6"/>
+        <Setter Property="Foreground" Value="{DynamicResource DpxAccent}"/>
+    </Style>
+
+    <!-- ── Buttons ──────────────────────────────────────────────────── -->
+    <Style Selector="Button.dpx">
+        <Setter Property="Height" Value="{DynamicResource DpxControlHeight}"/>
+        <Setter Property="MinHeight" Value="{DynamicResource DpxControlHeight}"/>
+        <Setter Property="Padding" Value="14,0"/>
+        <Setter Property="FontSize" Value="{DynamicResource DpxControlFontSize}"/>
+        <Setter Property="FontWeight" Value="Medium"/>
+        <Setter Property="Foreground" Value="{DynamicResource DpxText}"/>
+        <Setter Property="Background" Value="{DynamicResource DpxSurface}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource DpxBorder}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="{DynamicResource DpxControlRadius}"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+    </Style>
+    <Style Selector="Button.dpx:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource DpxRaised}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource DpxBorder}"/>
+    </Style>
+    <Style Selector="Button.dpx:pressed /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource DpxSunken}"/>
+    </Style>
+    <Style Selector="Button.dpx:disabled /template/ ContentPresenter">
+        <Setter Property="Opacity" Value="0.55"/>
+    </Style>
+
+    <Style Selector="Button.dpx.primary">
+        <Setter Property="Background" Value="{DynamicResource DpxAccent}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource DpxAccent}"/>
+        <Setter Property="Foreground" Value="{DynamicResource DpxAccentInk}"/>
+    </Style>
+    <Style Selector="Button.dpx.primary:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource DpxAccent2}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource DpxAccent2}"/>
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource DpxAccentInk}"/>
+    </Style>
+    <Style Selector="Button.dpx.primary:pressed /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource DpxAccent}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource DpxAccent}"/>
+    </Style>
+
+    <Style Selector="Button.dpx.ghost">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{DynamicResource DpxText2}"/>
+    </Style>
+    <Style Selector="Button.dpx.ghost:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource DpxRaised}"/>
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource DpxText}"/>
+    </Style>
+
+    <Style Selector="Button.dpx.danger">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource DpxBorder}"/>
+        <Setter Property="Foreground" Value="{DynamicResource DpxDanger}"/>
+    </Style>
+    <Style Selector="Button.dpx.danger:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource DpxDangerSoft}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource DpxDanger}"/>
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource DpxDanger}"/>
+    </Style>
+
+    <!-- ── Inputs (TextBox / ComboBox) ──────────────────────────────── -->
+    <Style Selector="TextBox.dpx">
+        <Setter Property="Height" Value="{DynamicResource DpxControlHeight}"/>
+        <Setter Property="MinHeight" Value="{DynamicResource DpxControlHeight}"/>
+        <Setter Property="Padding" Value="10,0"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="FontSize" Value="{DynamicResource DpxControlFontSize}"/>
+        <Setter Property="Foreground" Value="{DynamicResource DpxText}"/>
+        <Setter Property="Background" Value="{DynamicResource DpxSurface}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource DpxBorder}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="{DynamicResource DpxControlRadius}"/>
+    </Style>
+    <Style Selector="TextBox.dpx:focus /template/ Border#PART_BorderElement">
+        <Setter Property="BorderBrush" Value="{DynamicResource DpxAccent}"/>
+    </Style>
+    <Style Selector="TextBox.dpx.multiline">
+        <Setter Property="Height" Value="NaN"/>
+        <Setter Property="MinHeight" Value="60"/>
+        <Setter Property="Padding" Value="10,8"/>
+        <Setter Property="AcceptsReturn" Value="True"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+        <Setter Property="VerticalContentAlignment" Value="Top"/>
+    </Style>
+    <Style Selector="TextBox.dpx.mono">
+        <Setter Property="FontFamily" Value="{DynamicResource DpxMonoFamily}"/>
+        <Setter Property="FontSize" Value="12"/>
+    </Style>
+
+    <Style Selector="ComboBox.dpx">
+        <Setter Property="Height" Value="{DynamicResource DpxControlHeight}"/>
+        <Setter Property="MinHeight" Value="{DynamicResource DpxControlHeight}"/>
+        <Setter Property="Padding" Value="10,0"/>
+        <Setter Property="FontSize" Value="{DynamicResource DpxControlFontSize}"/>
+        <Setter Property="Foreground" Value="{DynamicResource DpxText}"/>
+        <Setter Property="Background" Value="{DynamicResource DpxSurface}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource DpxBorder}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="{DynamicResource DpxControlRadius}"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+    </Style>
+
+    <!-- ── CheckBox ─────────────────────────────────────────────────── -->
+    <Style Selector="CheckBox.dpx">
+        <Setter Property="Foreground" Value="{DynamicResource DpxText}"/>
+        <Setter Property="FontSize" Value="12.5"/>
+        <Setter Property="Padding" Value="6,0,0,0"/>
+        <Setter Property="MinHeight" Value="22"/>
+    </Style>
+
+    <!-- ── Tabs ─────────────────────────────────────────────────────── -->
+    <Style Selector="TabControl.dpx">
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+    </Style>
+    <Style Selector="TabControl.dpx > TabItem">
+        <Setter Property="MinHeight" Value="32"/>
+        <Setter Property="Padding" Value="12,8"/>
+        <Setter Property="FontSize" Value="12.5"/>
+        <Setter Property="FontWeight" Value="Medium"/>
+        <Setter Property="Foreground" Value="{DynamicResource DpxText2}"/>
+    </Style>
+    <Style Selector="TabControl.dpx > TabItem:selected">
+        <Setter Property="Foreground" Value="{DynamicResource DpxText}"/>
+    </Style>
+    <Style Selector="TabControl.dpx > TabItem:pointerover /template/ Border#PART_LayoutRoot">
+        <Setter Property="Background" Value="{DynamicResource DpxRaised}"/>
+    </Style>
+
+    <!-- ── Slider ───────────────────────────────────────────────────── -->
+    <Style Selector="Slider.dpx">
+        <Setter Property="Foreground" Value="{DynamicResource DpxAccent}"/>
+        <Setter Property="Background" Value="{DynamicResource DpxSunken}"/>
+        <Setter Property="MinHeight" Value="22"/>
+    </Style>
+
+    <!-- ── Footer band ──────────────────────────────────────────────── -->
+    <Style Selector="Border.dpx-footer">
+        <Setter Property="Background" Value="{DynamicResource DpxTitlebar}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource DpxDivider}"/>
+        <Setter Property="BorderThickness" Value="0,1,0,0"/>
+        <Setter Property="Padding" Value="20,12"/>
+    </Style>
+
+</Styles>

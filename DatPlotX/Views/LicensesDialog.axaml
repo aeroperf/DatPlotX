@@ -1,0 +1,42 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="DatPlotX.Views.LicensesDialog"
+        x:CompileBindings="True"
+        Title="Licenses"
+        Icon="/Assets/icon.png"
+        Width="640" Height="560"
+        Classes="dpx"
+        Background="{StaticResource DpxBg}"
+        WindowStartupLocation="CenterOwner"
+        CanResize="True">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <StackPanel Grid.Row="0" Margin="20,16,20,12" Spacing="4">
+            <TextBlock Classes="dpx-h1" Text="Licenses"/>
+            <TextBlock Classes="dpx-subtitle"
+                       Text="DatPlotX is licensed under the MIT License. Third-party components retain their own licenses."/>
+        </StackPanel>
+
+        <Border Grid.Row="1" Margin="20,0,20,0"
+                BorderBrush="{StaticResource DpxBorder}" BorderThickness="1"
+                CornerRadius="4">
+            <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                          VerticalScrollBarVisibility="Auto">
+                <TextBlock x:Name="LicenseText"
+                           Classes="dpx-mono"
+                           FontSize="11.5"
+                           Margin="12"
+                           TextWrapping="NoWrap"
+                           Foreground="{StaticResource DpxText}"/>
+            </ScrollViewer>
+        </Border>
+
+        <Border Grid.Row="2" Classes="dpx-footer">
+            <Grid ColumnDefinitions="*,Auto">
+                <Button Grid.Column="1" Classes="dpx primary"
+                        Content="Close" MinWidth="80" Click="Close_Click"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

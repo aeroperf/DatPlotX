@@ -1,0 +1,22 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:oxy="clr-namespace:OxyPlot.Avalonia;assembly=OxyPlot.Avalonia"
+             xmlns:vm="clr-namespace:DatPlotX.ViewModels"
+             x:DataType="vm:CompactPlotViewModel"
+             x:Class="DatPlotX.Views.CompactPlotControl">
+    <Grid>
+        <oxy:PlotView x:Name="PlotView" />
+        <!-- Overlay for the Shift+drag analysis-segment live preview (screen-space rubber band).
+             IsHitTestVisible=False so it never steals pointer events from the plot. -->
+        <Canvas x:Name="segmentOverlay" IsHitTestVisible="False"/>
+        <Border x:Name="hoverTooltipBorder"
+                Background="{DynamicResource SystemControlPageBackgroundAltHighBrush}"
+                BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                BorderThickness="1" CornerRadius="4" Padding="7,5"
+                IsVisible="False"
+                IsHitTestVisible="False"
+                HorizontalAlignment="Left" VerticalAlignment="Top">
+            <TextBlock x:Name="hoverTooltipText" FontSize="12" FontFamily="Consolas"/>
+        </Border>
+    </Grid>
+</UserControl>

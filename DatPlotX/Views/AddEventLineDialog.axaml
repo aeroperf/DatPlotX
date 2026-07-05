@@ -1,0 +1,57 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:dpx="clr-namespace:DatPlotX.Views.Controls.Dpx"
+        x:Class="DatPlotX.Views.AddEventLineDialog"
+        x:CompileBindings="True"
+        Title="Add Global Event Line"
+        Height="320" Width="440"
+        Classes="dpx"
+        Background="{StaticResource DpxBg}"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False">
+
+    <Grid RowDefinitions="*,Auto">
+        <StackPanel Grid.Row="0" Margin="20,16,20,14">
+            <TextBlock Classes="dpx-h1" Text="Add event line"/>
+
+            <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,-6,0,12">
+                <TextBlock Classes="dpx-subtitle" Text="Marks" Margin="0" VerticalAlignment="Center"/>
+                <Border Background="{StaticResource DpxSunken}" CornerRadius="3" Padding="5,1">
+                    <TextBlock x:Name="XPositionText"
+                               FontFamily="{StaticResource DpxMonoFamily}"
+                               FontSize="11.5"
+                               Foreground="{StaticResource DpxText}"
+                               Text="x = 0.000"/>
+                </Border>
+                <TextBlock Classes="dpx-subtitle" Text="on every pane in the stack." Margin="0" VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <Border Classes="dpx-section first">
+                <StackPanel Spacing="10">
+                    <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                        <TextBlock Grid.Column="0" Classes="dpx-label" Text="Label"/>
+                        <TextBox Grid.Column="1" x:Name="LabelTextBox"
+                                 Classes="dpx" MaxLength="16" Watermark="E1"/>
+                    </Grid>
+                    <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                        <TextBlock Grid.Column="0" Classes="dpx-label" Text="Color"/>
+                        <dpx:ColorPill Grid.Column="1" x:Name="ColorPickerPill"/>
+                    </Grid>
+                    <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                        <TextBlock Grid.Column="0" Classes="dpx-label" Text=""/>
+                        <TextBlock Classes="dpx-hint">
+                            Tip: Short labels (E1, T0) read best when many lines stack up.
+                        </TextBlock>
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+
+        <Border Grid.Row="1" Classes="dpx-footer">
+            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                <Button Grid.Column="1" x:Name="CancelButton" Classes="dpx ghost"   Content="Cancel"/>
+                <Button Grid.Column="2" x:Name="OkButton"     Classes="dpx primary" Content="Add line"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

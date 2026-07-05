@@ -1,0 +1,63 @@
+<Window x:Class="DatPlotX.Views.AboutDialog"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:CompileBindings="True"
+        Title="About DatPlotX"
+        Icon="/Assets/icon.png"
+        Width="420" Height="380"
+        Classes="dpx"
+        Background="{StaticResource DpxBg}"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False"
+        CanResize="False">
+
+    <Grid RowDefinitions="*,Auto">
+
+        <StackPanel Grid.Row="0" Margin="20,24,20,16"
+                    Spacing="10" VerticalAlignment="Center">
+            <Image Source="/Assets/icon.png"
+                   Width="72" Height="72"
+                   HorizontalAlignment="Center"/>
+
+            <TextBlock Text="DatPlotX"
+                       Classes="dpx-h1"
+                       Margin="0"
+                       HorizontalAlignment="Center"/>
+
+            <TextBlock x:Name="VersionText"
+                       Text="Version 1.0.0"
+                       Classes="dpx-mono"
+                       Foreground="{StaticResource DpxText2}"
+                       HorizontalAlignment="Center"/>
+
+            <TextBlock Text="A modern data plotting and visualization application."
+                       Foreground="{StaticResource DpxText2}"
+                       FontSize="12.5"
+                       TextAlignment="Center"
+                       TextWrapping="Wrap"
+                       HorizontalAlignment="Center"
+                       Margin="0,8,0,0"/>
+
+            <TextBlock Text="Built with .NET 10, Avalonia UI, ScottPlot 5, and OxyPlot."
+                       Classes="dpx-hint"
+                       TextAlignment="Center"
+                       HorizontalAlignment="Center"/>
+
+            <TextBlock Text="Copyright © AeroPerf 2026"
+                       Classes="dpx-hint"
+                       TextAlignment="Center"
+                       HorizontalAlignment="Center"/>
+        </StackPanel>
+
+        <Border Grid.Row="1" Classes="dpx-footer">
+            <Grid ColumnDefinitions="Auto,*,Auto">
+                <Button Grid.Column="0" Classes="dpx ghost"
+                        Content="Licenses" MinWidth="80"
+                        Click="Licenses_Click"/>
+                <Button Grid.Column="2" Classes="dpx primary"
+                        Content="OK" MinWidth="80"
+                        Click="OK_Click"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

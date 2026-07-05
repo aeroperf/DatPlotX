@@ -1,0 +1,197 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:DatPlotX.ViewModels"
+             x:Class="DatPlotX.Views.AnalysisPanel"
+             x:Name="Root"
+             x:DataType="vm:AnalysisPanelViewModel"
+             x:CompileBindings="True">
+
+    <UserControl.Styles>
+        <!-- Quiet, hover-only action buttons inside metric cells (⊕ flash, 📍 pin, ╱ line).
+             Borderless and transparent until hovered, so the table reads as data, not chrome. -->
+        <Style Selector="Button.dpx-cellbtn, ToggleButton.dpx-cellbtn">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="{StaticResource DpxText3}"/>
+            <Setter Property="Padding" Value="4,0"/>
+            <Setter Property="MinWidth" Value="0"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style Selector="Button.dpx-cellbtn /template/ ContentPresenter, ToggleButton.dpx-cellbtn /template/ ContentPresenter">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="CornerRadius" Value="4"/>
+        </Style>
+        <Style Selector="Button.dpx-cellbtn:pointerover /template/ ContentPresenter, ToggleButton.dpx-cellbtn:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{StaticResource DpxRaised}"/>
+            <Setter Property="TextElement.Foreground" Value="{StaticResource DpxText}"/>
+        </Style>
+        <!-- Checked = line shown on plot: accent wash. -->
+        <Style Selector="ToggleButton.dpx-cellbtn:checked /template/ ContentPresenter">
+            <Setter Property="Background" Value="{StaticResource DpxAccentSoft}"/>
+            <Setter Property="TextElement.Foreground" Value="{StaticResource DpxAccent}"/>
+        </Style>
+
+        <!-- Ghost danger button (✕ remove tolerance band). -->
+        <Style Selector="Button.dpx-ghostdanger">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="{StaticResource DpxText3}"/>
+            <Setter Property="Padding" Value="4,0"/>
+            <Setter Property="MinWidth" Value="0"/>
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style Selector="Button.dpx-ghostdanger:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{StaticResource DpxDangerSoft}"/>
+            <Setter Property="TextElement.Foreground" Value="{StaticResource DpxDanger}"/>
+        </Style>
+
+        <!-- Toolbar action buttons → .dpx-btn look. -->
+        <Style Selector="Button.dpx-toolbtn">
+            <Setter Property="Background" Value="{StaticResource DpxSurface}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource DpxBorder}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Foreground" Value="{StaticResource DpxText}"/>
+            <Setter Property="Padding" Value="12,4"/>
+            <Setter Property="FontSize" Value="12.5"/>
+        </Style>
+        <Style Selector="Button.dpx-toolbtn:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{StaticResource DpxRaised}"/>
+        </Style>
+
+        <!-- Row band: full-width Border behind each body row. Hover → accent wash. -->
+        <Style Selector="Border.dpx-rowband:pointerover">
+            <Setter Property="Background" Value="{StaticResource DpxAccentSoft}"/>
+        </Style>
+    </UserControl.Styles>
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <!-- Toolbar -->
+        <Border Grid.Row="0"
+                Background="{StaticResource DpxSurface}"
+                BorderBrush="{StaticResource DpxBorder}"
+                BorderThickness="0,0,0,1"
+                Padding="10,6">
+            <Grid ColumnDefinitions="Auto,Auto,*,Auto,Auto,Auto,Auto" VerticalAlignment="Center">
+
+                <TextBlock Grid.Column="0"
+                           Text="Statistics"
+                           FontWeight="SemiBold"
+                           VerticalAlignment="Center"
+                           Margin="0,0,12,0"/>
+
+                <ComboBox Grid.Column="1"
+                          MinWidth="200"
+                          FontSize="11"
+                          VerticalAlignment="Center"
+                          ItemsSource="{Binding SegmentChoices}"
+                          SelectedItem="{Binding SelectedSegment}"
+                          ToolTip.Tip="Select the segment to analyze">
+                    <!-- Collapsed selection box: label only. The dropdown-row template (ItemTemplate)
+                         carries the delete button; reusing it for the selection box renders empty in
+                         Avalonia's ComboBox, so the selection box gets its own plain-text template. -->
+                    <ComboBox.SelectionBoxItemTemplate>
+                        <DataTemplate x:DataType="vm:AnalysisSegmentChoice">
+                            <TextBlock Text="{Binding Label}" VerticalAlignment="Center"/>
+                        </DataTemplate>
+                    </ComboBox.SelectionBoxItemTemplate>
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate x:DataType="vm:AnalysisSegmentChoice">
+                            <Grid ColumnDefinitions="*,Auto" MinWidth="180">
+                                <TextBlock Grid.Column="0"
+                                           Text="{Binding Label}"
+                                           VerticalAlignment="Center"/>
+                                <!-- Click handled in code-behind (OnDeleteSegmentClick): a Command
+                                     binding to the panel VM from inside the ComboBox popup can't be
+                                     relied on to walk the namescope across the popup boundary. -->
+                                <Button Grid.Column="1"
+                                        Content="✕"
+                                        FontSize="10"
+                                        Padding="4,0"
+                                        Margin="8,0,0,0"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        IsVisible="{Binding CanDelete}"
+                                        ToolTip.Tip="Delete this segment"
+                                        Click="OnDeleteSegmentClick"
+                                        Tag="{Binding}"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+
+                <!-- spacer -->
+                <Border Grid.Column="2"/>
+
+                <Button Grid.Column="3"
+                        Classes="dpx-toolbtn"
+                        Content="Copy TSV"
+                        Command="{Binding CopyAsTsvCommand}"
+                        Margin="0,0,4,0"/>
+                <Button Grid.Column="4"
+                        Classes="dpx-toolbtn"
+                        Content="Copy Markdown"
+                        Command="{Binding CopyAsMarkdownCommand}"
+                        Margin="0,0,4,0"/>
+                <Button Grid.Column="5"
+                        Classes="dpx-toolbtn"
+                        Content="Export CSV"
+                        Command="{Binding ExportCsvCommand}"
+                        Margin="0,0,4,0"
+                        ToolTip.Tip="Save the results table (and any tolerance bands) to a CSV file"/>
+                <ProgressBar Grid.Column="6"
+                             IsIndeterminate="True"
+                             IsVisible="{Binding IsBusy}"
+                             Width="60" Height="6"
+                             VerticalAlignment="Center"/>
+            </Grid>
+        </Border>
+
+        <!-- Results table: simple ItemsControl-based layout. Columns are dynamic and
+             driven by AnalysisPanelViewModel.Columns; the view's code-behind builds
+             the per-row content (one StackPanel per cell) into a Grid so the user can
+             still copy/select rows naturally. -->
+        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" Padding="10,10,10,8">
+            <Border Background="{StaticResource DpxSurface}"
+                    BorderBrush="{StaticResource DpxBorder}"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    ClipToBounds="True"
+                    HorizontalAlignment="Left">
+                <Grid x:Name="ResultsGrid"/>
+            </Border>
+        </ScrollViewer>
+
+        <!-- Tolerance Band section: a separate per-curve metrics block (% in-band, crossings,
+             exceedance duration, max excursion) built in code-behind from BandRows. Hidden when
+             no band exists. The metrics are config-dependent and per-curve, so they live here
+             rather than as columns in the main grid. -->
+        <Border Grid.Row="2"
+                IsVisible="{Binding HasBands}"
+                Background="{StaticResource DpxSurface}"
+                BorderBrush="{StaticResource DpxBorder}"
+                BorderThickness="0,1,0,0"
+                Padding="10,8">
+            <StackPanel Spacing="6">
+                <TextBlock Text="Tolerance Bands"
+                           FontWeight="SemiBold"
+                           FontSize="11"/>
+                <ScrollViewer HorizontalScrollBarVisibility="Auto">
+                    <Border Background="{StaticResource DpxSurface}"
+                            BorderBrush="{StaticResource DpxBorder}"
+                            BorderThickness="1"
+                            CornerRadius="8"
+                            ClipToBounds="True"
+                            HorizontalAlignment="Left">
+                        <Grid x:Name="BandGrid"/>
+                    </Border>
+                </ScrollViewer>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

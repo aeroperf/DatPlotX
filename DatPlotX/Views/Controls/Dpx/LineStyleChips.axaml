@@ -1,0 +1,77 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="DatPlotX.Views.Controls.Dpx.LineStyleChips"
+             x:CompileBindings="True">
+
+    <UserControl.Styles>
+        <Style Selector="ToggleButton.chip">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="Padding" Value="8,0"/>
+            <Setter Property="Height" Value="22"/>
+            <Setter Property="MinHeight" Value="22"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Foreground" Value="{StaticResource DpxText2}"/>
+            <Setter Property="FontSize" Value="11.5"/>
+        </Style>
+        <Style Selector="ToggleButton.chip:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="TextElement.Foreground" Value="{StaticResource DpxText}"/>
+        </Style>
+        <Style Selector="ToggleButton.chip:checked /template/ ContentPresenter">
+            <Setter Property="Background" Value="{StaticResource DpxSurface}"/>
+            <Setter Property="TextElement.Foreground" Value="{StaticResource DpxText}"/>
+        </Style>
+        <Style Selector="ToggleButton.chip:checked">
+            <Setter Property="BorderBrush" Value="{StaticResource DpxBorder}"/>
+        </Style>
+    </UserControl.Styles>
+
+    <Border Background="{StaticResource DpxSunken}"
+            BorderBrush="{StaticResource DpxBorder}"
+            BorderThickness="1"
+            CornerRadius="7"
+            Padding="3">
+        <Grid ColumnDefinitions="*,*,*,*">
+            <ToggleButton x:Name="SolidChip" Grid.Column="0" Classes="chip">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                    <Path Stroke="{Binding $parent[ToggleButton].Foreground}" StrokeThickness="1.6"
+                          Data="M0,4 L32,4" Width="32" Height="8"
+                          VerticalAlignment="Center"/>
+                    <TextBlock Text="Solid" FontSize="11"/>
+                </StackPanel>
+            </ToggleButton>
+            <ToggleButton x:Name="DashChip" Grid.Column="1" Classes="chip">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                    <Path Stroke="{Binding $parent[ToggleButton].Foreground}" StrokeThickness="1.6"
+                          StrokeDashArray="4,2"
+                          Data="M0,4 L32,4" Width="32" Height="8"
+                          VerticalAlignment="Center"/>
+                    <TextBlock Text="Dash" FontSize="11"/>
+                </StackPanel>
+            </ToggleButton>
+            <ToggleButton x:Name="DotChip" Grid.Column="2" Classes="chip">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                    <Path Stroke="{Binding $parent[ToggleButton].Foreground}" StrokeThickness="1.6"
+                          StrokeDashArray="1,2" StrokeLineCap="Round"
+                          Data="M0,4 L32,4" Width="32" Height="8"
+                          VerticalAlignment="Center"/>
+                    <TextBlock Text="Dot" FontSize="11"/>
+                </StackPanel>
+            </ToggleButton>
+            <ToggleButton x:Name="DashDotChip" Grid.Column="3" Classes="chip">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                    <Path Stroke="{Binding $parent[ToggleButton].Foreground}" StrokeThickness="1.6"
+                          StrokeDashArray="4,2,1,2"
+                          Data="M0,4 L32,4" Width="32" Height="8"
+                          VerticalAlignment="Center"/>
+                    <TextBlock Text="Dash·Dot" FontSize="11"/>
+                </StackPanel>
+            </ToggleButton>
+        </Grid>
+    </Border>
+</UserControl>

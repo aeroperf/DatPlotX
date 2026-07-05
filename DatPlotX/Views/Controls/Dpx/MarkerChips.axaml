@@ -1,0 +1,63 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="DatPlotX.Views.Controls.Dpx.MarkerChips"
+             x:CompileBindings="True">
+
+    <UserControl.Styles>
+        <Style Selector="ToggleButton.mchip">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="Height" Value="28"/>
+            <Setter Property="MinHeight" Value="28"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Foreground" Value="{StaticResource DpxText2}"/>
+            <Setter Property="Padding" Value="0"/>
+        </Style>
+        <Style Selector="ToggleButton.mchip:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{StaticResource DpxRaised}"/>
+            <Setter Property="TextElement.Foreground" Value="{StaticResource DpxText}"/>
+        </Style>
+        <Style Selector="ToggleButton.mchip:checked /template/ ContentPresenter">
+            <Setter Property="Background" Value="{StaticResource DpxSurface}"/>
+            <Setter Property="TextElement.Foreground" Value="{StaticResource DpxAccent}"/>
+        </Style>
+        <Style Selector="ToggleButton.mchip:checked">
+            <Setter Property="BorderBrush" Value="{StaticResource DpxBorder}"/>
+        </Style>
+    </UserControl.Styles>
+
+    <Border Background="{StaticResource DpxSunken}"
+            BorderBrush="{StaticResource DpxBorder}"
+            BorderThickness="1"
+            CornerRadius="7"
+            Padding="4">
+        <Grid ColumnDefinitions="*,*,*,*,*,*" ColumnSpacing="4">
+            <ToggleButton x:Name="CircleChip" Grid.Column="0" Classes="mchip">
+                <Ellipse Width="8" Height="8" Fill="{Binding $parent[ToggleButton].Foreground}"/>
+            </ToggleButton>
+            <ToggleButton x:Name="SquareChip" Grid.Column="1" Classes="mchip">
+                <Rectangle Width="8" Height="8" Fill="{Binding $parent[ToggleButton].Foreground}"/>
+            </ToggleButton>
+            <ToggleButton x:Name="TriangleChip" Grid.Column="2" Classes="mchip">
+                <Path Fill="{Binding $parent[ToggleButton].Foreground}"
+                      Data="M 4,0 L 8,8 L 0,8 Z" Width="8" Height="8"/>
+            </ToggleButton>
+            <ToggleButton x:Name="DiamondChip" Grid.Column="3" Classes="mchip">
+                <Path Fill="{Binding $parent[ToggleButton].Foreground}"
+                      Data="M 4,0 L 8,4 L 4,8 L 0,4 Z" Width="8" Height="8"/>
+            </ToggleButton>
+            <ToggleButton x:Name="CrossChip" Grid.Column="4" Classes="mchip">
+                <Path Stroke="{Binding $parent[ToggleButton].Foreground}" StrokeThickness="1.6"
+                      Data="M 0,0 L 8,8 M 8,0 L 0,8" Width="8" Height="8"/>
+            </ToggleButton>
+            <ToggleButton x:Name="PlusChip" Grid.Column="5" Classes="mchip">
+                <Path Stroke="{Binding $parent[ToggleButton].Foreground}" StrokeThickness="1.6"
+                      Data="M 4,0 L 4,8 M 0,4 L 8,4" Width="8" Height="8"/>
+            </ToggleButton>
+        </Grid>
+    </Border>
+</UserControl>

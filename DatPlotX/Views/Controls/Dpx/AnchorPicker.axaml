@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="DatPlotX.Views.Controls.Dpx.AnchorPicker">
+
+    <UserControl.Styles>
+        <Style Selector="ToggleButton.cell">
+            <Setter Property="Background" Value="{StaticResource DpxSurface}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource DpxBorder}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="CornerRadius" Value="3"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="MinHeight" Value="0"/>
+            <Setter Property="MinWidth" Value="0"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Stretch"/>
+        </Style>
+        <Style Selector="ToggleButton.cell:checked /template/ ContentPresenter">
+            <Setter Property="Background" Value="{StaticResource DpxAccent}"/>
+        </Style>
+    </UserControl.Styles>
+
+    <Border Background="{StaticResource DpxSunken}"
+            BorderBrush="{StaticResource DpxBorder}"
+            BorderThickness="1"
+            CornerRadius="6"
+            Padding="4"
+            Width="78" Height="78"
+            HorizontalAlignment="Left">
+        <UniformGrid Rows="3" Columns="3" x:Name="CellHost"/>
+    </Border>
+</UserControl>

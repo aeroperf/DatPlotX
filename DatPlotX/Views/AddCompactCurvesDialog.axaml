@@ -1,0 +1,188 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:dpx="clr-namespace:DatPlotX.Views.Controls.Dpx"
+        xmlns:vm="clr-namespace:DatPlotX.ViewModels"
+        xmlns:m="clr-namespace:DatPlotX.Models"
+        xmlns:conv="clr-namespace:DatPlotX"
+        x:Class="DatPlotX.Views.AddCompactCurvesDialog"
+        x:DataType="vm:AddCompactCurvesDialogViewModel"
+        x:CompileBindings="True"
+        Title="Add Compact Curves"
+        Height="640" Width="1000"
+        Classes="dpx"
+        Background="{StaticResource DpxBg}"
+        WindowStartupLocation="CenterOwner">
+
+    <Grid RowDefinitions="*,Auto">
+
+        <!-- ── Stage 1 (column picker) ────────────────────────────── -->
+        <ScrollViewer Grid.Row="0" x:Name="Stage1Panel" VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="20,16,20,14" Spacing="12" MaxWidth="620" HorizontalAlignment="Center">
+
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <TextBlock Classes="dpx-h1" Text="Add Compact Curves" Margin="0"/>
+                    <Border Classes="dpx-h1-tag" VerticalAlignment="Center">
+                        <TextBlock x:Name="SelectionTag" Text="0 of 0"/>
+                    </Border>
+                </StackPanel>
+
+                <dpx:WizardStepper x:Name="Stage1Stepper" Step="1"/>
+
+                <TextBlock Classes="dpx-subtitle" Margin="0,2,0,4">
+                    Each selected column becomes one banded Y-axis on the compact plot surface.
+                </TextBlock>
+
+                <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                    <dpx:SearchBox Grid.Column="0" x:Name="ColumnSearch" Watermark="Filter columns…"/>
+                    <Button Grid.Column="1" x:Name="SelectAllButton" Classes="dpx ghost" Content="Select all"/>
+                    <Button Grid.Column="2" x:Name="ClearAllButton"  Classes="dpx ghost" Content="Clear"/>
+                </Grid>
+
+                <Border Classes="dpx-card">
+                    <ItemsControl x:Name="ColumnList" ItemsSource="{Binding AvailableColumns}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="vm:CompactColumnPick">
+                                <Border BorderBrush="{StaticResource DpxDivider}"
+                                        BorderThickness="0,0,0,1"
+                                        Padding="12,7"
+                                        IsVisible="{Binding IsVisible}">
+                                    <Border.Background>
+                                        <MultiBinding Converter="{x:Static conv:BoolToBrushConverter.Instance}">
+                                            <Binding Path="IsSelected"/>
+                                        </MultiBinding>
+                                    </Border.Background>
+                                    <Grid ColumnDefinitions="22,*">
+                                        <CheckBox Grid.Column="0" Classes="dpx"
+                                                  IsChecked="{Binding IsSelected}"/>
+                                        <TextBlock Grid.Column="1"
+                                                   Text="{Binding ColumnName}"
+                                                   VerticalAlignment="Center"
+                                                   FontSize="12.5"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- ── Stage 2 (per-curve config table) ──────────────────── -->
+        <Grid Grid.Row="0" x:Name="Stage2Panel" IsVisible="False" RowDefinitions="Auto,Auto,Auto,*">
+            <StackPanel Grid.Row="0" Margin="20,16,20,4" Orientation="Horizontal" Spacing="10">
+                <TextBlock Classes="dpx-h1" Text="Configure curves" Margin="0"/>
+            </StackPanel>
+            <dpx:WizardStepper Grid.Row="1" x:Name="Stage2Stepper" Step="2" Margin="20,0"/>
+            <TextBlock Grid.Row="2" Classes="dpx-subtitle" Margin="20,8,20,4">
+                Order top-to-bottom · axis side, color, line style, marker, boolean band, and overflow per curve.
+            </TextBlock>
+
+            <ScrollViewer Grid.Row="3" Margin="20,0,20,12">
+                <Border Classes="dpx-card">
+                    <Grid RowDefinitions="Auto,*">
+                        <!-- table head -->
+                        <Border Grid.Row="0"
+                                Background="{StaticResource DpxSunken}"
+                                BorderBrush="{StaticResource DpxDivider}"
+                                BorderThickness="0,0,0,1">
+                            <Grid ColumnDefinitions="1.6*,1.6*,90,1.4*,1*,90,56,70">
+                                <TextBlock Grid.Column="0" Classes="dpx-section-title upper" Text="COLUMN"        Margin="10,8" FontSize="10.5"/>
+                                <TextBlock Grid.Column="1" Classes="dpx-section-title upper" Text="DISPLAY NAME"  Margin="10,8" FontSize="10.5"/>
+                                <TextBlock Grid.Column="2" Classes="dpx-section-title upper" Text="AXIS"          Margin="10,8" FontSize="10.5"/>
+                                <TextBlock Grid.Column="3" Classes="dpx-section-title upper" Text="COLOR"         Margin="10,8" FontSize="10.5"/>
+                                <TextBlock Grid.Column="4" Classes="dpx-section-title upper" Text="LINE"          Margin="10,8" FontSize="10.5"/>
+                                <TextBlock Grid.Column="5" Classes="dpx-section-title upper" Text="MARKER"        Margin="10,8" FontSize="10.5"/>
+                                <TextBlock Grid.Column="6" Classes="dpx-section-title upper" Text="BOOL"          Margin="10,8" FontSize="10.5" HorizontalAlignment="Center"/>
+                                <TextBlock Grid.Column="7" Classes="dpx-section-title upper" Text="OVERFLOW"      Margin="10,8" FontSize="10.5" HorizontalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- rows -->
+                        <ItemsControl Grid.Row="1" x:Name="DraftsList" ItemsSource="{Binding Drafts}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="vm:CompactCurveDraft">
+                                    <Border BorderBrush="{StaticResource DpxDivider}"
+                                            BorderThickness="0,0,0,1"
+                                            Padding="0,4">
+                                        <Grid ColumnDefinitions="1.6*,1.6*,90,1.4*,1*,90,56,70">
+                                            <!-- Column name with color dot -->
+                                            <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="8"
+                                                        VerticalAlignment="Center" Margin="10,0">
+                                                <Ellipse Width="8" Height="8" Fill="{Binding Color, Converter={x:Static conv:StringToBrushConverter.Instance}}"/>
+                                                <TextBlock Text="{Binding SourceColumn}"
+                                                           VerticalAlignment="Center"
+                                                           TextTrimming="CharacterEllipsis"
+                                                           FontSize="12"/>
+                                            </StackPanel>
+                                            <!-- Display name -->
+                                            <TextBox Grid.Column="1" Classes="dpx" Margin="6,0"
+                                                     Text="{Binding DisplayName}"/>
+                                            <!-- Axis -->
+                                            <ComboBox Grid.Column="2" Classes="dpx" Margin="6,0"
+                                                      SelectedItem="{Binding AxisSide}">
+                                                <m:AxisSide>Left</m:AxisSide>
+                                                <m:AxisSide>Right</m:AxisSide>
+                                            </ComboBox>
+                                            <!-- Color cell -->
+                                            <Button Grid.Column="3" Margin="6,0"
+                                                    Background="Transparent" BorderBrush="Transparent"
+                                                    Padding="0" Click="ColorCell_Click"
+                                                    Tag="{Binding}">
+                                                <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                                                    <Border Width="16" Height="16" CornerRadius="3"
+                                                            Background="{Binding Color, Converter={x:Static conv:StringToBrushConverter.Instance}}"
+                                                            BorderBrush="#22000000" BorderThickness="1"/>
+                                                    <TextBlock Text="{Binding Color}"
+                                                               FontFamily="{StaticResource DpxMonoFamily}"
+                                                               FontSize="11"
+                                                               Foreground="{StaticResource DpxText2}"/>
+                                                </StackPanel>
+                                            </Button>
+                                            <!-- Line -->
+                                            <ComboBox Grid.Column="4" Classes="dpx" Margin="6,0"
+                                                      SelectedItem="{Binding LineStyle}">
+                                                <m:LineStyle>Solid</m:LineStyle>
+                                                <m:LineStyle>Dash</m:LineStyle>
+                                                <m:LineStyle>Dot</m:LineStyle>
+                                                <m:LineStyle>DashDot</m:LineStyle>
+                                            </ComboBox>
+                                            <!-- Marker -->
+                                            <ComboBox Grid.Column="5" Classes="dpx" Margin="6,0"
+                                                      SelectedItem="{Binding MarkerStyle}">
+                                                <m:MarkerStyle>None</m:MarkerStyle>
+                                                <m:MarkerStyle>Circle</m:MarkerStyle>
+                                                <m:MarkerStyle>Square</m:MarkerStyle>
+                                                <m:MarkerStyle>Triangle</m:MarkerStyle>
+                                                <m:MarkerStyle>Diamond</m:MarkerStyle>
+                                                <m:MarkerStyle>Cross</m:MarkerStyle>
+                                                <m:MarkerStyle>Plus</m:MarkerStyle>
+                                            </ComboBox>
+                                            <!-- Bool -->
+                                            <CheckBox Grid.Column="6" Classes="dpx"
+                                                      IsChecked="{Binding IsBoolean}"
+                                                      HorizontalAlignment="Center"/>
+                                            <!-- Overflow -->
+                                            <CheckBox Grid.Column="7" Classes="dpx"
+                                                      IsChecked="{Binding AllowOverflow}"
+                                                      HorizontalAlignment="Center"/>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Grid>
+                </Border>
+            </ScrollViewer>
+        </Grid>
+
+        <!-- Footer -->
+        <Border Grid.Row="1" Classes="dpx-footer">
+            <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto" ColumnSpacing="8">
+                <Button Grid.Column="0" x:Name="BackButton" Classes="dpx ghost" Content="← Back" IsVisible="False"/>
+                <TextBlock Grid.Column="1" x:Name="FooterHint" Classes="dpx-hint" VerticalAlignment="Center"/>
+                <Button Grid.Column="3" x:Name="CancelButton" Classes="dpx ghost"   Content="Cancel"/>
+                <Button Grid.Column="4" x:Name="NextButton"   Classes="dpx primary" Content="Next →"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

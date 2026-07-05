@@ -1,0 +1,66 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- ── Theme tokens (light) ───────────────────────────────────────── -->
+    <Color x:Key="DpxBgColor">#FAFAF9</Color>
+    <Color x:Key="DpxSurfaceColor">#FFFFFF</Color>
+    <Color x:Key="DpxRaisedColor">#F5F5F4</Color>
+    <Color x:Key="DpxSunkenColor">#F0F0EE</Color>
+    <Color x:Key="DpxBorderColor">#E5E5E2</Color>
+    <Color x:Key="DpxBorderStrongColor">#D4D4D0</Color>
+    <Color x:Key="DpxDividerColor">#ECECE9</Color>
+    <Color x:Key="DpxTextColor">#18181B</Color>
+    <Color x:Key="DpxText2Color">#52525B</Color>
+    <Color x:Key="DpxText3Color">#8E8E93</Color>
+    <Color x:Key="DpxTextDisabledColor">#B8B8BC</Color>
+    <Color x:Key="DpxTitlebarColor">#F2F2F0</Color>
+    <Color x:Key="DpxDangerColor">#DC2626</Color>
+    <Color x:Key="DpxDangerSoftColor">#FEE2E2</Color>
+    <Color x:Key="DpxGridInkColor">#0B000000</Color>
+
+    <!-- Accent (amber) -->
+    <Color x:Key="DpxAccentColor">#E08A1A</Color>
+    <Color x:Key="DpxAccent2Color">#F4A93D</Color>
+    <Color x:Key="DpxAccentSoftColor">#29E08A1A</Color>
+    <Color x:Key="DpxAccentInkColor">#FFFFFF</Color>
+
+    <SolidColorBrush x:Key="DpxBg" Color="{StaticResource DpxBgColor}"/>
+    <SolidColorBrush x:Key="DpxSurface" Color="{StaticResource DpxSurfaceColor}"/>
+    <SolidColorBrush x:Key="DpxRaised" Color="{StaticResource DpxRaisedColor}"/>
+    <SolidColorBrush x:Key="DpxSunken" Color="{StaticResource DpxSunkenColor}"/>
+    <SolidColorBrush x:Key="DpxBorder" Color="{StaticResource DpxBorderColor}"/>
+    <SolidColorBrush x:Key="DpxBorderStrong" Color="{StaticResource DpxBorderStrongColor}"/>
+    <SolidColorBrush x:Key="DpxDivider" Color="{StaticResource DpxDividerColor}"/>
+    <SolidColorBrush x:Key="DpxText" Color="{StaticResource DpxTextColor}"/>
+    <SolidColorBrush x:Key="DpxText2" Color="{StaticResource DpxText2Color}"/>
+    <SolidColorBrush x:Key="DpxText3" Color="{StaticResource DpxText3Color}"/>
+    <SolidColorBrush x:Key="DpxTextDisabled" Color="{StaticResource DpxTextDisabledColor}"/>
+    <SolidColorBrush x:Key="DpxTitlebar" Color="{StaticResource DpxTitlebarColor}"/>
+    <SolidColorBrush x:Key="DpxDanger" Color="{StaticResource DpxDangerColor}"/>
+    <SolidColorBrush x:Key="DpxDangerSoft" Color="{StaticResource DpxDangerSoftColor}"/>
+    <SolidColorBrush x:Key="DpxGridInk" Color="{StaticResource DpxGridInkColor}"/>
+    <SolidColorBrush x:Key="DpxAccent" Color="{StaticResource DpxAccentColor}"/>
+    <SolidColorBrush x:Key="DpxAccent2" Color="{StaticResource DpxAccent2Color}"/>
+    <SolidColorBrush x:Key="DpxAccentSoft" Color="{StaticResource DpxAccentSoftColor}"/>
+    <SolidColorBrush x:Key="DpxAccentInk" Color="{StaticResource DpxAccentInkColor}"/>
+
+    <!-- Typography -->
+    <FontFamily x:Key="DpxFontFamily">$Default</FontFamily>
+    <FontFamily x:Key="DpxMonoFamily">Consolas, Menlo, Monaco, monospace</FontFamily>
+    <x:Double x:Key="DpxBodyFontSize">13</x:Double>
+    <x:Double x:Key="DpxLabelFontSize">12</x:Double>
+    <x:Double x:Key="DpxControlFontSize">12.5</x:Double>
+    <x:Double x:Key="DpxSectionTitleFontSize">11</x:Double>
+    <x:Double x:Key="DpxH1FontSize">15</x:Double>
+    <x:Double x:Key="DpxMonoFontSize">11.5</x:Double>
+    <x:Double x:Key="DpxHintFontSize">11</x:Double>
+
+    <!-- Density / radius -->
+    <x:Double x:Key="DpxControlHeight">28</x:Double>
+    <x:Double x:Key="DpxChipHeight">22</x:Double>
+    <CornerRadius x:Key="DpxControlRadius">6</CornerRadius>
+    <CornerRadius x:Key="DpxChipRadius">5</CornerRadius>
+    <CornerRadius x:Key="DpxSwatchRadius">4</CornerRadius>
+    <CornerRadius x:Key="DpxWindowRadius">8</CornerRadius>
+
+</ResourceDictionary>

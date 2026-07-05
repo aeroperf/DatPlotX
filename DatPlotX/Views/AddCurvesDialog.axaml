@@ -1,0 +1,108 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:dpx="clr-namespace:DatPlotX.Views.Controls.Dpx"
+        xmlns:vm="clr-namespace:DatPlotX.ViewModels"
+        xmlns:views="clr-namespace:DatPlotX.Views"
+        x:Class="DatPlotX.Views.AddCurvesDialog"
+        x:DataType="vm:AddCurvesDialogViewModel"
+        x:CompileBindings="True"
+        Title="Add Curves to Pane"
+        Height="470" Width="640"
+        Classes="dpx"
+        Background="{StaticResource DpxBg}"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False">
+
+    <Grid RowDefinitions="*,Auto">
+
+        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="20,16,20,14">
+                <TextBlock Classes="dpx-h1" Text="Add curves to pane"/>
+                <TextBlock Classes="dpx-subtitle">
+                    Plot one parameter at a time onto this stacked pane. Repeat to add more.
+                </TextBlock>
+
+                <!-- Parameter / Y-axis / Unit / Plot row -->
+                <Grid ColumnDefinitions="1.4*,1*,0.7*,Auto" ColumnSpacing="10">
+                    <StackPanel Grid.Column="0" Spacing="5">
+                        <TextBlock Classes="dpx-section-title upper" Text="PARAMETER" Margin="0"/>
+                        <dpx:SearchBox x:Name="ParameterSearch" Watermark="Filter parameters…"
+                                       Text="{Binding FilterText, Mode=TwoWay}"/>
+                        <ComboBox x:Name="ParameterCombo" Classes="dpx"
+                                  ItemsSource="{Binding AvailableYParameters}"
+                                  SelectedItem="{Binding SelectedParameter}"
+                                  HorizontalAlignment="Stretch"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Spacing="5">
+                        <TextBlock Classes="dpx-section-title upper" Text="Y-AXIS" Margin="0"/>
+                        <ComboBox x:Name="AxisCombo" Classes="dpx"
+                                  ItemsSource="{Binding AvailableYAxes}"
+                                  SelectedItem="{Binding SelectedYAxis}"
+                                  HorizontalAlignment="Stretch">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate x:DataType="vm:YAxisOption">
+                                    <TextBlock Text="{Binding Label}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2" Spacing="5">
+                        <TextBlock Classes="dpx-section-title upper" Text="UNIT" Margin="0"/>
+                        <TextBox x:Name="UnitBox" Classes="dpx"
+                                 Watermark="e.g. ft"
+                                 Text="{Binding UnitText, Mode=TwoWay}"
+                                 HorizontalAlignment="Stretch"
+                                 VerticalAlignment="Bottom"
+                                 ToolTip.Tip="Auto-parsed from the column header; edit before plotting. Used by the Statistics panel."/>
+                    </StackPanel>
+                    <Button Grid.Column="3" x:Name="PlotCurveButton"
+                            Classes="dpx primary"
+                            Content="+ Plot curve"
+                            VerticalAlignment="Bottom"/>
+                </Grid>
+
+                <!-- Already plotted list -->
+                <Border Classes="dpx-section">
+                    <StackPanel Spacing="8">
+                        <TextBlock x:Name="PlottedHeading" Classes="dpx-section-title upper" Text="ALREADY ON PANE · 0"/>
+                        <Border Classes="dpx-card">
+                            <ItemsControl x:Name="PlottedList">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="views:AddCurvesDialog+PlottedRowVm">
+                                        <Border BorderBrush="{StaticResource DpxDivider}"
+                                                BorderThickness="0,0,0,1"
+                                                Padding="12,7">
+                                            <Grid ColumnDefinitions="14,*,Auto" ColumnSpacing="10" VerticalAlignment="Center">
+                                                <Ellipse Grid.Column="0" Width="10" Height="10"
+                                                         Fill="{Binding Color}"/>
+                                                <TextBlock Grid.Column="1"
+                                                           Text="{Binding ParameterName}"
+                                                           VerticalAlignment="Center"
+                                                           FontSize="12.5"/>
+                                                <Border Grid.Column="2"
+                                                        Background="{StaticResource DpxSunken}"
+                                                        CornerRadius="3"
+                                                        Padding="7,2">
+                                                    <TextBlock Text="{Binding AxisLabel}"
+                                                               FontFamily="{StaticResource DpxMonoFamily}"
+                                                               FontSize="10.5"
+                                                               Foreground="{StaticResource DpxText2}"/>
+                                                </Border>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Border>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <Border Grid.Row="1" Classes="dpx-footer">
+            <Grid ColumnDefinitions="*,Auto">
+                <Button Grid.Column="1" x:Name="CloseButton" Classes="dpx" Content="Close"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

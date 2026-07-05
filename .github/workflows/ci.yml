@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Cancel superseded runs on the same ref (a new push to a PR supersedes the old).
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build-test:
+    name: build + test (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore
+        run: dotnet restore DatPlotX.Tests/DatPlotX.Tests.csproj
+
+      - name: Build
+        run: dotnet build DatPlotX.Tests/DatPlotX.Tests.csproj --configuration Release --no-restore
+
+      # Headless Avalonia UI tests run without a display — no xvfb needed.
+      - name: Test
+        run: dotnet test DatPlotX.Tests/DatPlotX.Tests.csproj --configuration Release --no-build --verbosity normal
+
+  format:
+    name: format --verify-no-changes
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      # Gate on layout only (whitespace + style). The analyzer autofix pass
+      # (dotnet format analyzers) applies semantic changes — e.g. forwarding a
+      # CancellationToken — which belong in real commits, not a formatting gate.
+      - name: Verify formatting (whitespace + style)
+        run: |
+          dotnet format whitespace DatPlotX/DatPlotX.csproj --verify-no-changes --verbosity diagnostic
+          dotnet format style DatPlotX/DatPlotX.csproj --verify-no-changes --verbosity diagnostic
+          dotnet format whitespace DatPlotX.Tests/DatPlotX.Tests.csproj --verify-no-changes --verbosity diagnostic
+          dotnet format style DatPlotX.Tests/DatPlotX.Tests.csproj --verify-no-changes --verbosity diagnostic

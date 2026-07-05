@@ -1,0 +1,25 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="DatPlotX.App"
+             RequestedThemeVariant="Light">
+    <Application.Styles>
+        <FluentTheme />
+        <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
+        <StyleInclude Source="avares://OxyPlot.Avalonia/Themes/Default.axaml"/>
+        <StyleInclude Source="avares://DatPlotX/Themes/DpxStyles.axaml"/>
+    </Application.Styles>
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="avares://DatPlotX/Themes/DpxTokens.axaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <SolidColorBrush x:Key="PrimaryBrush" Color="#0078D4" />
+            <SolidColorBrush x:Key="SecondaryBrush" Color="#F3F3F3" />
+            <SolidColorBrush x:Key="AccentBrush" Color="#005A9E" />
+            <SolidColorBrush x:Key="TextBrush" Color="#1B1B1B" />
+            <SolidColorBrush x:Key="SubtleBrush" Color="#767676" />
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="DatPlotX.Views.Controls.Dpx.SearchBox">
+
+    <Grid>
+        <TextBox x:Name="InnerBox"
+                 Classes="dpx"
+                 Padding="30,0,10,0"
+                 Watermark="Search…"/>
+        <Path Data="M 6,2 A 4,4 0 1,0 6,10 A 4,4 0 1,0 6,2 Z M 9,9 L 12,12"
+              Stroke="{StaticResource DpxText3}"
+              StrokeThickness="1.5"
+              Width="14" Height="14"
+              Margin="9,0,0,0"
+              HorizontalAlignment="Left"
+              VerticalAlignment="Center"
+              IsHitTestVisible="False"/>
+    </Grid>
+</UserControl>

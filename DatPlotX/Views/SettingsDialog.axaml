@@ -1,0 +1,57 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:DatPlotX.ViewModels"
+        x:Class="DatPlotX.Views.SettingsDialog"
+        x:DataType="vm:SettingsDialogViewModel"
+        x:CompileBindings="True"
+        Title="Settings"
+        Icon="/Assets/icon.png"
+        Width="440" Height="330"
+        Classes="dpx"
+        Background="{StaticResource DpxBg}"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False"
+        CanResize="False">
+
+    <Grid RowDefinitions="*,Auto">
+
+        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="20,16,20,14">
+
+                <TextBlock Classes="dpx-h1" Text="Settings"/>
+
+                <Border Classes="dpx-section first">
+                    <StackPanel Spacing="10">
+                        <TextBlock Classes="dpx-section-title upper" Text="PLOT"/>
+                        <CheckBox Classes="dpx"
+                                  Content="Show hover tooltips by default"
+                                  IsChecked="{Binding HoverTooltipsEnabledByDefault}"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Classes="dpx-section">
+                    <StackPanel Spacing="6">
+                        <TextBlock Classes="dpx-section-title upper" Text="PRIVACY"/>
+                        <CheckBox Classes="dpx"
+                                  Content="Notify me about crash reports"
+                                  IsChecked="{Binding CrashReportingEnabled}"/>
+                        <TextBlock TextWrapping="Wrap"
+                                   Opacity="0.7"
+                                   FontSize="11"
+                                   Text="Crash reports are saved on this computer only and are never uploaded. When enabled, DatPlotX offers to open the saved report after a crash so you can attach it to a bug report."/>
+                    </StackPanel>
+                </Border>
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <Border Grid.Row="1" Classes="dpx-footer">
+            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                <Button Grid.Column="1" Classes="dpx ghost" Content="Cancel"
+                        Click="OnCancelClick"/>
+                <Button Grid.Column="2" Classes="dpx primary" Content="OK"
+                        Click="OnOkClick"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

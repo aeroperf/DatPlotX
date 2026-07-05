@@ -1,0 +1,136 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:dpx="clr-namespace:DatPlotX.Views.Controls.Dpx"
+        xmlns:views="clr-namespace:DatPlotX.Views"
+        xmlns:vm="clr-namespace:DatPlotX.ViewModels"
+        xmlns:conv="clr-namespace:DatPlotX"
+        x:Class="DatPlotX.Views.CurveManagerDialog"
+        x:DataType="vm:CurveManagerDialogViewModel"
+        x:CompileBindings="True"
+        Title="Curve Manager"
+        Height="600" Width="940"
+        Classes="dpx"
+        Background="{StaticResource DpxBg}"
+        WindowStartupLocation="CenterOwner">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <!-- Header band -->
+        <StackPanel Grid.Row="0" Margin="20,16,20,12" Spacing="2">
+            <TextBlock Classes="dpx-h1" Text="Manage curves" Margin="0"/>
+            <TextBlock Classes="dpx-subtitle"
+                       Text="Edit, show/hide, or remove curves from your plot."
+                       Margin="0"/>
+        </StackPanel>
+
+        <!-- Grid -->
+        <Border Grid.Row="1" Margin="20,0,20,12"
+                Background="{StaticResource DpxSurface}"
+                BorderBrush="{StaticResource DpxBorder}"
+                BorderThickness="1"
+                CornerRadius="8">
+            <DataGrid ItemsSource="{Binding Curves}"
+                      SelectedItem="{Binding SelectedCurve}"
+                      AutoGenerateColumns="False"
+                      CanUserReorderColumns="True"
+                      CanUserSortColumns="True"
+                      CanUserResizeColumns="True"
+                      SelectionMode="Single"
+                      GridLinesVisibility="Horizontal"
+                      HeadersVisibility="Column"
+                      Background="Transparent"
+                      BorderThickness="0">
+
+                <DataGrid.Columns>
+
+                    <DataGridCheckBoxColumn Header="Visible"
+                                            Binding="{Binding IsVisible}"
+                                            Width="62"/>
+
+                    <DataGridTextColumn Header="Curve"
+                                        Binding="{Binding CurveName}"
+                                        IsReadOnly="True"
+                                        Width="170"/>
+
+                    <DataGridTextColumn Header="Column"
+                                        Binding="{Binding YColumnName}"
+                                        IsReadOnly="True"
+                                        Width="130"/>
+
+                    <DataGridTextColumn Header="Pane"
+                                        Binding="{Binding PaneDisplay}"
+                                        IsReadOnly="True"
+                                        Width="80"/>
+
+                    <DataGridTextColumn Header="Y-Axis"
+                                        Binding="{Binding YAxisDisplay}"
+                                        IsReadOnly="True"
+                                        Width="90"/>
+
+                    <DataGridTemplateColumn Header="Color" Width="160">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate x:DataType="vm:CurveItemViewModel">
+                                <dpx:ColorPill Color="{Binding Color, Mode=TwoWay}"
+                                               Margin="6,3"
+                                               PickRequested="ChangeColor_Click"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <DataGridTemplateColumn Header="Width" Width="92">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate x:DataType="vm:CurveItemViewModel">
+                                <ComboBox Classes="dpx"
+                                          SelectedItem="{Binding LineWidth, Mode=TwoWay}"
+                                          Margin="6,3" MinHeight="0" Height="26">
+                                    <ComboBoxItem Content="0.5"/>
+                                    <ComboBoxItem Content="1.0"/>
+                                    <ComboBoxItem Content="1.5"/>
+                                    <ComboBoxItem Content="2.0"/>
+                                    <ComboBoxItem Content="2.5"/>
+                                    <ComboBoxItem Content="3.0"/>
+                                    <ComboBoxItem Content="4.0"/>
+                                    <ComboBoxItem Content="5.0"/>
+                                </ComboBox>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <DataGridTemplateColumn Header="Line style" Width="180">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate x:DataType="vm:CurveItemViewModel">
+                                <dpx:LineStyleChips Value="{Binding LineStyle, Mode=TwoWay}"
+                                                    Margin="6,3"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <DataGridTemplateColumn Header="" Width="*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate x:DataType="vm:CurveItemViewModel">
+                                <Button Classes="dpx ghost"
+                                        Margin="6,3"
+                                        Height="26" MinHeight="0" Padding="10,0"
+                                        Command="{Binding MarkForRemovalCommand}"
+                                        Content="{Binding IsMarkedForRemoval,
+                                                 Converter={x:Static views:CurveManagerDialog.RemoveButtonConverter}}">
+                                    <ToolTip.Tip>Mark for removal</ToolTip.Tip>
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+
+        <!-- Footer -->
+        <Border Grid.Row="2" Classes="dpx-footer">
+            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                <Button Grid.Column="1" Classes="dpx ghost" Content="Cancel"
+                        Click="Cancel_Click"/>
+                <Button Grid.Column="2" Classes="dpx primary" Content="Apply"
+                        Click="Apply_Click"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

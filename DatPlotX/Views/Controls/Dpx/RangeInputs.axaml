@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="DatPlotX.Views.Controls.Dpx.RangeInputs">
+
+    <Grid ColumnDefinitions="Auto,*,Auto,Auto,*"
+          ColumnSpacing="6"
+          VerticalAlignment="Center">
+        <TextBlock Grid.Column="0"
+                   Text="MIN" FontSize="10.5" FontWeight="SemiBold"
+                   Foreground="{StaticResource DpxText3}"
+                   LetterSpacing="0.6"
+                   VerticalAlignment="Center"/>
+        <TextBox Grid.Column="1" x:Name="MinBox" Classes="dpx mono"/>
+        <Border Grid.Column="2" Width="8" Height="1"
+                Background="{StaticResource DpxBorderStrong}"
+                VerticalAlignment="Center"/>
+        <TextBlock Grid.Column="3"
+                   Text="MAX" FontSize="10.5" FontWeight="SemiBold"
+                   Foreground="{StaticResource DpxText3}"
+                   LetterSpacing="0.6"
+                   VerticalAlignment="Center"/>
+        <TextBox Grid.Column="4" x:Name="MaxBox" Classes="dpx mono"/>
+    </Grid>
+</UserControl>
