@@ -52,10 +52,34 @@ chosen at project creation and locked for the life of the project.
 
 ## Download
 
-Grab a signed, self-contained build for your platform from the
+Download a self-contained build for your platform from the
 **[Releases page](https://github.com/aeroperf/DatPlotX/releases)** —
-`win-x64`, `win-arm64`, `osx-x64`, `osx-arm64`, and `linux-x64`. No runtime install
-required.
+`win-x64`, `osx-arm64`, and `linux-x64`. No runtime install required.
+
+Builds are **not code-signed**. Windows and macOS will warn on first launch —
+this is expected for unsigned community software, not a sign of tampering.
+One-time steps below.
+
+### macOS: "DatPlotX can't be opened" / "unidentified developer"
+
+Gatekeeper blocks unsigned apps by default. Clear the quarantine flag once, after unzipping and moving `DatPlotX.app` to the Applications folder:
+
+```bash
+xattr -cr /Applications/DatPlotX.app
+```
+
+Then open normally. Alternative: right-click the app, select **Open**, then confirm
+**Open** in the dialog — this works without a terminal.
+
+### Windows: "Windows protected your PC" (SmartScreen)
+
+Click **More info**, then **Run anyway**. This appears once per release build and does
+not reappear after that version has been run.
+
+### Linux
+
+No OS-level signing gate — the binary runs as downloaded. Use `chmod +x` if the
+execute bit isn't set.
 
 ## Build from source
 
