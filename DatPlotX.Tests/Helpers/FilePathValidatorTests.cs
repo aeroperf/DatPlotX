@@ -37,7 +37,7 @@ public class FilePathValidatorTests
     public void ValidateAndNormalizePath_ValidPath_ReturnsAbsolutePath()
     {
         var result = FilePathValidator.ValidateAndNormalizePath("/tmp/testfile.csv");
-        result.Should().Be("/tmp/testfile.csv");
+        result.Should().Be(Path.GetFullPath("/tmp/testfile.csv"));
     }
 
     [Fact]

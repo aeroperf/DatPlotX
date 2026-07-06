@@ -362,7 +362,7 @@ public partial class AnalysisPanelViewModel : ObservableObject, IDisposable
         var sb = new StringBuilder();
         sb.Append("Curve");
         foreach (var col in Columns) sb.Append('\t').Append(col.DisplayName);
-        sb.AppendLine();
+        sb.Append('\n');
         foreach (var row in Rows)
         {
             sb.Append(row.DisplayName);
@@ -371,7 +371,7 @@ public partial class AnalysisPanelViewModel : ObservableObject, IDisposable
                 sb.Append('\t');
                 sb.Append(row.Cells.TryGetValue(col.MetricId, out var c) ? c.DisplayText(row.Unit) : "");
             }
-            sb.AppendLine();
+            sb.Append('\n');
         }
         return sb.ToString();
     }
@@ -422,10 +422,10 @@ public partial class AnalysisPanelViewModel : ObservableObject, IDisposable
         var sb = new StringBuilder();
         sb.Append("| Curve |");
         foreach (var col in Columns) sb.Append(' ').Append(col.DisplayName).Append(" |");
-        sb.AppendLine();
+        sb.Append('\n');
         sb.Append("| --- |");
         foreach (var _ in Columns) sb.Append(" --- |");
-        sb.AppendLine();
+        sb.Append('\n');
         foreach (var row in Rows)
         {
             sb.Append("| ").Append(row.DisplayName).Append(" |");
@@ -435,7 +435,7 @@ public partial class AnalysisPanelViewModel : ObservableObject, IDisposable
                 sb.Append(row.Cells.TryGetValue(col.MetricId, out var c) ? c.DisplayText(row.Unit) : "");
                 sb.Append(" |");
             }
-            sb.AppendLine();
+            sb.Append('\n');
         }
         return sb.ToString();
     }
