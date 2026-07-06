@@ -213,7 +213,7 @@ public static class AppHelpContent
             "Manage Curve... — opens the Manage Curve dialog.",
             "Clear All Curves — remove every curve (with confirmation).",
             "Add Event Line Here / Delete Event Line / Use as Segment Boundary / Clear All Event Lines — event-line controls. Use as Segment Boundary pairs two lines into a statistics segment.",
-            "Reset View — auto-fit all axes to the data.",
+            "Set Scale to Default — auto-fit all axes to the data.",
             "Format Pane... — gridlines, X-axis label and range, background color.",
             "Export Image... — export the surface as PNG, JPEG, BMP, or SVG.",
         ]),

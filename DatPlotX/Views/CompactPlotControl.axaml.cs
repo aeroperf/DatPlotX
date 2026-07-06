@@ -321,7 +321,7 @@ public partial class CompactPlotControl : UserControl
         _addCurvesMenuItem = new MenuItem { Header = "_Add Curves..." };
         _manageCurveMenuItem = new MenuItem { Header = "_Manage Curve..." };
         _clearAllCurvesMenuItem = new MenuItem { Header = "_Clear All Curves" };
-        _resetViewMenuItem = new MenuItem { Header = "_Reset View" };
+        _resetViewMenuItem = new MenuItem { Header = "_Set Scale to Default" };
         ToolTip.SetTip(_resetViewMenuItem, "Auto-fit all axes to the data");
         _formatPaneMenuItem = new MenuItem { Header = "_Format Pane..." };
         _exportImageMenuItem = new MenuItem { Header = "_Export Image..." };
