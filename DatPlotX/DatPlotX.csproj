@@ -32,6 +32,13 @@
     <PackageReference Include="OxyPlot.Avalonia" Version="2.1.0-Avalonia11" />
     <!-- OxyPlot.SkiaSharp provides PNG/JPEG image exporters for the Compact Plot Surface. -->
     <PackageReference Include="OxyPlot.SkiaSharp" Version="2.2.0" />
+    <!-- VERSION PIN: OxyPlot.SkiaSharp 2.2.0 transitively drags in SkiaSharp.NativeAssets.Linux
+         2.88.9, which loses the version-resolution race against ScottPlot/Avalonia.Skia's
+         SkiaSharp 3.119.0 managed assembly and gets copied to the linux-x64 output instead.
+         The managed lib refuses to load the mismatched native .so at runtime (Linux CI only —
+         Win32/macOS asset packages already resolve to 3.119.0). Pin this explicit reference so
+         it wins over the transitive one. -->
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="3.119.0" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageReference Include="CsvHelper" Version="33.0.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0" />
