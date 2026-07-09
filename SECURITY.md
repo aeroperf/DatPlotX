@@ -17,8 +17,8 @@ release notes once the issue is resolved (unless you prefer to remain anonymous)
 
 ## Supported versions
 
-DatPlotX is pre-1.0 and ships frequently. Security fixes are applied to the latest
-released version. Please upgrade to the most recent release before reporting.
+DatPlotX ships frequently. Security fixes are applied to the latest released
+version. Please upgrade to the most recent release before reporting.
 
 ## Scope
 
