@@ -26,17 +26,11 @@ and no account required.
 DatPlotX picks the right rendering model for the shape of your data. The mode is
 chosen at project creation and locked for the life of the project.
 
-| Mode | Best for | Engine |
-|------|----------|--------|
-| **Stacked Panes** | Synchronized multi-parameter stripcharts with a shared X-axis (event lines, callouts, statistics, annotations) | ScottPlot 5 |
-| **Compact Plot Surface** | Dense single-area exhibits with one banded Y-axis per curve — FDA / FDM (NTSB-style) flight data plots | OxyPlot 2 |
-| **Grouped Parameter Plot** | One line per unique combination of input parameters — parametric arrays, lookup tables | ScottPlot 5 |
-
-<div align="center">
-<img src="Images/screenshots/stacked-panes.png" alt="Stacked Panes mode" width="400">
-<img src="Images/screenshots/compact-plot.png" alt="Compact Plot Surface mode" width="400">
-<img src="Images/screenshots/grouped-plot.png" alt="Grouped Parameter Plot mode showing a pump performance map" width="400">
-</div>
+| Stacked Panes | Compact Plot Surface | Grouped Parameter Plot |
+|:---:|:---:|:---:|
+| <img src="Images/screenshots/hero.png" alt="Stacked Panes mode" width="270"> | <img src="Images/screenshots/compact-plot.png" alt="Compact Plot Surface mode" width="270"> | <img src="Images/screenshots/grouped-plot.png" alt="Grouped Parameter Plot mode showing a pump performance map" width="270"> |
+| Synchronized multi-parameter stripcharts with a shared X-axis — event lines, callouts, statistics, annotations | Dense single-area exhibits with one banded Y-axis per curve — FDA / FDM (NTSB-style) flight data plots | One line per unique combination of input parameters — parametric arrays, lookup tables |
+| *ScottPlot 5* | *OxyPlot 2* | *ScottPlot 5* |
 
 > Try the modes yourself with the datasets in [`SampleData/`](SampleData/) — the
 > Grouped screenshot above is the included pump performance map.
@@ -53,6 +47,13 @@ chosen at project creation and locked for the life of the project.
   Nothing is ever uploaded (see [Docs/privacy.md](Docs/privacy.md) and
   [Docs/security-baseline.md](Docs/security-baseline.md)).
 - **Native on Windows, macOS, and Linux** via Avalonia UI.
+
+### Analysis & curve styling
+
+| Curve analysis & statistics | Per-curve styling |
+|:---:|:---:|
+| <img src="Images/screenshots/compact-analysis.png" alt="Compact Plot Surface with an analysis segment, slope overlays, and the statistics panel" width="560"> | <img src="Images/screenshots/manage-curve-dialog.png" alt="Manage Curve dialog" width="220"> |
+| Define analysis segments (Shift+drag, or snap to event lines) and get per-curve max / min / mean / std-dev / slope with slope overlays on the plot. Copy results as TSV or Markdown, or export CSV. | Color, line style, width, and marker shape per curve via the Manage Curve dialog. |
 
 ## Download
 
