@@ -35,7 +35,11 @@ chosen at project creation and locked for the life of the project.
 <div align="center">
 <img src="Images/screenshots/stacked-panes.png" alt="Stacked Panes mode" width="400">
 <img src="Images/screenshots/compact-plot.png" alt="Compact Plot Surface mode" width="400">
+<img src="Images/screenshots/grouped-plot.png" alt="Grouped Parameter Plot mode showing a pump performance map" width="400">
 </div>
+
+> Try the modes yourself with the datasets in [`SampleData/`](SampleData/) — the
+> Grouped screenshot above is the included pump performance map.
 
 ## Features
 
