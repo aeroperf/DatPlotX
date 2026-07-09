@@ -30,7 +30,6 @@ chosen at project creation and locked for the life of the project.
 |:---:|:---:|:---:|
 | <img src="Images/screenshots/hero.png" alt="Stacked Panes mode" width="270"> | <img src="Images/screenshots/compact-plot.png" alt="Compact Plot Surface mode" width="270"> | <img src="Images/screenshots/grouped-plot.png" alt="Grouped Parameter Plot mode showing a pump performance map" width="270"> |
 | Synchronized multi-parameter stripcharts with a shared X-axis — event lines, callouts, statistics, annotations | Dense single-area exhibits with one banded Y-axis per curve — FDA / FDM (NTSB-style) flight data plots | One line per unique combination of input parameters — parametric arrays, lookup tables |
-| *ScottPlot 5* | *OxyPlot 2* | *ScottPlot 5* |
 
 > Try the modes yourself with the datasets in [`SampleData/`](SampleData/) — the
 > Grouped screenshot above is the included pump performance map.
