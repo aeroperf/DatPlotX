@@ -119,18 +119,51 @@ public sealed class CompactAnalysisCurveSource : IAnalysisCurveSource, IDisposab
 
         try
         {
-            var x = data.GetColumnData(_vm.XAxisColumn!);
-            var y = data.GetColumnData(curve.SourceColumn);
-            int n = Math.Min(x.Length, y.Length);
+            var xSrc = data.GetColumnData(_vm.XAxisColumn!);
+            var ySrc = data.GetColumnData(curve.SourceColumn);
+            int n = Math.Min(xSrc.Length, ySrc.Length);
             if (n == 0) return null;
-            if (n < x.Length || n < y.Length)
+
+            // AnalysisCurveData slices the visible window with a binary search and integrates
+            // with a trapezoid rule — both require X ascending. Compact plots points in raw
+            // file order (no sort, unlike Stacked's as-plotted scatter), and the X column is
+            // any user-chosen column, so it may not be monotonic. When X is out of order we must
+            // sort the (X, Y) pairs; when it's already ascending (the common time/index case) we
+            // can hand the arrays straight through.
+            bool needsSort = !IsAscending(xSrc, n);
+
+            double[] x, y;
+            if (n < xSrc.Length || n < ySrc.Length || needsSort)
             {
-                var x2 = new double[n]; Array.Copy(x, x2, n); x = x2;
-                var y2 = new double[n]; Array.Copy(y, y2, n); y = y2;
+                // Copy before handing off. GetColumnData returns the *cached backing array by
+                // reference*, so sorting (or truncating a view of) it in place would corrupt the
+                // shared column data for the plot and every other reader. Always work on a copy
+                // whenever we'd otherwise touch or re-length the source.
+                x = new double[n]; Array.Copy(xSrc, x, n);
+                y = new double[n]; Array.Copy(ySrc, y, n);
+                if (needsSort) Array.Sort(x, y);
             }
+            else
+            {
+                x = xSrc;
+                y = ySrc;
+            }
+
             return new AnalysisCurveData(curveId, x, y);
         }
         catch { return null; }
+    }
+
+    private static bool IsAscending(double[] x, int count)
+    {
+        for (int i = 1; i < count; i++)
+        {
+            // NaN comparisons are false, so a NaN X here returns false and forces a sort, which
+            // corrals NaN keys to the front (Array.Sort orders NaN first) and leaves the finite
+            // tail binary-searchable — metrics skip NaN samples regardless.
+            if (!(x[i - 1] <= x[i])) return false;
+        }
+        return true;
     }
 
     private static string? ExtractUnit(CompactCurveModel c)
