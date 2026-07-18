@@ -37,12 +37,21 @@ public sealed class RecentFilesService : IRecentFilesService
     public void AddFile(string path)
     {
         if (string.IsNullOrWhiteSpace(path)) return;
+        // Normalize so the same file reached via different textual paths (../ segments, symlink
+        // spelling, trailing separators) dedupes to one entry instead of appearing twice.
+        path = NormalizePath(path);
         var list = Load();
-        list.RemoveAll(p => string.Equals(p, path, StringComparison.OrdinalIgnoreCase));
+        list.RemoveAll(p => string.Equals(NormalizePath(p), path, StringComparison.OrdinalIgnoreCase));
         list.Insert(0, path);
         if (list.Count > MaxRecentFiles)
             list = list.Take(MaxRecentFiles).ToList();
         Save(list);
+    }
+
+    private static string NormalizePath(string path)
+    {
+        try { return Path.GetFullPath(path); }
+        catch { return path; } // malformed path — keep the original rather than throwing
     }
 
     public void RemoveFile(string path)
