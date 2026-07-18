@@ -1,15 +1,16 @@
 using DatPlotX.Helpers;
 using ScottPlot;
-using SkiaSharp;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace DatPlotX.Services.Export;
 
 /// <summary>
-/// Strategy for exporting plots to SVG format
-/// Note: For multi-plot export, this currently renders to PNG as true SVG multi-plot
-/// would require more complex implementation
+/// Strategy for exporting plots to SVG format.
+/// Multi-plot export composites each pane's vector SVG into one document (stacked vertically)
+/// via nested &lt;svg&gt; elements, so the result is genuine, editable vector output.
 /// </summary>
-public class SvgExportStrategy : IImageExportStrategy
+public partial class SvgExportStrategy : IImageExportStrategy
 {
     public string FileExtension => ".svg";
     public string FilterDescription => "SVG Files|*.svg";
@@ -31,29 +32,52 @@ public class SvgExportStrategy : IImageExportStrategy
 
         int paneHeight = height / plots.Count;
 
-        // For SVG multi-plot export, we render to bitmap and save as PNG
-        // True SVG multi-plot export would require more complex implementation
-        using var combinedBitmap = new SKBitmap(width, height);
-        using var canvas = new SKCanvas(combinedBitmap);
-        canvas.Clear(SKColors.White);
+        // Composite each pane's SVG into one parent SVG document. Each pane is emitted as its own
+        // vector SVG (ScottPlot's GetSvgXml) and embedded as a nested <svg> positioned at the
+        // pane's y-offset — nested <svg> is native SVG and needs no parsing of the pane internals.
+        // Previously this rasterized every pane to PNG and wrote the bytes into a .svg file, so the
+        // "SVG" opened in no vector editor (review #8).
+        var sb = new StringBuilder();
+        sb.Append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+        sb.Append($"<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"{width}\" height=\"{height}\" ")
+          .Append($"viewBox=\"0 0 {width} {height}\">\n");
+        sb.Append($"<rect width=\"{width}\" height=\"{height}\" fill=\"white\"/>\n");
 
         int yOffset = 0;
         foreach (var plot in plots)
         {
             if (plot != null)
             {
-                byte[] imageBytes = plot.GetImageBytes(width, paneHeight, ScottPlot.ImageFormat.Png);
-                using var skData = SKData.CreateCopy(imageBytes);
-                using var skBitmap = SKBitmap.Decode(skData);
-                using var skImage = SKImage.FromBitmap(skBitmap);
-                canvas.DrawImage(skImage, 0, yOffset);
+                string paneSvg = StripXmlProlog(plot.GetSvgXml(width, paneHeight));
+                sb.Append($"<svg x=\"0\" y=\"{yOffset}\" width=\"{width}\" height=\"{paneHeight}\" ")
+                  .Append($"viewBox=\"0 0 {width} {paneHeight}\" overflow=\"visible\">\n");
+                sb.Append(paneSvg);
+                sb.Append("\n</svg>\n");
                 yOffset += paneHeight;
             }
         }
 
-        using var image = SKImage.FromBitmap(combinedBitmap);
-        using var data = image.Encode(SKEncodedImageFormat.Png, 100);
-        using var stream = File.Create(filePath);
-        data.SaveTo(stream);
+        sb.Append("</svg>\n");
+
+        // false = truncate/overwrite; write the assembled UTF-8 SVG document.
+        File.WriteAllText(filePath, sb.ToString(), new UTF8Encoding(false));
     }
+
+    /// <summary>
+    /// Remove a leading <c>&lt;?xml …?&gt;</c> declaration (and any leading doctype) from a child
+    /// SVG so it can be embedded as a nested element inside the parent document.
+    /// </summary>
+    private static string StripXmlProlog(string svg)
+    {
+        svg = svg.TrimStart();
+        svg = XmlPrologRegex().Replace(svg, string.Empty, 1);
+        svg = DoctypeRegex().Replace(svg, string.Empty, 1);
+        return svg.TrimStart();
+    }
+
+    [GeneratedRegex(@"^\s*<\?xml[^>]*\?>", RegexOptions.IgnoreCase)]
+    private static partial Regex XmlPrologRegex();
+
+    [GeneratedRegex(@"^\s*<!DOCTYPE[^>]*>", RegexOptions.IgnoreCase)]
+    private static partial Regex DoctypeRegex();
 }
