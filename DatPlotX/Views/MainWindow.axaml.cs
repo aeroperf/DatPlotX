@@ -28,6 +28,7 @@ public partial class MainWindow : Window
     // Guards the OnClosing → prompt → programmatic-close cycle so the second (allowed) close
     // does not re-run the unsaved-changes prompt. See OnClosing.
     private bool _closeConfirmed;
+    private bool _closePromptInProgress;
 
     /// <summary>
     /// Designer-only parameterless ctor for the Avalonia previewer / x:CompileBindings.
@@ -170,11 +171,15 @@ public partial class MainWindow : Window
         }
 
         e.Cancel = true;
-        _ = ConfirmAndCloseAsync();
+        // Re-entrancy guard: a second close request (double-clicked X, or ⌘Q while the prompt is
+        // opening) must not spawn a second prompt alongside the first.
+        if (!_closePromptInProgress)
+            _ = ConfirmAndCloseAsync();
     }
 
     private async Task ConfirmAndCloseAsync()
     {
+        _closePromptInProgress = true;
         bool canClose;
         try
         {
@@ -185,6 +190,10 @@ public partial class MainWindow : Window
             // Never trap the user in a window they can't close because the prompt threw.
             DatPlotX.Helpers.SafeErrorHandler.LogError(ex, "confirming application close");
             canClose = true;
+        }
+        finally
+        {
+            _closePromptInProgress = false;
         }
 
         if (canClose)
