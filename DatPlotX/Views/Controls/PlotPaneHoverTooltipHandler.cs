@@ -52,49 +52,40 @@ public sealed class PlotPaneHoverTooltipHandler
         var scale = _avaPlot.DisplayScale;
         var mousePixel = new ScottPlot.Pixel((float)(pixelPos.X * scale), (float)(pixelPos.Y * scale));
 
-        // Convert mouse pixel to plot coordinates (Y1 and Y2)
-        var coordY1 = _avaPlot.Plot.GetCoordinates(mousePixel, _avaPlot.Plot.Axes.Bottom, _avaPlot.Plot.Axes.Left);
-        var coordY2 = _avaPlot.Plot.GetCoordinates(mousePixel, _avaPlot.Plot.Axes.Bottom, _avaPlot.Plot.Axes.Right);
+        // Mouse X is axis-independent (shared bottom axis); read it off the Y1 projection.
+        var mouseX = _avaPlot.Plot.GetCoordinates(mousePixel, _avaPlot.Plot.Axes.Bottom, _avaPlot.Plot.Axes.Left).X;
 
-        // Ask the VM for the nearest curve at mouse X — covers both Signal and Scatter
-        var closest = _viewModel.GetClosestCurveAt(coordY1.X, coordY1.Y, coordY2.Y);
-        if (closest is null)
+        // Pick the nearest curve in PIXEL space. Selecting by data-unit distance (the old
+        // GetClosestCurveAt) mixed Y1-scale and Y2-scale values, so on a dual-Y pane the curve on
+        // the smaller-range axis always won regardless of what was actually under the cursor. Here
+        // every candidate is projected to pixels through its own Y axis before comparing.
+        var bottom = _avaPlot.Plot.Axes.Bottom;
+        var leftAxis = _avaPlot.Plot.Axes.Left;
+        var rightAxis = _avaPlot.Plot.Axes.Right;
+
+        CurveConfigurationModel? bestConfig = null;
+        double bestYValue = double.NaN;
+        double bestPixelDist = double.MaxValue;
+
+        foreach (var (config, yValue) in _viewModel.GetCurveValuesAtX(mouseX))
         {
-            HideTooltip();
-            return;
+            if (double.IsNaN(yValue)) continue;
+
+            var yAxisPlot = config.YAxis == YAxisType.Y2 ? rightAxis : leftAxis;
+            var curvePixel = _avaPlot.Plot.GetPixel(new ScottPlot.Coordinates(mouseX, yValue), bottom, yAxisPlot);
+            var dx = curvePixel.X - mousePixel.X;
+            var dy = curvePixel.Y - mousePixel.Y;
+            var pixelDist = Math.Sqrt(dx * dx + dy * dy);
+
+            if (pixelDist < bestPixelDist)
+            {
+                bestPixelDist = pixelDist;
+                bestConfig = config;
+                bestYValue = yValue;
+            }
         }
 
-        var (curveId, yAxis, yDistance) = closest.Value;
-
-        // Convert y-distance from data coords to pixels for threshold check
-        var config = _viewModel.GetCurveConfig(curveId);
-        if (config is null || !config.IsVisible)
-        {
-            HideTooltip();
-            return;
-        }
-
-        // Get the actual y value on that curve at the mouse's X
-        double yValue = _viewModel.GetCurveYValueAtX(curveId, coordY1.X);
-        if (double.IsNaN(yValue))
-        {
-            HideTooltip();
-            return;
-        }
-
-        // Convert the curve point to pixels using the correct Y axis (Y1 or Y2)
-        var yAxisPlot = yAxis == YAxisType.Y2
-            ? _avaPlot.Plot.Axes.Right
-            : _avaPlot.Plot.Axes.Left;
-        var curvePixel = _avaPlot.Plot.GetPixel(
-            new ScottPlot.Coordinates(coordY1.X, yValue),
-            _avaPlot.Plot.Axes.Bottom,
-            yAxisPlot);
-        var dx = curvePixel.X - mousePixel.X;
-        var dy = curvePixel.Y - mousePixel.Y;
-        var pixelDist = Math.Sqrt(dx * dx + dy * dy);
-
-        if (pixelDist > HoverThresholdPixels)
+        if (bestConfig is null || bestPixelDist > HoverThresholdPixels)
         {
             HideTooltip();
             return;
@@ -102,7 +93,7 @@ public sealed class PlotPaneHoverTooltipHandler
 
         var xLabel = _viewModel.PaneModel.XAxisLabel ?? "X";
 
-        _tooltipText.Text = $"{xLabel}: {coordY1.X:N3}\n{config.CurveName}: {yValue:N3}";
+        _tooltipText.Text = $"{xLabel}: {mouseX:N3}\n{bestConfig.CurveName}: {bestYValue:N3}";
 
         // Position tooltip near cursor with offset so it doesn't obscure the point
         var tipX = pixelPos.X + 14;
