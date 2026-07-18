@@ -1163,7 +1163,7 @@ public partial class MainWindow : Window
             if (paneIndex >= 0 && paneIndex < _viewModel.Panes.Count)
             {
                 var result = await _dialogService.ShowConfirmation(
-                    $"Are you sure you want to remove Pane {paneIndex}?",
+                    $"Are you sure you want to remove Pane {paneIndex + 1}?",
                     "Remove Pane");
 
                 if (result == DatPlotX.Services.DialogResult.Yes)
