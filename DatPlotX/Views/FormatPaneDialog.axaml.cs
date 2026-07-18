@@ -63,6 +63,14 @@ public partial class FormatPaneDialog : Window
 
     private void OK_Click(object? sender, RoutedEventArgs e)
     {
+        var error = _viewModel.Validate();
+        if (error is not null)
+        {
+            // Keep the dialog open and surface the reason instead of silently applying an inverted
+            // range that would flip the axis.
+            _viewModel.ValidationMessage = error;
+            return;
+        }
         _viewModel.ApplyTo(PaneModel);
         Close(true);
     }

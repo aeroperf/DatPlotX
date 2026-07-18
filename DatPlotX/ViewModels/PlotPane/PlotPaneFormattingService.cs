@@ -81,20 +81,20 @@ public class PlotPaneFormattingService : IPlotPaneFormattingService
 
         // Apply explicit manual axis ranges if set; otherwise restore the captured ranges.
         // Never call AutoScale here — that would destroy user zoom state.
-        if (paneModel.XAxisMin.HasValue && paneModel.XAxisMax.HasValue)
-            plotModel.Axes.Bottom.Range.Set(paneModel.XAxisMin.Value, paneModel.XAxisMax.Value);
-        else
-            plotModel.Axes.Bottom.Range.Set(currentXMin, currentXMax);
+        // Each bound is applied independently: a user who sets only a min (or only a max) used to
+        // have it silently dropped because the whole range was gated on BOTH bounds being present.
+        // The unset side falls back to the current range value.
+        plotModel.Axes.Bottom.Range.Set(
+            paneModel.XAxisMin ?? currentXMin,
+            paneModel.XAxisMax ?? currentXMax);
 
-        if (paneModel.YAxisMin.HasValue && paneModel.YAxisMax.HasValue)
-            plotModel.Axes.Left.Range.Set(paneModel.YAxisMin.Value, paneModel.YAxisMax.Value);
-        else
-            plotModel.Axes.Left.Range.Set(currentYMin, currentYMax);
+        plotModel.Axes.Left.Range.Set(
+            paneModel.YAxisMin ?? currentYMin,
+            paneModel.YAxisMax ?? currentYMax);
 
-        if (paneModel.Y2AxisMin.HasValue && paneModel.Y2AxisMax.HasValue)
-            plotModel.Axes.Right.Range.Set(paneModel.Y2AxisMin.Value, paneModel.Y2AxisMax.Value);
-        else
-            plotModel.Axes.Right.Range.Set(currentY2Min, currentY2Max);
+        plotModel.Axes.Right.Range.Set(
+            paneModel.Y2AxisMin ?? currentY2Min,
+            paneModel.Y2AxisMax ?? currentY2Max);
 
         // Apply grid settings
         plotModel.Grid.MajorLineColor = ScottPlot.Color.FromHex(paneModel.GridColor);

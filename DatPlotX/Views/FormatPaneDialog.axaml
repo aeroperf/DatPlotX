@@ -408,7 +408,14 @@
             <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="8">
                 <TextBlock Grid.Column="0" Classes="dpx-hint"
                            Text="Changes apply when you click OK"
-                           VerticalAlignment="Center"/>
+                           VerticalAlignment="Center"
+                           IsVisible="{Binding ValidationMessage, Converter={x:Static ObjectConverters.IsNull}}"/>
+                <TextBlock Grid.Column="0"
+                           Foreground="#E53935" FontWeight="SemiBold"
+                           Text="{Binding ValidationMessage}"
+                           TextWrapping="Wrap"
+                           VerticalAlignment="Center"
+                           IsVisible="{Binding ValidationMessage, Converter={x:Static ObjectConverters.IsNotNull}}"/>
                 <Button Grid.Column="2" Classes="dpx ghost" Content="Cancel"
                         Click="Cancel_Click"/>
                 <Button Grid.Column="3" Classes="dpx primary" Content="OK"

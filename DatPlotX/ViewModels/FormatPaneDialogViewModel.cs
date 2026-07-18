@@ -59,6 +59,9 @@ public sealed partial class FormatPaneDialogViewModel : ObservableObject
     [ObservableProperty] private string? _y2MinText;
     [ObservableProperty] private string? _y2MaxText;
 
+    /// <summary>Non-null when the current axis-range inputs are invalid; shown in the footer.</summary>
+    [ObservableProperty] private string? _validationMessage;
+
     [ObservableProperty] private bool _showMajorGrid = true;
     [ObservableProperty] private bool _showMinorGrid;
     [ObservableProperty] private string _gridColor = "#E0E0E0";
@@ -123,6 +126,27 @@ public sealed partial class FormatPaneDialogViewModel : ObservableObject
         LegendPosition = LegendPositionToDisplay(model.LegendPosition);
 
         UpdateFormatPreview();
+    }
+
+    /// <summary>
+    /// Returns a user-facing error if any manually-ranged axis has min ≥ max, else null. Without
+    /// this an inverted range flowed straight into ScottPlot's Range.Set(min, max) and produced a
+    /// silently flipped axis. Only bounds where BOTH ends are provided are checked (a one-sided
+    /// bound fills the other end from the live range at apply time).
+    /// </summary>
+    public string? Validate()
+    {
+        if (RangeInverted(XAutoScale, XMinText, XMaxText)) return "X axis minimum must be less than maximum.";
+        if (RangeInverted(Y1AutoScale, Y1MinText, Y1MaxText)) return "Y1 axis minimum must be less than maximum.";
+        if (RangeInverted(Y2AutoScale, Y2MinText, Y2MaxText)) return "Y2 axis minimum must be less than maximum.";
+        return null;
+    }
+
+    private static bool RangeInverted(bool autoScale, string? minText, string? maxText)
+    {
+        if (autoScale) return false;
+        if (!TryParseDouble(minText, out var min) || !TryParseDouble(maxText, out var max)) return false;
+        return min >= max;
     }
 
     public void ApplyTo(PlotPaneModel model)
