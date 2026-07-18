@@ -44,6 +44,42 @@ public class ImportOptionsDialogViewModelTests
         vm.DecimalFormats.Should().Contain("Period (.)").And.Contain("Comma (,)");
     }
 
+    // --- Validation ---
+
+    [Fact]
+    public void CommaDelimiter_WithCommaDecimal_IsInvalid()
+    {
+        var vm = new ImportOptionsDialogViewModel
+        {
+            SelectedDelimiter = ",",
+            SelectedDecimalFormat = "Comma (,)"
+        };
+        vm.CanImport.Should().BeFalse();
+        vm.ValidationHint.Should().Contain("delimiter");
+    }
+
+    [Fact]
+    public void CommaDelimiter_WithPeriodDecimal_IsValid()
+    {
+        var vm = new ImportOptionsDialogViewModel
+        {
+            SelectedDelimiter = ",",
+            SelectedDecimalFormat = "Period (.)"
+        };
+        vm.CanImport.Should().BeTrue();
+    }
+
+    [Fact]
+    public void SemicolonDelimiter_WithCommaDecimal_IsValid()
+    {
+        var vm = new ImportOptionsDialogViewModel
+        {
+            SelectedDelimiter = ";",
+            SelectedDecimalFormat = "Comma (,)"
+        };
+        vm.CanImport.Should().BeTrue();
+    }
+
     // --- GetImportOptions ---
 
     [Fact]

@@ -55,9 +55,13 @@ public partial class ImportOptionsDialogViewModel : ObservableObject
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsDecimalFormatEnabled))]
     [NotifyPropertyChangedFor(nameof(AreLineSelectorsEnabled))]
+    [NotifyPropertyChangedFor(nameof(CanImport))]
+    [NotifyPropertyChangedFor(nameof(ValidationHint))]
     private string _selectedDelimiter = ",";
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanImport))]
+    [NotifyPropertyChangedFor(nameof(ValidationHint))]
     private string _selectedDecimalFormat = "Period (.)";
 
     [ObservableProperty]
@@ -149,6 +153,13 @@ public partial class ImportOptionsDialogViewModel : ObservableObject
         if (HeaderLine < 0) return "Header line must be 0 or greater.";
         if (UnitLine < 0) return "Unit line must be 0 or greater.";
         if (DataStartLine < 1) return "Data start line must be at least 1.";
+
+        // A comma delimiter with a comma decimal separator would split every decimal value into
+        // extra columns and shred the import. Block the combination up front instead of letting
+        // the user "successfully" import garbage.
+        if (SelectedDelimiter == "," && SelectedDecimalFormat == "Comma (,)")
+            return "Comma cannot be both the column delimiter and the decimal separator. " +
+                   "Choose a different delimiter or use a period decimal.";
 
         if (HeaderLine > 0 && UnitLine > 0 && HeaderLine == UnitLine)
             return "Header and unit lines must differ.";
