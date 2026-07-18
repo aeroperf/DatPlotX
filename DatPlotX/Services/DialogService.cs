@@ -59,10 +59,14 @@ public class DialogService : IDialogService
         var vm = new ViewModels.SettingsDialogViewModel(settings);
         var dialog = new Views.SettingsDialog(vm);
 
+        // Both branches must await a modal ShowDialog. The old else-branch used the non-blocking
+        // Show(), so DialogAccepted was read before the user could interact — every change was
+        // silently discarded when there was no owner window. Self-own the dialog as a fallback,
+        // matching the other dialogs here.
         if (owner is not null)
             await dialog.ShowDialog(owner);
         else
-            dialog.Show();
+            await dialog.ShowDialog(dialog);
 
         if (!dialog.DialogAccepted) return false;
         vm.ApplyTo(settings);
