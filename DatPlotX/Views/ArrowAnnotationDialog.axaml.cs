@@ -16,6 +16,11 @@ public partial class ArrowAnnotationDialog : Window
 
     private string _arrowColor = "#333333";
     private string _labelColor = "#000000";
+    // Captured on load so OK can preserve a non-default arrowhead length when the user didn't
+    // touch the size. The single "Size" control drives width and length via a 1.5 ratio; blindly
+    // recomputing on OK rewrote a loaded model's length whenever it wasn't exactly 1.5 × width.
+    private double _loadedArrowheadWidth;
+    private double _loadedArrowheadLength;
 
     public ArrowAnnotationDialog(ArrowAnnotationModel? existingModel = null)
     {
@@ -114,6 +119,8 @@ public partial class ArrowAnnotationDialog : Window
         LabelFontSizeStepper.Value = m.LabelFontSize;
         LineWidthStepper.Value = m.LineWidth;
         ArrowheadSizeStepper.Value = m.ArrowheadWidth;
+        _loadedArrowheadWidth = m.ArrowheadWidth;
+        _loadedArrowheadLength = m.ArrowheadLength;
         ArrowheadStyleChips.Value = m.ArrowheadStyle.ToString();
         ArrowEndsChips.Value = m.ArrowEnds.ToString();
         LabelTextBox.Text = m.Label ?? string.Empty;
@@ -259,7 +266,11 @@ public partial class ArrowAnnotationDialog : Window
 
         if (Enum.TryParse<ArrowheadStyle>(ArrowheadStyleChips.Value, out var hs)) Result.ArrowheadStyle = hs;
         Result.ArrowheadWidth = ArrowheadSizeStepper.Value;
-        Result.ArrowheadLength = ArrowheadSizeStepper.Value * 1.5;
+        // Preserve a loaded custom length when the user left the size untouched; otherwise derive
+        // it from the new size via the standard 1.5 ratio.
+        Result.ArrowheadLength = ArrowheadSizeStepper.Value == _loadedArrowheadWidth && _loadedArrowheadLength > 0
+            ? _loadedArrowheadLength
+            : ArrowheadSizeStepper.Value * 1.5;
         if (Enum.TryParse<ArrowEnds>(ArrowEndsChips.Value, out var ae)) Result.ArrowEnds = ae;
 
         Result.Label = string.IsNullOrWhiteSpace(LabelTextBox.Text) ? null : LabelTextBox.Text;
