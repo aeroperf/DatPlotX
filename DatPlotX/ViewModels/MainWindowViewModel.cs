@@ -1163,19 +1163,50 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
         }
     }
 
+    /// <summary>
+    /// Set once the close has been confirmed (by either the File → Exit command or the
+    /// window-close prompt) so the window's OnClosing handler doesn't prompt a second time
+    /// when <see cref="IApplicationLifetimeService.Shutdown"/> tears the window down.
+    /// </summary>
+    public bool CloseConfirmed { get; private set; }
+
     [RelayCommand]
     private async Task ExitAsync()
     {
-        if (HasUnsavedChanges)
+        if (!await ConfirmCloseAsync())
+            return;
+
+        CloseConfirmed = true;
+        _lifetimeService.Shutdown();
+    }
+
+    /// <summary>
+    /// Runs the unsaved-changes prompt and reports whether the caller may proceed with
+    /// closing the application. Returns <c>true</c> when there is nothing to save, the user
+    /// discarded their changes, or the save completed; returns <c>false</c> when the user
+    /// cancelled or the save did not succeed (in which case <see cref="HasUnsavedChanges"/>
+    /// is still set). Shared by the File → Exit command and the window-close handler so
+    /// closing via the title-bar / ⌘Q / Alt+F4 can no longer silently discard work.
+    /// </summary>
+    public async Task<bool> ConfirmCloseAsync()
+    {
+        if (!HasUnsavedChanges)
+            return true;
+
+        var result = await _dialogService.ShowUnsavedChangesDialog();
+        if (result == DialogResult.Cancel)
+            return false;
+
+        if (result == DialogResult.Yes)
         {
-            var result = await _dialogService.ShowUnsavedChangesDialog();
-            if (result == DialogResult.Cancel)
-                return;
-            if (result == DialogResult.Yes)
-                await SaveProject();
+            await SaveProject();
+            // SaveProject clears HasUnsavedChanges only on success; if the save was cancelled
+            // or failed, the flag is still set — don't proceed with the close and lose work.
+            return !HasUnsavedChanges;
         }
 
-        _lifetimeService.Shutdown();
+        // result == No → discard changes and allow the close.
+        return true;
     }
 
     #endregion

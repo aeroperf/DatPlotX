@@ -25,6 +25,10 @@ public partial class MainWindow : Window
     private readonly Dictionary<PlotPaneViewModel, IDisposable> _paneSubscriptions = new();
     private GridLength _savedBottomPaneHeight = new GridLength(15, GridUnitType.Star);
 
+    // Guards the OnClosing → prompt → programmatic-close cycle so the second (allowed) close
+    // does not re-run the unsaved-changes prompt. See OnClosing.
+    private bool _closeConfirmed;
+
     /// <summary>
     /// Designer-only parameterless ctor for the Avalonia previewer / x:CompileBindings.
     /// Do not use at runtime — DI provides the parameterized constructor.
@@ -148,6 +152,46 @@ public partial class MainWindow : Window
         if (grouped is null) return;
         var ok = await _fileOperationsService.ExportGroupedPlotAsync(grouped.GetPlot());
         _viewModel.StatusText = ok ? "Exported Grouped Plot to image file" : "Export cancelled.";
+    }
+
+    protected override void OnClosing(WindowClosingEventArgs e)
+    {
+        // The unsaved-changes prompt used to live only on File → Exit / Ctrl+Q. Closing via the
+        // title-bar button, ⌘Q, or Alt+F4 goes through this window-close path instead, so without
+        // this guard those routes discarded unsaved work silently. Cancel the first close, run the
+        // async prompt, then re-close programmatically (guarded by _closeConfirmed) if allowed.
+        // _closeConfirmed: our own programmatic re-close below.
+        // _viewModel.CloseConfirmed: File → Exit already ran the prompt then called Shutdown,
+        // which closes this window — don't prompt again.
+        if (_closeConfirmed || _viewModel is null || _viewModel.CloseConfirmed)
+        {
+            base.OnClosing(e);
+            return;
+        }
+
+        e.Cancel = true;
+        _ = ConfirmAndCloseAsync();
+    }
+
+    private async Task ConfirmAndCloseAsync()
+    {
+        bool canClose;
+        try
+        {
+            canClose = await _viewModel.ConfirmCloseAsync();
+        }
+        catch (Exception ex)
+        {
+            // Never trap the user in a window they can't close because the prompt threw.
+            DatPlotX.Helpers.SafeErrorHandler.LogError(ex, "confirming application close");
+            canClose = true;
+        }
+
+        if (canClose)
+        {
+            _closeConfirmed = true;
+            Close();
+        }
     }
 
     protected override void OnClosed(EventArgs e)
