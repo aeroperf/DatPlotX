@@ -385,10 +385,14 @@ public sealed partial class CompactPlotViewModel : ObservableObject
             try { yData = _data.GetColumnData(curve.SourceColumn); }
             catch { continue; }
 
+            // Track the event line's X even when the interpolated Y is NaN (a gap / out-of-range X),
+            // so the callout stays attached to the line instead of being stranded at its old X.
+            // Only refresh Y and the value text when we have a finite reading.
+            callout.X = newXPosition;
+
             double yVal = InterpolateY(xData, yData, newXPosition);
             if (double.IsNaN(yVal)) continue;
 
-            callout.X = newXPosition;
             callout.Y = yVal;
             callout.Text = FormatCalloutValue(yVal, curve.IsBoolean);
         }
