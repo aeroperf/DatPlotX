@@ -86,11 +86,14 @@ public class DataExportService : IDataExportService
 
             foreach (var intersection in intersections)
             {
+                // Invariant: keep numbers period-decimal so downstream tools parse them the same
+                // way as the CSV sibling exports, regardless of the machine's locale.
+                var ci = CultureInfo.InvariantCulture;
                 lines.Add($"{intersection.EventLineLabel}\t" +
-                         $"{intersection.XPosition}\t" +
+                         $"{intersection.XPosition.ToString(ci)}\t" +
                          $"{intersection.CurveName}\t" +
-                         $"{intersection.YValue}\t" +
-                         $"{intersection.PaneIndex}\t" +
+                         $"{intersection.YValue.ToString(ci)}\t" +
+                         $"{intersection.PaneIndex.ToString(ci)}\t" +
                          $"{intersection.YAxis}");
             }
 
@@ -310,10 +313,11 @@ public class DataExportService : IDataExportService
 
             foreach (var intersection in intersections.OrderBy(i => i.EventLineLabel).ThenBy(i => i.CurveName))
             {
+                var ci = CultureInfo.InvariantCulture;
                 lines.Add($"{intersection.EventLineLabel,-15} " +
-                         $"{intersection.XPosition,-15:F4} " +
+                         $"{intersection.XPosition.ToString("F4", ci),-15} " +
                          $"{intersection.CurveName,-20} " +
-                         $"{intersection.YValue,-15:F4} " +
+                         $"{intersection.YValue.ToString("F4", ci),-15} " +
                          $"{intersection.YAxis,-10}");
             }
 
@@ -326,10 +330,10 @@ public class DataExportService : IDataExportService
             var eventLineGroups = intersections.GroupBy(i => i.EventLineLabel).OrderBy(g => g.Key);
             foreach (var group in eventLineGroups)
             {
-                lines.Add($"\nEvent Line: {group.Key} (X = {group.First().XPosition:F4})");
-                lines.Add($"  Min Y: {group.Min(i => i.YValue):F4}");
-                lines.Add($"  Max Y: {group.Max(i => i.YValue):F4}");
-                lines.Add($"  Mean Y: {group.Average(i => i.YValue):F4}");
+                lines.Add(FormattableString.Invariant($"\nEvent Line: {group.Key} (X = {group.First().XPosition:F4})"));
+                lines.Add(FormattableString.Invariant($"  Min Y: {group.Min(i => i.YValue):F4}"));
+                lines.Add(FormattableString.Invariant($"  Max Y: {group.Max(i => i.YValue):F4}"));
+                lines.Add(FormattableString.Invariant($"  Mean Y: {group.Average(i => i.YValue):F4}"));
             }
 
             // Source data summary (if available)
