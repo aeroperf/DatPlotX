@@ -13,7 +13,7 @@ public sealed class LastMetric : IMetricDefinition
     public MetricResult Compute(ReadOnlySpan<double> x, ReadOnlySpan<double> y, MetricParameters parameters)
     {
         for (int i = y.Length - 1; i >= 0; i--)
-            if (!double.IsNaN(y[i])) return new MetricResult(y[i], x[i], y[i]);
+            if (double.IsFinite(y[i])) return new MetricResult(y[i], x[i], y[i]);
         return MetricResult.Empty;
     }
 }

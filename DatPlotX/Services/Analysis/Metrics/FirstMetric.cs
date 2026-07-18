@@ -13,7 +13,7 @@ public sealed class FirstMetric : IMetricDefinition
     public MetricResult Compute(ReadOnlySpan<double> x, ReadOnlySpan<double> y, MetricParameters parameters)
     {
         for (int i = 0; i < y.Length; i++)
-            if (!double.IsNaN(y[i])) return new MetricResult(y[i], x[i], y[i]);
+            if (double.IsFinite(y[i])) return new MetricResult(y[i], x[i], y[i]);
         return MetricResult.Empty;
     }
 }

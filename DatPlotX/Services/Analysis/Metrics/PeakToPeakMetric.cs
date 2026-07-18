@@ -21,7 +21,7 @@ public sealed class PeakToPeakMetric : IMetricDefinition
         bool any = false;
         foreach (var v in y)
         {
-            if (double.IsNaN(v)) continue;
+            if (!double.IsFinite(v)) continue;
             if (v < min) min = v;
             if (v > max) max = v;
             any = true;

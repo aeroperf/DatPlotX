@@ -23,7 +23,7 @@ public sealed class IntegralMetric : IMetricDefinition
         {
             double y0 = y[i - 1], y1 = y[i];
             double x0 = x[i - 1], x1 = x[i];
-            if (double.IsNaN(y0) || double.IsNaN(y1) || double.IsNaN(x0) || double.IsNaN(x1))
+            if (!double.IsFinite(y0) || !double.IsFinite(y1) || !double.IsFinite(x0) || !double.IsFinite(x1))
                 continue;
             sum += 0.5 * (y0 + y1) * (x1 - x0);
             any = true;

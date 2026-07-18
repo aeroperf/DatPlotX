@@ -38,7 +38,7 @@ public sealed class PercentileMetric : IMetricDefinition
         // Copy out finite values
         var buf = new double[y.Length];
         int n = 0;
-        foreach (var v in y) { if (!double.IsNaN(v)) buf[n++] = v; }
+        foreach (var v in y) { if (double.IsFinite(v)) buf[n++] = v; }
         if (n == 0) return MetricResult.Empty;
 
         Array.Sort(buf, 0, n);

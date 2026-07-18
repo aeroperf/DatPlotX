@@ -27,7 +27,7 @@ public sealed class SlopeMetric : IMetricDefinition
         int n = 0;
         for (int i = 0; i < y.Length; i++)
         {
-            if (double.IsNaN(y[i]) || double.IsNaN(x[i])) continue;
+            if (!double.IsFinite(y[i]) || !double.IsFinite(x[i])) continue;
             sumX += x[i]; sumY += y[i]; n++;
             if (x[i] < minX) minX = x[i];
             if (x[i] > maxX) maxX = x[i];
@@ -40,7 +40,7 @@ public sealed class SlopeMetric : IMetricDefinition
         double sxx = 0, sxy = 0, syy = 0;
         for (int i = 0; i < y.Length; i++)
         {
-            if (double.IsNaN(y[i]) || double.IsNaN(x[i])) continue;
+            if (!double.IsFinite(y[i]) || !double.IsFinite(x[i])) continue;
             double dx = x[i] - meanX;
             double dy = y[i] - meanY;
             sxx += dx * dx;

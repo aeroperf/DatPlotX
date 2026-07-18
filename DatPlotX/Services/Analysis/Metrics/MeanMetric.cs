@@ -14,7 +14,7 @@ public sealed class MeanMetric : IMetricDefinition
     {
         double sum = 0;
         int n = 0;
-        foreach (var v in y) { if (!double.IsNaN(v)) { sum += v; n++; } }
+        foreach (var v in y) { if (double.IsFinite(v)) { sum += v; n++; } }
         if (n == 0) return MetricResult.Empty;
         double mean = sum / n;
         return new MetricResult(mean, Line: MetricLine.Horizontal(mean));

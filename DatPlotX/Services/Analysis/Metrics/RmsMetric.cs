@@ -17,7 +17,7 @@ public sealed class RmsMetric : IMetricDefinition
     {
         double sumSq = 0;
         int n = 0;
-        foreach (var v in y) { if (!double.IsNaN(v)) { sumSq += v * v; n++; } }
+        foreach (var v in y) { if (double.IsFinite(v)) { sumSq += v * v; n++; } }
         return n > 0 ? new MetricResult(Math.Sqrt(sumSq / n)) : MetricResult.Empty;
     }
 }

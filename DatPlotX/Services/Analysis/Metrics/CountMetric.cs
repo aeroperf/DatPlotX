@@ -13,7 +13,7 @@ public sealed class CountMetric : IMetricDefinition
     public MetricResult Compute(ReadOnlySpan<double> x, ReadOnlySpan<double> y, MetricParameters parameters)
     {
         int n = 0;
-        foreach (var v in y) { if (!double.IsNaN(v)) n++; }
+        foreach (var v in y) { if (double.IsFinite(v)) n++; }
         return new MetricResult(n);
     }
 }

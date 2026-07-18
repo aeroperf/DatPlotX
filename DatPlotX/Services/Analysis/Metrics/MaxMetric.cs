@@ -23,7 +23,7 @@ public sealed class MaxMetric : IMetricDefinition
         for (int i = 0; i < y.Length; i++)
         {
             double v = y[i];
-            if (double.IsNaN(v)) continue;
+            if (!double.IsFinite(v)) continue;
             if (v > bestY) { bestY = v; bestX = x[i]; any = true; }
         }
 

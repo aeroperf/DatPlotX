@@ -305,4 +305,41 @@ public class MetricsTests
         r.Line.X1.Should().Be(4);
         r.Line.Y1.Should().BeApproximately(9, 1e-9);
     }
+
+    // --- ±Infinity handling: metrics treat non-finite samples (sensor sentinels parsed from
+    // "Infinity" in a CSV) like gaps, matching ToleranceBandEvaluator. Previously they filtered
+    // only NaN, so a single ∞ poisoned Mean/RMS/StdDev/Max into ∞ or NaN.
+
+    [Fact]
+    public void Mean_SkipsInfinity()
+    {
+        var x = X(3);
+        var y = new double[] { 100, 200, double.PositiveInfinity };
+        new MeanMetric().Compute(x, y).Value.Should().BeApproximately(150, 1e-9);
+    }
+
+    [Fact]
+    public void Max_SkipsInfinity()
+    {
+        var x = X(3);
+        var y = new double[] { 1, 5, double.PositiveInfinity };
+        new MaxMetric().Compute(x, y).Value.Should().Be(5);
+    }
+
+    [Fact]
+    public void StdDev_SkipsInfinity()
+    {
+        var x = X(4);
+        var y = new double[] { 2, 4, 6, double.NegativeInfinity };
+        // Population stddev of {2,4,6} = sqrt(8/3).
+        new StdDevMetric().Compute(x, y).Value.Should().BeApproximately(Math.Sqrt(8.0 / 3.0), 1e-9);
+    }
+
+    [Fact]
+    public void Count_ExcludesInfinity()
+    {
+        var x = X(4);
+        var y = new double[] { 1, 2, double.PositiveInfinity, double.NaN };
+        new CountMetric().Compute(x, y).Value.Should().Be(2);
+    }
 }
