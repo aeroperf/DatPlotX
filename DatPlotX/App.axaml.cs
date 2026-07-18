@@ -36,6 +36,11 @@ public partial class App : Application
         ConfigureServices(services);
         ServiceProvider = services.BuildServiceProvider();
 
+        // Route the static SafeErrorHandler.LogError through the rolling file logger so caught
+        // errors land in the log folder users are pointed to, not just the debugger.
+        Helpers.SafeErrorHandler.Logger =
+            ServiceProvider.GetService<ILoggerFactory>()?.CreateLogger("DatPlotX.Helpers.SafeErrorHandler");
+
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             var mainWindow = ServiceProvider.GetRequiredService<MainWindow>();

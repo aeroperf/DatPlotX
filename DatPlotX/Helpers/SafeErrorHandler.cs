@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging;
+
 namespace DatPlotX.Helpers;
 
 /// <summary>
@@ -5,6 +7,14 @@ namespace DatPlotX.Helpers;
 /// </summary>
 public static class SafeErrorHandler
 {
+    /// <summary>
+    /// Optional sink set by the app at startup so <see cref="LogError"/> reaches the rolling file
+    /// log (Help → Open Log Folder), not just the debugger. Left null in tests/designer, where
+    /// the Debug fallback is fine. In a Release build Debug.WriteLine is compiled out, so without
+    /// this the errors left no on-disk trace at all.
+    /// </summary>
+    public static ILogger? Logger { get; set; }
+
     /// <summary>
     /// Gets a user-friendly error message that doesn't expose internal system details
     /// </summary>
@@ -63,8 +73,16 @@ public static class SafeErrorHandler
             logMessage += $"\nAdditional Info: {additionalInfo}";
         }
 
-        // For now, write to debug output
-        // In production, replace with proper logging framework (NLog, Serilog, etc.)
-        System.Diagnostics.Debug.WriteLine(logMessage);
+        // Prefer the app's rolling file logger so errors are recoverable from the log folder the
+        // user is directed to for bug reports. Fall back to Debug when no logger is wired (tests,
+        // designer). The security-baseline scrubbing rule still holds: callers pass basename-only
+        // additionalInfo, never row data / column names / file contents.
+        if (Logger is { } logger)
+            // CA1848 (LoggerMessage delegates) is not worth it on this rare error path.
+#pragma warning disable CA1848
+            logger.LogError(ex, "Operation: {Operation}. {AdditionalInfo}", operation, additionalInfo ?? string.Empty);
+#pragma warning restore CA1848
+        else
+            System.Diagnostics.Debug.WriteLine(logMessage);
     }
 }
