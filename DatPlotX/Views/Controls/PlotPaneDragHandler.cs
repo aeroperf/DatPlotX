@@ -529,16 +529,21 @@ public class PlotPaneDragHandler
             (float)(end.X * _avaPlot.DisplayScale),
             (float)(end.Y * _avaPlot.DisplayScale));
 
-        var startCoord = _avaPlot.Plot.GetCoordinates(startPixel);
-        var endCoord = _avaPlot.Plot.GetCoordinates(endPixel);
+        var bottom = _viewModel.PlotModel.Axes.Bottom;
+        var left = _viewModel.PlotModel.Axes.Left;
+        var right = _viewModel.PlotModel.Axes.Right;
 
-        double xMin = Math.Min(startCoord.X, endCoord.X);
-        double xMax = Math.Max(startCoord.X, endCoord.X);
-        double yMin = Math.Min(startCoord.Y, endCoord.Y);
-        double yMax = Math.Max(startCoord.Y, endCoord.Y);
+        // Project the box corners through the Left axis (X + Y1) and, separately, through the Right
+        // axis for Y2. Zooming only Left left the Y2 curve fixed on its own axis while Y1 reframed,
+        // so a "zoom to this region" never framed a Y2 curve (review: box-zoom ignored Y2).
+        var startY1 = _avaPlot.Plot.GetCoordinates(startPixel, bottom, left);
+        var endY1 = _avaPlot.Plot.GetCoordinates(endPixel, bottom, left);
+        var startY2 = _avaPlot.Plot.GetCoordinates(startPixel, bottom, right);
+        var endY2 = _avaPlot.Plot.GetCoordinates(endPixel, bottom, right);
 
-        _viewModel.PlotModel.Axes.Bottom.Range.Set(xMin, xMax);
-        _viewModel.PlotModel.Axes.Left.Range.Set(yMin, yMax);
+        bottom.Range.Set(Math.Min(startY1.X, endY1.X), Math.Max(startY1.X, endY1.X));
+        left.Range.Set(Math.Min(startY1.Y, endY1.Y), Math.Max(startY1.Y, endY1.Y));
+        right.Range.Set(Math.Min(startY2.Y, endY2.Y), Math.Max(startY2.Y, endY2.Y));
         _avaPlot.Refresh();
     }
 
@@ -567,19 +572,25 @@ public class PlotPaneDragHandler
             (float)(currentPosition.X * _avaPlot.DisplayScale),
             (float)(currentPosition.Y * _avaPlot.DisplayScale));
 
-        var startCoord = _avaPlot.Plot.GetCoordinates(startPixel);
-        var endCoord = _avaPlot.Plot.GetCoordinates(endPixel);
+        var bottom = _viewModel.PlotModel.Axes.Bottom;
+        var left = _viewModel.PlotModel.Axes.Left;
+        var right = _viewModel.PlotModel.Axes.Right;
 
-        double coordDx = endCoord.X - startCoord.X;
-        double coordDy = endCoord.Y - startCoord.Y;
+        // Compute the drag delta per axis: X + Y1 via the Left axis, Y2 via the Right axis. Panning
+        // only Left desynced the Y2 curve vertically from the Y1 curve during the drag (review:
+        // pan ignored Y2). Each axis is shifted by its own data-space delta so both track the mouse.
+        var startY1 = _avaPlot.Plot.GetCoordinates(startPixel, bottom, left);
+        var endY1 = _avaPlot.Plot.GetCoordinates(endPixel, bottom, left);
+        var startY2 = _avaPlot.Plot.GetCoordinates(startPixel, bottom, right);
+        var endY2 = _avaPlot.Plot.GetCoordinates(endPixel, bottom, right);
 
-        var xRange = _viewModel.PlotModel.Axes.Bottom.Range;
-        var yRange = _viewModel.PlotModel.Axes.Left.Range;
+        double coordDx = endY1.X - startY1.X;
+        double coordDy1 = endY1.Y - startY1.Y;
+        double coordDy2 = endY2.Y - startY2.Y;
 
-        _viewModel.PlotModel.Axes.Bottom.Range.Set(
-            xRange.Min - coordDx, xRange.Max - coordDx);
-        _viewModel.PlotModel.Axes.Left.Range.Set(
-            yRange.Min - coordDy, yRange.Max - coordDy);
+        bottom.Range.Set(bottom.Range.Min - coordDx, bottom.Range.Max - coordDx);
+        left.Range.Set(left.Range.Min - coordDy1, left.Range.Max - coordDy1);
+        right.Range.Set(right.Range.Min - coordDy2, right.Range.Max - coordDy2);
 
         _avaPlot.Refresh();
     }
