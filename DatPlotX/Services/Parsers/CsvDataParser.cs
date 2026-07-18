@@ -497,7 +497,12 @@ public class CsvDataParser : ICsvDataParser
             if (string.IsNullOrWhiteSpace(value)) continue;
             nonEmptyCount++;
 
-            if (canBeDouble && !double.TryParse(value, NumberStyles.Any, culture, out _)) canBeDouble = false;
+            // Use the SAME NumberStyles the row-fill fast path uses (see FillRow). NumberStyles.Any
+            // additionally accepts parentheses-negatives, currency symbols, etc.; detecting a column
+            // as double with Any but then filling it with Float|AllowThousands would silently NaN
+            // every value that only Any can parse (e.g. accounting-negative "(1.5)"). Keep them in
+            // lockstep so a value that detects as double also fills as double.
+            if (canBeDouble && !double.TryParse(value, NumberStyles.Float | NumberStyles.AllowThousands, culture, out _)) canBeDouble = false;
             if (canBeDateTime && !DateTime.TryParse(value, culture, DateTimeStyles.None, out _)) canBeDateTime = false;
             if (canBeBool && !bool.TryParse(value, out _)) canBeBool = false;
 

@@ -53,6 +53,25 @@ public class CsvDataParserTests : IDisposable
     }
 
     [Fact]
+    public async Task ParseAsync_DetectionAndFill_UseSameNumberStyles_NoSilentDataLoss()
+    {
+        // Regression for review #6: column-type detection used NumberStyles.Any (accepts
+        // parentheses-negatives, currency, etc.) while row-fill used Float|AllowThousands. A value
+        // like "(1.5)" was detected as double but failed to fill and became DBNull → silent NaN.
+        // Now both use the same styles, so such a column is classified as string and every value
+        // is preserved verbatim (nothing silently dropped).
+        var path = WriteTempCsv("v\n1.5\n(1.5)\n2.5\n");
+        var result = await new CsvDataParser().ParseAsync(path, new CsvImportOptions());
+
+        result.Data.Columns["v"]!.DataType.Should().Be(typeof(string));
+        result.Data.Rows.Count.Should().Be(3);
+        result.Data.Rows[1]["v"].Should().Be("(1.5)");
+        // No cell silently nulled out.
+        foreach (System.Data.DataRow row in result.Data.Rows)
+            row["v"].Should().NotBe(DBNull.Value);
+    }
+
+    [Fact]
     public async Task ParseAsync_IntegerThenFractional_KeepsLaterFractionalValues()
     {
         // Regression for review C3: a column that is all-integer in the first (sampled) rows but
