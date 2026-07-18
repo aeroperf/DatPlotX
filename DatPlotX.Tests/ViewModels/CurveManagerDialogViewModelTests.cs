@@ -55,11 +55,12 @@ public class CurveManagerDialogViewModelTests
     }
 
     [Fact]
-    public void GetModifiedCurves_AfterTogglingItemIsVisible_ReflectsChange()
+    public void GetModifiedCurves_AfterTogglingItemIsVisibleAndApplying_ReflectsChange()
     {
         var curve = MakeCurve("a"); curve.IsVisible = true;
         var vm = new CurveManagerDialogViewModel(MakeCurves(curve));
         vm.Curves[0].IsVisible = false;
+        vm.ApplyChanges();
         vm.GetModifiedCurves().Single().IsVisible.Should().BeFalse();
     }
 
@@ -117,30 +118,40 @@ public class CurveManagerDialogViewModelTests
     }
 
     [Fact]
-    public void CurveItemViewModel_IsVisible_PropagatesBackToConfig()
+    public void CurveItemViewModel_Edits_DoNotTouchConfig_UntilApplyChanges()
+    {
+        // Cancel semantics: editing a row must not mutate the live config. The setters hold the
+        // edit on the row view model only; a dialog that closes without ApplyChanges (Cancel)
+        // therefore leaves the config — and the plot / .DPX — untouched.
+        var curve = MakeCurve();
+        curve.IsVisible = true;
+        curve.Color = "#111111";
+        curve.LineWidth = 1.0;
+
+        var item = new CurveItemViewModel(curve);
+        item.IsVisible = false;
+        item.Color = "#FF0000";
+        item.LineWidth = 4.0;
+
+        curve.IsVisible.Should().BeTrue();
+        curve.Color.Should().Be("#111111");
+        curve.LineWidth.Should().Be(1.0);
+    }
+
+    [Fact]
+    public void CurveItemViewModel_ApplyChanges_PropagatesEditsBackToConfig()
     {
         var curve = MakeCurve();
         curve.IsVisible = true;
         var item = new CurveItemViewModel(curve);
         item.IsVisible = false;
-        curve.IsVisible.Should().BeFalse();
-    }
-
-    [Fact]
-    public void CurveItemViewModel_Color_PropagatesBackToConfig()
-    {
-        var curve = MakeCurve();
-        var item = new CurveItemViewModel(curve);
         item.Color = "#FF0000";
-        curve.Color.Should().Be("#FF0000");
-    }
-
-    [Fact]
-    public void CurveItemViewModel_LineWidth_PropagatesBackToConfig()
-    {
-        var curve = MakeCurve();
-        var item = new CurveItemViewModel(curve);
         item.LineWidth = 4.0;
+
+        item.ApplyChanges();
+
+        curve.IsVisible.Should().BeFalse();
+        curve.Color.Should().Be("#FF0000");
         curve.LineWidth.Should().Be(4.0);
     }
 

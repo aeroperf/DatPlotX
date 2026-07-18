@@ -28,6 +28,17 @@ public partial class CurveManagerDialogViewModel : ObservableObject
     }
 
     /// <summary>
+    /// Commit the edits from every row back into the live curve configuration models.
+    /// Must be called by the dialog on OK/Apply only — until then the edits live purely on
+    /// the row view models, so a Cancel leaves the live models (and the plot) untouched.
+    /// </summary>
+    public void ApplyChanges()
+    {
+        foreach (var c in Curves)
+            c.ApplyChanges();
+    }
+
+    /// <summary>
     /// Get the modified curve configurations
     /// </summary>
     public List<CurveConfigurationModel> GetModifiedCurves()
@@ -81,24 +92,17 @@ public partial class CurveItemViewModel : ObservableObject
         _lineStyle = config.LineStyle;
     }
 
-    partial void OnIsVisibleChanged(bool value)
+    /// <summary>
+    /// Copy this row's edited values into the live configuration model. Called only when the
+    /// dialog is accepted (OK/Apply); the property setters no longer mutate the model directly,
+    /// so a Cancel discards these edits instead of leaking them into the plot and the .DPX.
+    /// </summary>
+    public void ApplyChanges()
     {
-        Configuration.IsVisible = value;
-    }
-
-    partial void OnColorChanged(string value)
-    {
-        Configuration.Color = value;
-    }
-
-    partial void OnLineWidthChanged(double value)
-    {
-        Configuration.LineWidth = value;
-    }
-
-    partial void OnLineStyleChanged(LineStyle value)
-    {
-        Configuration.LineStyle = value;
+        Configuration.IsVisible = IsVisible;
+        Configuration.Color = Color;
+        Configuration.LineWidth = LineWidth;
+        Configuration.LineStyle = LineStyle;
     }
 
     [RelayCommand]

@@ -36,7 +36,12 @@ public partial class CurveManagerDialog : Window
         DataContext = ViewModel;
     }
 
-    private void Apply_Click(object? sender, RoutedEventArgs e) => Close(true);
+    private void Apply_Click(object? sender, RoutedEventArgs e)
+    {
+        // Commit edits into the live models only on OK; Cancel discards them (see review #3).
+        ViewModel.ApplyChanges();
+        Close(true);
+    }
 
     private void Cancel_Click(object? sender, RoutedEventArgs e) => Close(false);
 
