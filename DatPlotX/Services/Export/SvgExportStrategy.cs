@@ -1,5 +1,6 @@
 using DatPlotX.Helpers;
 using ScottPlot;
+using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -37,11 +38,14 @@ public partial class SvgExportStrategy : IImageExportStrategy
         // pane's y-offset — nested <svg> is native SVG and needs no parsing of the pane internals.
         // Previously this rasterized every pane to PNG and wrote the bytes into a .svg file, so the
         // "SVG" opened in no vector editor (review #8).
+        // SVG numbers must be invariant (period decimal, no thousands separators) regardless of
+        // the machine's locale, so every interpolated coordinate/size is formatted with it.
+        var inv = CultureInfo.InvariantCulture;
         var sb = new StringBuilder();
         sb.Append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-        sb.Append($"<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"{width}\" height=\"{height}\" ")
-          .Append($"viewBox=\"0 0 {width} {height}\">\n");
-        sb.Append($"<rect width=\"{width}\" height=\"{height}\" fill=\"white\"/>\n");
+        sb.Append(inv, $"<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"{width}\" height=\"{height}\" ")
+          .Append(inv, $"viewBox=\"0 0 {width} {height}\">\n");
+        sb.Append(inv, $"<rect width=\"{width}\" height=\"{height}\" fill=\"white\"/>\n");
 
         int yOffset = 0;
         foreach (var plot in plots)
@@ -49,8 +53,8 @@ public partial class SvgExportStrategy : IImageExportStrategy
             if (plot != null)
             {
                 string paneSvg = StripXmlProlog(plot.GetSvgXml(width, paneHeight));
-                sb.Append($"<svg x=\"0\" y=\"{yOffset}\" width=\"{width}\" height=\"{paneHeight}\" ")
-                  .Append($"viewBox=\"0 0 {width} {paneHeight}\" overflow=\"visible\">\n");
+                sb.Append(inv, $"<svg x=\"0\" y=\"{yOffset}\" width=\"{width}\" height=\"{paneHeight}\" ")
+                  .Append(inv, $"viewBox=\"0 0 {width} {paneHeight}\" overflow=\"visible\">\n");
                 sb.Append(paneSvg);
                 sb.Append("\n</svg>\n");
                 yOffset += paneHeight;
