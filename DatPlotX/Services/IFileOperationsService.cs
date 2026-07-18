@@ -34,7 +34,7 @@ public interface IFileOperationsService
     /// <param name="project">Project to save</param>
     /// <param name="currentFilePath">Current file path (null to force save-as dialog)</param>
     /// <returns>File path where project was saved, or null if user cancelled</returns>
-    Task<string?> SaveProjectAsync(ProjectSettingsModel project, string? currentFilePath);
+    Task<FileOperationResult<string>> SaveProjectAsync(ProjectSettingsModel project, string? currentFilePath);
 
     /// <summary>
     /// Export plots as images with user dialog for format/location selection

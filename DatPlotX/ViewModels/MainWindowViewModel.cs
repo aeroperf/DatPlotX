@@ -1063,14 +1063,22 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
 
             StatusText = "Saving project...";
 
-            var savedPath = await _fileOperationsService.SaveProjectAsync(_currentProject, filePath);
+            var saveResult = await _fileOperationsService.SaveProjectAsync(_currentProject, filePath);
 
-            if (savedPath == null)
+            if (saveResult.Outcome == FileOperationOutcome.Cancelled)
             {
                 StatusText = "Save cancelled.";
                 return;
             }
+            if (saveResult.Outcome == FileOperationOutcome.Failed)
+            {
+                // The service already showed the error dialog; report failure (not cancellation)
+                // and leave HasUnsavedChanges set so the work isn't treated as saved.
+                StatusText = "Failed to save project.";
+                return;
+            }
 
+            var savedPath = saveResult.Value!;
             _currentFilePath = savedPath;
             HasUnsavedChanges = false;
             UpdateWindowTitle();

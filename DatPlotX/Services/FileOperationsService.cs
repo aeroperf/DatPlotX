@@ -133,7 +133,7 @@ public class FileOperationsService : IFileOperationsService
         }
     }
 
-    public async Task<string?> SaveProjectAsync(ProjectSettingsModel project, string? currentFilePath)
+    public async Task<FileOperationResult<string>> SaveProjectAsync(ProjectSettingsModel project, string? currentFilePath)
     {
         try
         {
@@ -142,7 +142,7 @@ public class FileOperationsService : IFileOperationsService
             if (filePath == null)
             {
                 var storageProvider = GetStorageProvider();
-                if (storageProvider == null) return null;
+                if (storageProvider == null) return FileOperationResult.Cancelled<string>();
 
                 var file = await storageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
                 {
@@ -155,17 +155,19 @@ public class FileOperationsService : IFileOperationsService
                     }
                 });
 
-                if (file == null) return null;
+                if (file == null) return FileOperationResult.Cancelled<string>();
                 filePath = file.Path.LocalPath;
             }
 
             await _projectService.SaveProjectAsync(project, filePath);
-            return filePath;
+            return FileOperationResult.Success(filePath);
         }
         catch (Exception ex)
         {
+            // The dialog surfaces the error; return Failed (not Cancelled) so the caller doesn't
+            // report a failed save as "cancelled" and leave the user thinking nothing went wrong.
             await _dialogService.ShowError($"Error saving project: {ex.Message}", "Save Error");
-            return null;
+            return FileOperationResult.Failed<string>(ex.Message);
         }
     }
 
