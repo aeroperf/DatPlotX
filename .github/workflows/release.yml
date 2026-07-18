@@ -1,0 +1,117 @@
+name: Release
+
+# Build the per-platform binaries on their own native runners and attach them to a
+# GitHub Release. Triggered by pushing a version tag (e.g. v1.1.0). This is why no
+# local Windows/Linux machine is needed — GitHub's runners build those targets.
+on:
+  push:
+    tags:
+      - 'v*'
+  # Manual trigger for a dry run: builds + uploads workflow artifacts but does NOT
+  # create a GitHub Release (guarded on the tag ref below).
+  workflow_dispatch:
+
+permissions:
+  contents: write   # needed to create the Release and upload assets
+
+jobs:
+  # ---- Per-platform builds, each on its native OS via the existing scripts ----
+  build-macos:
+    name: build macOS (osx-arm64)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+      - name: Build .app bundle
+        run: ./scripts/build-macos-app.sh
+      - name: Zip release
+        run: ./scripts/zip-macos-release.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos
+          path: releases/*.zip
+          if-no-files-found: error
+
+  build-windows:
+    name: build Windows (win-x64)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+      - name: Build single-file exe
+        shell: pwsh
+        run: .\scripts\build-win-x64.ps1
+      - name: Zip release
+        shell: pwsh
+        run: .\scripts\zip-win-release.ps1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows
+          path: releases/*.zip
+          if-no-files-found: error
+
+  build-linux:
+    name: build Linux (linux-x64)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+      - name: Build single-file binary
+        run: ./scripts/build-linux.sh linux-x64
+      - name: Tar release
+        run: ./scripts/tar-linux-release.sh linux-x64
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux
+          path: releases/*.tar.gz
+          if-no-files-found: error
+
+  # ---- Publish the GitHub Release with all three artifacts ----
+  release:
+    name: publish GitHub Release
+    needs: [build-macos, build-windows, build-linux]
+    runs-on: ubuntu-latest
+    # Only create a Release for an actual tag push; workflow_dispatch just builds.
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Download all build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
+
+      - name: Extract release notes for this tag from CHANGELOG
+        id: notes
+        run: |
+          set -euo pipefail
+          TAG="${GITHUB_REF_NAME}"        # e.g. v1.1.0
+          VERSION="${TAG#v}"              # e.g. 1.1.0
+          # Pull the section between "## <version>" and the next "## " heading.
+          awk -v ver="## ${VERSION}" '
+            $0 ~ "^" ver {found=1; next}
+            found && /^## / {exit}
+            found {print}
+          ' CHANGELOG.md > release-notes.md
+          if [ ! -s release-notes.md ]; then
+            echo "No CHANGELOG section for ${VERSION}; using a generic note." >&2
+            echo "Release ${VERSION}. See CHANGELOG.md for details." > release-notes.md
+          fi
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: DatPlotX ${{ github.ref_name }}
+          body_path: release-notes.md
+          draft: true          # published manually after a sanity check of the assets
+          fail_on_unmatched_files: true
+          files: |
+            dist/macos/*.zip
+            dist/windows/*.zip
+            dist/linux/*.tar.gz
