@@ -217,8 +217,21 @@ public partial class ManageCompactCurveDialog : Window
     {
         if (_suppressBindings) return;
         _markerColor = MarkerSwatchPicker.Color;
-        if (!string.Equals(_markerColor, _curveColor, StringComparison.OrdinalIgnoreCase))
+        if (!ColorsEqual(_markerColor, _curveColor))
             MatchCurveColor.IsChecked = false;
+    }
+
+    /// <summary>
+    /// Compare two hex color strings by their parsed ARGB value, not by text. Otherwise visually
+    /// identical colors in different spellings (e.g. "#FF0000" vs "#FFFF0000") compare unequal and
+    /// a spurious explicit MarkerColor override is stored, so the marker stops tracking the curve.
+    /// </summary>
+    private static bool ColorsEqual(string? a, string? b)
+    {
+        if (string.Equals(a, b, StringComparison.OrdinalIgnoreCase)) return true;
+        if (string.IsNullOrEmpty(a) || string.IsNullOrEmpty(b)) return false;
+        if (Color.TryParse(a, out var ca) && Color.TryParse(b, out var cb)) return ca == cb;
+        return false;
     }
 
     private void OpenCurveColorPicker() => SafeInvokeAsync(async () =>
@@ -293,7 +306,7 @@ public partial class ManageCompactCurveDialog : Window
             : MarkerStyle.None;
         curve.MarkerSize = Math.Round(MarkerSizeSlider.Value);
 
-        curve.MarkerColor = MatchCurveColor.IsChecked == true || string.Equals(_markerColor, _curveColor, StringComparison.OrdinalIgnoreCase)
+        curve.MarkerColor = MatchCurveColor.IsChecked == true || ColorsEqual(_markerColor, _curveColor)
             ? null
             : _markerColor;
 
