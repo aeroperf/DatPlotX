@@ -39,9 +39,12 @@ public partial class ManageSegmentsDialogViewModel : ObservableObject
     public IReadOnlyList<SegmentRowViewModel> ToRemove =>
         Rows.Where(r => r.IsMarkedForRemoval && r.CanDelete).ToList();
 
-    /// <summary>Rows whose name changed from the original.</summary>
+    /// <summary>Rows whose name changed from the original. Blank/whitespace names are ignored so a
+    /// cleared name can't rename a segment to an empty string (it would show blank in the panel).</summary>
     public IReadOnlyList<SegmentRowViewModel> Renamed =>
-        Rows.Where(r => r is { CanDelete: true, IsMarkedForRemoval: false } && r.Name != r.OriginalName).ToList();
+        Rows.Where(r => r is { CanDelete: true, IsMarkedForRemoval: false }
+                        && r.Name != r.OriginalName
+                        && !string.IsNullOrWhiteSpace(r.Name)).ToList();
 }
 
 /// <summary>One editable segment row in the Manage Segments dialog.</summary>
