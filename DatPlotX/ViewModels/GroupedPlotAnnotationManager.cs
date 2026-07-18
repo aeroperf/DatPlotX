@@ -154,11 +154,23 @@ public sealed class GroupedPlotAnnotationManager
     }
 
     /// <summary>
-    /// Re-add all annotation plottables to the current plot. Call after the Grouped view does
-    /// <c>plot.Clear()</c> + scatter rebuild so annotations survive the redraw.
+    /// Re-add all annotation plottables to the current plot. Safe to call whether or not the
+    /// caller already did <c>plot.Clear()</c>: the normal <c>UpdatePlot</c> path clears the plot
+    /// first, but the reset-view path only autoscales, so we must remove any still-attached
+    /// plottables before re-adding. Without this, "Set Scale to Default" stacked a duplicate copy
+    /// of every annotation on each click, and the prior copies — no longer tracked in the
+    /// dictionaries — became orphaned and could not be deleted (review #7).
     /// </summary>
     public void Reapply()
     {
+        var plot = _getPlot();
+        if (plot is not null)
+        {
+            foreach (var t in _textPlottables.Values) plot.Remove(t);
+            foreach (var a in _arrowPlottables.Values) plot.Remove(a);
+            foreach (var a in _reverseArrowPlottables.Values) plot.Remove(a);
+            foreach (var l in _arrowLabelPlottables.Values) plot.Remove(l);
+        }
         _textPlottables.Clear();
         _arrowPlottables.Clear();
         _reverseArrowPlottables.Clear();
