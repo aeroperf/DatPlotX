@@ -22,24 +22,26 @@
         <conv:BoolToGridLengthConverter x:Key="BoolToGridLength"/>
     </Window.Resources>
 
+    <!-- Gestures use the platform command modifier: Cmd on macOS, Ctrl on Windows/Linux. Avalonia
+         does not auto-map Ctrl→Cmd, so each gesture is declared per-platform via OnPlatform. -->
     <Window.KeyBindings>
-        <KeyBinding Gesture="Ctrl+N" Command="{Binding NewProjectCommand}"/>
-        <KeyBinding Gesture="Ctrl+O" Command="{Binding OpenProjectCommand}"/>
-        <KeyBinding Gesture="Ctrl+S" Command="{Binding SaveProjectCommand}"/>
-        <KeyBinding Gesture="Ctrl+Shift+S" Command="{Binding SaveProjectAsCommand}"/>
-        <KeyBinding Gesture="Ctrl+E" Command="{Binding ExportImageCommand}"/>
-        <KeyBinding Gesture="Ctrl+Shift+E" Command="{Binding ExportIntersectionsCommand}"/>
-        <KeyBinding Gesture="Ctrl+Q" Command="{Binding ExitCommand}"/>
-        <KeyBinding Gesture="Ctrl+Shift+A" Command="{Binding AddCurvesDispatchCommand}"/>
-        <KeyBinding Gesture="Ctrl+M" Command="{Binding ManageCurvesDispatchCommand}"/>
-        <KeyBinding Gesture="Ctrl+Shift+Delete" Command="{Binding ClearAllCurvesDispatchCommand}"/>
-        <KeyBinding Gesture="Ctrl+L" Command="{Binding AddEventLineCommand}"/>
-        <KeyBinding Gesture="Ctrl+Shift+L" Command="{Binding ClearEventLinesDispatchCommand}"/>
-        <KeyBinding Gesture="Ctrl+T" Command="{Binding ToggleHoverTooltipsCommand}"/>
-        <KeyBinding Gesture="Ctrl+F" Command="{Binding FormatCompactPaneCommand}"/>
-        <KeyBinding Gesture="Ctrl+OemComma" Command="{Binding ShowSettingsCommand}"/>
-        <KeyBinding Gesture="Ctrl+R" Command="{Binding ToggleAnalysisPanelCommand}"/>
-        <KeyBinding Gesture="Ctrl+I" Command="{Binding ToggleInlineMetricsCommand}"/>
+        <KeyBinding Gesture="{OnPlatform 'Ctrl+N', macOS='Cmd+N'}" Command="{Binding NewProjectCommand}"/>
+        <KeyBinding Gesture="{OnPlatform 'Ctrl+O', macOS='Cmd+O'}" Command="{Binding OpenProjectCommand}"/>
+        <KeyBinding Gesture="{OnPlatform 'Ctrl+S', macOS='Cmd+S'}" Command="{Binding SaveProjectCommand}"/>
+        <KeyBinding Gesture="{OnPlatform 'Ctrl+Shift+S', macOS='Cmd+Shift+S'}" Command="{Binding SaveProjectAsCommand}"/>
+        <KeyBinding Gesture="{OnPlatform 'Ctrl+E', macOS='Cmd+E'}" Command="{Binding ExportImageCommand}"/>
+        <KeyBinding Gesture="{OnPlatform 'Ctrl+Shift+E', macOS='Cmd+Shift+E'}" Command="{Binding ExportIntersectionsCommand}"/>
+        <KeyBinding Gesture="{OnPlatform 'Ctrl+Q', macOS='Cmd+Q'}" Command="{Binding ExitCommand}"/>
+        <KeyBinding Gesture="{OnPlatform 'Ctrl+Shift+A', macOS='Cmd+Shift+A'}" Command="{Binding AddCurvesDispatchCommand}"/>
+        <KeyBinding Gesture="{OnPlatform 'Ctrl+M', macOS='Cmd+M'}" Command="{Binding ManageCurvesDispatchCommand}"/>
+        <KeyBinding Gesture="{OnPlatform 'Ctrl+Shift+Delete', macOS='Cmd+Shift+Delete'}" Command="{Binding ClearAllCurvesDispatchCommand}"/>
+        <KeyBinding Gesture="{OnPlatform 'Ctrl+L', macOS='Cmd+L'}" Command="{Binding AddEventLineCommand}"/>
+        <KeyBinding Gesture="{OnPlatform 'Ctrl+Shift+L', macOS='Cmd+Shift+L'}" Command="{Binding ClearEventLinesDispatchCommand}"/>
+        <KeyBinding Gesture="{OnPlatform 'Ctrl+T', macOS='Cmd+T'}" Command="{Binding ToggleHoverTooltipsCommand}"/>
+        <KeyBinding Gesture="{OnPlatform 'Ctrl+F', macOS='Cmd+F'}" Command="{Binding FormatCompactPaneCommand}"/>
+        <KeyBinding Gesture="{OnPlatform 'Ctrl+OemComma', macOS='Cmd+OemComma'}" Command="{Binding ShowSettingsCommand}"/>
+        <KeyBinding Gesture="{OnPlatform 'Ctrl+R', macOS='Cmd+R'}" Command="{Binding ToggleAnalysisPanelCommand}"/>
+        <KeyBinding Gesture="{OnPlatform 'Ctrl+I', macOS='Cmd+I'}" Command="{Binding ToggleInlineMetricsCommand}"/>
     </Window.KeyBindings>
 
     <DockPanel>
@@ -68,30 +70,30 @@
                 <MenuItem Header="_File">
                     <MenuItem Header="_New Project"
                               Command="{Binding NewProjectCommand}"
-                              InputGesture="Ctrl+N"/>
+                              InputGesture="{OnPlatform 'Ctrl+N', macOS='Cmd+N'}"/>
                     <Separator/>
                     <MenuItem Header="Open _Project..."
                               Command="{Binding OpenProjectCommand}"
-                              InputGesture="Ctrl+O"/>
+                              InputGesture="{OnPlatform 'Ctrl+O', macOS='Cmd+O'}"/>
                     <MenuItem Header="Open _Recent" Name="OpenRecentMenu"/>
                     <Separator/>
                     <MenuItem Header="_Save Project"
                               Command="{Binding SaveProjectCommand}"
-                              InputGesture="Ctrl+S"/>
+                              InputGesture="{OnPlatform 'Ctrl+S', macOS='Cmd+S'}"/>
                     <MenuItem Header="Save Project _As..."
                               Command="{Binding SaveProjectAsCommand}"
-                              InputGesture="Ctrl+Shift+S"/>
+                              InputGesture="{OnPlatform 'Ctrl+Shift+S', macOS='Cmd+Shift+S'}"/>
                     <Separator/>
                     <MenuItem Header="_Export Image..."
                               Command="{Binding ExportImageCommand}"
-                              InputGesture="Ctrl+E"/>
+                              InputGesture="{OnPlatform 'Ctrl+E', macOS='Cmd+E'}"/>
                     <MenuItem Header="Export _Intersections..."
                               Command="{Binding ExportIntersectionsCommand}"
-                              InputGesture="Ctrl+Shift+E"/>
+                              InputGesture="{OnPlatform 'Ctrl+Shift+E', macOS='Cmd+Shift+E'}"/>
                     <Separator/>
                     <MenuItem Header="E_xit"
                               Command="{Binding ExitCommand}"
-                              InputGesture="Ctrl+Q"/>
+                              InputGesture="{OnPlatform 'Ctrl+Q', macOS='Cmd+Q'}"/>
                 </MenuItem>
 
                 <MenuItem Header="_Curves"
@@ -99,43 +101,43 @@
                     <MenuItem Header="_Add Curves..."
                               IsVisible="{Binding IsPanesMode}"
                               IsEnabled="False"
-                              InputGesture="Ctrl+Shift+A"
+                              InputGesture="{OnPlatform 'Ctrl+Shift+A', macOS='Cmd+Shift+A'}"
                               ToolTip.ShowOnDisabled="True"
                               ToolTip.Tip="In Stacked mode, right-click the desired pane and choose &quot;Add Curves...&quot; to add curves to that pane."/>
                     <MenuItem Header="Add Co_mpact Curves..."
                               Command="{Binding AddCompactCurvesCommand}"
                               IsVisible="{Binding IsCompactMode}"
-                              InputGesture="Ctrl+Shift+A"/>
+                              InputGesture="{OnPlatform 'Ctrl+Shift+A', macOS='Cmd+Shift+A'}"/>
                     <MenuItem Header="_Manage Curves..."
                               IsVisible="{Binding IsPanesMode}"
                               IsEnabled="False"
-                              InputGesture="Ctrl+M"
+                              InputGesture="{OnPlatform 'Ctrl+M', macOS='Cmd+M'}"
                               ToolTip.ShowOnDisabled="True"
                               ToolTip.Tip="In Stacked mode, right-click the desired pane and choose &quot;Manage Curve&quot; to edit its curves."/>
                     <MenuItem Header="_Manage Curve..."
                               Command="{Binding ManageCompactCurvesCommand}"
                               IsVisible="{Binding IsCompactMode}"
-                              InputGesture="Ctrl+M"
+                              InputGesture="{OnPlatform 'Ctrl+M', macOS='Cmd+M'}"
                               ToolTip.Tip="Edit color, line style, markers, or delete a compact-surface curve"/>
                     <Separator IsVisible="{Binding IsPanesMode}"/>
                     <MenuItem Header="Clear _All Curves"
                               Command="{Binding ClearAllCurvesDispatchCommand}"
                               IsVisible="{Binding IsPanesMode}"
-                              InputGesture="Ctrl+Shift+Delete"/>
+                              InputGesture="{OnPlatform 'Ctrl+Shift+Delete', macOS='Cmd+Shift+Delete'}"/>
                     <MenuItem Header="Clear _All Curves"
                               Command="{Binding ClearAllCurvesDispatchCommand}"
                               IsVisible="{Binding IsCompactMode}"
-                              InputGesture="Ctrl+Shift+Delete"/>
+                              InputGesture="{OnPlatform 'Ctrl+Shift+Delete', macOS='Cmd+Shift+Delete'}"/>
                 </MenuItem>
 
                 <MenuItem Header="_Event Lines"
                           IsVisible="{Binding IsPanesMode}">
                     <MenuItem Header="_Add Event Line"
                               Command="{Binding AddEventLineCommand}"
-                              InputGesture="Ctrl+L"/>
+                              InputGesture="{OnPlatform 'Ctrl+L', macOS='Cmd+L'}"/>
                     <MenuItem Header="_Clear All Event Lines"
                               Command="{Binding ClearEventLinesDispatchCommand}"
-                              InputGesture="Ctrl+Shift+L"/>
+                              InputGesture="{OnPlatform 'Ctrl+Shift+L', macOS='Cmd+Shift+L'}"/>
                 </MenuItem>
 
                 <!-- Statistics: the single home for per-curve descriptive statistics. The panel
@@ -149,7 +151,7 @@
                               Command="{Binding ToggleAnalysisPanelCommand}"
                               IsChecked="{Binding ShowAnalysisPanel}"
                               ToggleType="CheckBox"
-                              InputGesture="Ctrl+R"
+                              InputGesture="{OnPlatform 'Ctrl+R', macOS='Cmd+R'}"
                               ToolTip.Tip="Show or hide the per-curve statistics panel"/>
                     <!-- Inline overlay is Stacked-only (drawn in each pane corner). Stays visible
                          whenever statistics are available so the menu layout doesn't shift between
@@ -158,7 +160,7 @@
                               Command="{Binding ToggleInlineMetricsCommand}"
                               IsChecked="{Binding ShowInlineMetrics}"
                               ToggleType="CheckBox"
-                              InputGesture="Ctrl+I"
+                              InputGesture="{OnPlatform 'Ctrl+I', macOS='Cmd+I'}"
                               ToolTip.Tip="Draw the top statistics for each visible curve in the corner of its pane (Stacked mode only)"/>
                     <Separator/>
                     <MenuItem Header="_Segments..."
@@ -175,13 +177,13 @@
                 <MenuItem Header="_Tools">
                     <MenuItem Header="Show Hover _Tooltips"
                               Command="{Binding ToggleHoverTooltipsCommand}"
-                              InputGesture="Ctrl+T"
+                              InputGesture="{OnPlatform 'Ctrl+T', macOS='Cmd+T'}"
                               IsChecked="{Binding HoverTooltipsEnabled}"
                               ToggleType="CheckBox"/>
                     <MenuItem Header="_Format Pane..."
                               Command="{Binding FormatCompactPaneCommand}"
                               IsVisible="{Binding IsCompactMode}"
-                              InputGesture="Ctrl+F"
+                              InputGesture="{OnPlatform 'Ctrl+F', macOS='Cmd+F'}"
                               ToolTip.Tip="Configure gridlines, X-axis, and background for the Compact Plot Surface"/>
                     <MenuItem Header="Configure _Inputs..."
                               Command="{Binding ConfigureGroupedInputsCommand}"
@@ -190,7 +192,7 @@
                     <Separator/>
                     <MenuItem Header="_Settings..."
                               Command="{Binding ShowSettingsCommand}"
-                              InputGesture="Ctrl+,"/>
+                              InputGesture="{OnPlatform 'Ctrl+,', macOS='Cmd+,'}"/>
                 </MenuItem>
 
                 <MenuItem Header="_Help">
