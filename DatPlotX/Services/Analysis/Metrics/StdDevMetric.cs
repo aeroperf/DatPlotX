@@ -9,7 +9,9 @@ namespace DatPlotX.Services.Analysis.Metrics;
 public sealed class StdDevMetric : IMetricDefinition
 {
     public string Id => "stddev";
-    public string DisplayName => "StdDev";
+    // "(pop)" flags population standard deviation (÷N). Without it, engineers comparing against a
+    // spreadsheet's sample stddev (STDEV.S, ÷N−1) see different numbers with no explanation.
+    public string DisplayName => "StdDev (pop)";
     public MetricCategory Category => MetricCategory.Basic;
     public MetricKind Kind => MetricKind.Scalar;
 
