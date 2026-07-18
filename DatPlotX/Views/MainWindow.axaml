@@ -423,7 +423,7 @@
                                     BorderThickness="1"
                                     CornerRadius="4"
                                     Padding="8,2">
-                                <TextBlock Text="Ctrl"
+                                <TextBlock Text="{OnPlatform 'Ctrl', macOS='⌘'}"
                                            FontSize="13"
                                            Foreground="#3F3F3F"/>
                             </Border>
@@ -458,7 +458,7 @@
                                     BorderThickness="1"
                                     CornerRadius="4"
                                     Padding="8,2">
-                                <TextBlock Text="Ctrl"
+                                <TextBlock Text="{OnPlatform 'Ctrl', macOS='⌘'}"
                                            FontSize="13"
                                            Foreground="#3F3F3F"/>
                             </Border>
