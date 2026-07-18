@@ -52,12 +52,15 @@ public sealed class SlopeMetric : IMetricDefinition
 
         double slope = sxy / sxx;
         double intercept = meanY - slope * meanX;
-        // A flat (or near-flat) line has no Y variance to explain, so the fit is
-        // trivially perfect. Use a relative threshold on syy: summing a constant Y
-        // accumulates rounding error that leaves syy tiny-but-nonzero, which would
-        // otherwise yield a garbage r2 ≈ 0 instead of 1.
-        double syyTolerance = 1e-20 + 1e-12 * meanY * meanY * n;
-        double r2 = syy <= syyTolerance ? 1.0 : (sxy * sxy) / (sxx * syy);
+        // A truly flat line has no Y variance to explain, so R² is trivially 1; but summing a
+        // constant Y accumulates rounding error that leaves syy tiny-but-nonzero. Treat syy as
+        // "no real variance" only when the RMS deviation is negligible relative to |meanY|.
+        // Compare per-sample (syy/n) against (eps·meanY)² so the threshold does NOT scale with n —
+        // the old syy ≤ eps·meanY²·n floor grew with sample count and forced a fake R² = 1 for a
+        // genuine weak trend on a large-offset, low-variance signal.
+        double rmsDev2 = syy / n;
+        double relFloor = 1e-12 * meanY * meanY;
+        double r2 = rmsDev2 <= relFloor ? 1.0 : (sxy * sxy) / (sxx * syy);
 
         // Endpoints of the fit line across the segment's actual X extent.
         double y0 = slope * minX + intercept;

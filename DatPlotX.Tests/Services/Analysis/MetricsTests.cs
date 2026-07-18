@@ -342,4 +342,29 @@ public class MetricsTests
         var y = new double[] { 1, 2, double.PositiveInfinity, double.NaN };
         new CountMetric().Compute(x, y).Value.Should().Be(2);
     }
+
+    [Fact]
+    public void Slope_WeakTrendOnLargeOffset_DoesNotReportFakePerfectR2()
+    {
+        // Large offset (~10000), tiny real linear ramp plus noise. The old syy floor scaled with
+        // n and forced r2 = 1; the per-sample floor must let a genuine imperfect fit through.
+        int n = 1000;
+        var x = X(n);
+        var y = new double[n];
+        for (int i = 0; i < n; i++)
+            y[i] = 10000 + 0.0001 * i + (i % 2 == 0 ? 0.05 : -0.05); // ramp + alternating noise
+        var r = new SlopeMetric().Compute(x, y);
+
+        r.Extras!["r2"].Should().BeLessThan(0.99);
+        r.Extras["r2"].Should().BeGreaterThanOrEqualTo(0.0);
+    }
+
+    [Fact]
+    public void Slope_TrulyFlatLine_ReportsR2One()
+    {
+        var x = X(500);
+        var y = new double[500];
+        Array.Fill(y, 10000.0);
+        new SlopeMetric().Compute(x, y).Extras!["r2"].Should().Be(1.0);
+    }
 }
