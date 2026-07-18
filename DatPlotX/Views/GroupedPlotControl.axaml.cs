@@ -202,7 +202,9 @@ public partial class GroupedPlotControl : UserControl
         var plot = PlotControl.Plot;
         foreach (var scatter in _scatters)
             scatter.MarkerSize = _vm.ShowMarkers ? 5 : 0;
-        if (_vm.ShowLegend)
+        // Match UpdatePlot: never show a legend with no series, or ScottPlot draws an empty legend
+        // box when the user toggles the legend on before both X and Y are selected.
+        if (_vm.ShowLegend && _scatters.Count > 0)
         {
             plot.ShowLegend(Alignment.UpperRight);
             plot.Legend.Layout = new DatPlotX.Helpers.TopHeadroomLegendLayout();
