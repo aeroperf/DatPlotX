@@ -35,9 +35,11 @@ public sealed class CompactAnalysisOverlayHost : IAnalysisOverlayHost
 
         // Each compact curve has its own Y axis. Walk the LineSeries in PlotModel to find the
         // axis associated with this curve's source column.
+        // Match the curve's own series by tag. If none matches (e.g. a rename that hasn't rebuilt
+        // yet), do NOT fall back to the first series — that would draw the marker against a
+        // different band's Y axis, landing it at a visibly wrong height. Skip drawing instead.
         var ySeries = _vm.PlotModel.Series.OfType<LineSeries>()
-            .FirstOrDefault(s => string.Equals((s.Tag as string), curve.SourceColumn, StringComparison.Ordinal))
-            ?? _vm.PlotModel.Series.OfType<LineSeries>().FirstOrDefault();
+            .FirstOrDefault(s => string.Equals((s.Tag as string), curve.SourceColumn, StringComparison.Ordinal));
         var yKey = ySeries?.YAxisKey;
         if (string.IsNullOrEmpty(yKey)) return;
 
@@ -152,9 +154,11 @@ public sealed class CompactAnalysisOverlayHost : IAnalysisOverlayHost
         var curve = _vm.Curves.FirstOrDefault(c => c.Id == guid);
         if (curve is null) return;
 
+        // Match the curve's own series by tag. If none matches (e.g. a rename that hasn't rebuilt
+        // yet), do NOT fall back to the first series — that would draw the marker against a
+        // different band's Y axis, landing it at a visibly wrong height. Skip drawing instead.
         var ySeries = _vm.PlotModel.Series.OfType<LineSeries>()
-            .FirstOrDefault(s => string.Equals((s.Tag as string), curve.SourceColumn, StringComparison.Ordinal))
-            ?? _vm.PlotModel.Series.OfType<LineSeries>().FirstOrDefault();
+            .FirstOrDefault(s => string.Equals((s.Tag as string), curve.SourceColumn, StringComparison.Ordinal));
         var yKey = ySeries?.YAxisKey;
         if (string.IsNullOrEmpty(yKey)) return;
 
