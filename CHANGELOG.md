@@ -1,10 +1,15 @@
 # Changelog
 
-## Unreleased
+## 1.2.0 — 9 August 2026
+
+Feature release. No breaking changes; existing `.DPX` projects load unchanged and pick up the new event-line X value with its default 2 decimals.
 
 ### Event lines
 - Event lines now draw their X-axis value on a second row beneath the label (e.g. `Stall` / `218.17`) in both Stacked Panes and Compact Plot Surface modes. The value tracks the line as it is dragged.
 - New **Event Line** tab in the right-click **Format Pane** dialog (both modes) toggles the X-value row and sets its decimal places (default 2). Stacked is per pane; Compact applies to the whole surface. Both settings persist in the `.DPX` project.
+
+### Build & release
+- Added a GitHub Actions release workflow that builds Windows, macOS, and Linux artifacts on a version tag.
 
 ## 1.1.0 — 18 July 2026
 

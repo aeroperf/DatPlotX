@@ -11,9 +11,14 @@
 *.lscache
 
 # Build results
-[Dd]ebug/
+# NOTE: these are deliberately NOT bare `[Rr]elease/` / `[Dd]ebug/` patterns — an unanchored
+# rule matches a directory at ANY depth, which silently swallowed `.claude/skills/release/`.
+# Build output only ever lands under bin/ or obj/, which are ignored below anyway.
+**/[Bb]in/[Dd]ebug/
+**/[Bb]in/[Rr]elease/
+**/[Oo]bj/[Dd]ebug/
+**/[Oo]bj/[Rr]elease/
 [Dd]ebugPublic/
-[Rr]elease/
 x64/
 build/
 bld/

@@ -6,6 +6,13 @@ public static class AppChangelogContent
 {
     public static ChangelogEntry[] GetEntries() =>
     [
+        new("1.2.0", "9 August 2026",
+        [
+            "Event lines now show their X-axis value on a second row under the label, in both Stacked and Compact plot modes.",
+            "The value follows the line as you drag it, so it always matches where the line sits.",
+            "New \"Event Line\" tab in Format Pane (right-click the plot) turns the X value on or off and sets its decimal places — 2 by default.",
+            "In Stacked mode the setting is per pane; in Compact mode it applies to the whole surface. Either way it is saved with the project.",
+        ]),
         new("1.1.0", "18 July 2026",
         [
             "Project files now save atomically — a crash or full disk mid-save can no longer corrupt an existing .DPX.",
