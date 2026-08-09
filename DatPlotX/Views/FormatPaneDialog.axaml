@@ -400,6 +400,41 @@
                     </ScrollViewer>
                 </TabItem>
 
+                <!-- ── Event Line tab ────────────────────────────────── -->
+                <TabItem Header="Event Line">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="0,8,0,0">
+                            <Border Classes="dpx-section first">
+                                <StackPanel Spacing="10">
+                                    <TextBlock Classes="dpx-section-title upper" Text="LABEL"/>
+                                    <CheckBox Classes="dpx" Content="Show X-axis value under the label"
+                                              IsChecked="{Binding ShowEventLineXValue, Mode=TwoWay}"/>
+                                    <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                                        <TextBlock Grid.Column="0" Classes="dpx-label" Text="Decimals"/>
+                                        <ComboBox Grid.Column="1"
+                                                  Classes="dpx"
+                                                  HorizontalAlignment="Left" Width="100"
+                                                  IsEnabled="{Binding ShowEventLineXValue}"
+                                                  ItemsSource="{Binding DecimalsOptions}"
+                                                  SelectedItem="{Binding EventLineXValueDecimals, Mode=TwoWay}"/>
+                                    </Grid>
+                                    <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                                        <TextBlock Grid.Column="0" Classes="dpx-label" Text="Preview"
+                                                   VerticalAlignment="Top"/>
+                                        <TextBlock Grid.Column="1"
+                                                   Classes="dpx-mono"
+                                                   Foreground="{StaticResource DpxText2}"
+                                                   VerticalAlignment="Center"
+                                                   Text="{Binding EventLineLabelPreview}"/>
+                                    </Grid>
+                                    <TextBlock Classes="dpx-hint"
+                                               Text="Per-pane setting; applies to every event line drawn on this pane."/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+
             </TabControl>
         </Grid>
 

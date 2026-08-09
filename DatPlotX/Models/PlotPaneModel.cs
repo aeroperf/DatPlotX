@@ -207,4 +207,15 @@ public class PlotPaneModel
     /// Legend font size
     /// </summary>
     public double LegendFontSize { get; set; } = 14;
+
+    // Event line label formatting
+    /// <summary>
+    /// True = draw the event line's X-axis value on a second row beneath its label.
+    /// </summary>
+    public bool ShowEventLineXValue { get; set; } = true;
+
+    /// <summary>
+    /// Decimal places used when rendering the event line's X-axis value row.
+    /// </summary>
+    public int EventLineXValueDecimals { get; set; } = 2;
 }

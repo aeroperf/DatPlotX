@@ -27,6 +27,16 @@ public class CompactPaneSettings
 
     /// <summary>True = X-axis label rendered bold.</summary>
     public bool XAxisLabelBold { get; set; }
+
+    /// <summary>
+    /// True = draw each event line's X-axis value on a second row beneath its label.
+    /// </summary>
+    public bool ShowEventLineXValue { get; set; } = true;
+
+    /// <summary>
+    /// Decimal places used when rendering the event line's X-axis value row.
+    /// </summary>
+    public int EventLineXValueDecimals { get; set; } = 2;
 }
 
 public enum CompactGridLineStyle

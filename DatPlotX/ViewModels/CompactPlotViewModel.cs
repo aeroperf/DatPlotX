@@ -353,6 +353,8 @@ public sealed partial class CompactPlotViewModel : ObservableObject
         }
 
         annotation.X = newXPosition;
+        if (annotation.ValueLabel is not null || existing.ShowLabel)
+            annotation.ValueLabel = existing.ShowLabel ? FormatEventLineXValue(newXPosition) : null;
         UpdateCalloutsForEventLine(id, newXPosition);
         PlotModel.InvalidatePlot(false);
     }
@@ -969,6 +971,7 @@ public sealed partial class CompactPlotViewModel : ObservableObject
                 StrokeThickness = ev.LineWidth,
                 LineStyle = MapEventLinePattern(ev.LinePattern),
                 Label = ev.ShowLabel ? ev.Label : null,
+                ValueLabel = ev.ShowLabel ? FormatEventLineXValue(ev.XPosition) : null,
                 XAxisKey = XAxisKey,
                 Layer = AnnotationLayer.AboveSeries,
                 Tag = tag,
@@ -1064,6 +1067,14 @@ public sealed partial class CompactPlotViewModel : ObservableObject
         if (!Guid.TryParseExact(rest.Slice(0, sep), "N", out var id)) return null;
         return (id, rest.Slice(sep + 1).ToString());
     }
+
+    /// <summary>
+    /// Text for the row drawn under an event line's label. Null when the pane setting is off
+    /// (or the position isn't finite), which suppresses the row.
+    /// </summary>
+    private string? FormatEventLineXValue(double xPosition) =>
+        EventLineLabelFormatter.FormatOrNull(
+            xPosition, Settings.ShowEventLineXValue, Settings.EventLineXValueDecimals);
 
     private static OxyLineStyle MapEventLinePattern(LinePatternType p) => p switch
     {

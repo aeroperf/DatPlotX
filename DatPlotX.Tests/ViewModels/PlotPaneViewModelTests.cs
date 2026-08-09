@@ -145,4 +145,51 @@ public class PlotPaneViewModelTests
         pane.PlotModel!.GetPlottables().Count().Should().BeLessThan(plottablesBefore)
             .And.BeGreaterThan(0);
     }
+
+    private static string EventLineLabelText(PlotPaneViewModel pane) =>
+        pane.PlotModel!.GetPlottables().OfType<ScottPlot.Plottables.Text>().Single().LabelText;
+
+    [Fact]
+    public void AddGlobalEventLineVisual_LabelCarriesXValueRow()
+    {
+        var pane = MakePaneWithPlot();
+        pane.AddGlobalEventLineVisual(Guid.NewGuid(), xPosition: 218.171, label: "Stall", showLabel: true);
+
+        EventLineLabelText(pane).Should().Be("Stall\n218.17");
+    }
+
+    [Fact]
+    public void AddGlobalEventLineVisual_XValueDisabled_LabelIsNameOnly()
+    {
+        var pane = MakePaneWithPlot();
+        pane.PaneModel.ShowEventLineXValue = false;
+
+        pane.AddGlobalEventLineVisual(Guid.NewGuid(), xPosition: 218.171, label: "Stall", showLabel: true);
+
+        EventLineLabelText(pane).Should().Be("Stall");
+    }
+
+    [Fact]
+    public void MoveGlobalEventLine_UpdatesXValueRow()
+    {
+        var pane = MakePaneWithPlot();
+        var id = Guid.NewGuid();
+        pane.AddGlobalEventLineVisual(id, xPosition: 218.171, label: "Stall", showLabel: true);
+
+        pane.MoveGlobalEventLine(id, 300.5);
+
+        EventLineLabelText(pane).Should().Be("Stall\n300.50");
+    }
+
+    [Fact]
+    public void RefreshEventLineLabels_PicksUpNewDecimalSetting()
+    {
+        var pane = MakePaneWithPlot();
+        pane.AddGlobalEventLineVisual(Guid.NewGuid(), xPosition: 218.171, label: "Stall", showLabel: true);
+
+        pane.PaneModel.EventLineXValueDecimals = 3;
+        pane.RefreshEventLineLabels();
+
+        EventLineLabelText(pane).Should().Be("Stall\n218.171");
+    }
 }

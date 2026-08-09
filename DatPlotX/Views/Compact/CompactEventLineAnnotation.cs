@@ -18,6 +18,11 @@ public sealed class CompactEventLineAnnotation : Annotation
     public double StrokeThickness { get; set; } = 2.0;
     public LineStyle LineStyle { get; set; } = LineStyle.Solid;
     public string? Label { get; set; }
+    /// <summary>
+    /// Optional second row drawn beneath <see cref="Label"/> (the event line's X-axis value,
+    /// already formatted to the pane's decimal setting). Null suppresses the row.
+    /// </summary>
+    public string? ValueLabel { get; set; }
     /// <summary>0 = bottom of plot area, 1 = top. Matches LineAnnotation.TextLinePosition convention.</summary>
     public double LabelLinePosition { get; set; } = 0.97;
     public double LabelPadding { get; set; } = 4.0;
@@ -43,21 +48,40 @@ public sealed class CompactEventLineAnnotation : Annotation
             LineStyle.GetDashArray(),
             LineJoin.Miter);
 
-        if (!string.IsNullOrEmpty(Label))
+        if (string.IsNullOrEmpty(Label) && string.IsNullOrEmpty(ValueLabel)) return;
+
+        // Rows are left-aligned against the line (matching Stacked mode, which uses ScottPlot's
+        // multiline left alignment) so both surfaces read identically.
+        double labelY = area.Top + (area.Bottom - area.Top) * (1.0 - LabelLinePosition);
+        double rowX = sx + LabelPadding;
+        string? nameRow = string.IsNullOrEmpty(Label) ? null : Label;
+        string? valueRow = string.IsNullOrEmpty(ValueLabel) ? null : ValueLabel;
+
+        double rowY = labelY;
+        if (nameRow is not null)
         {
-            double labelY = area.Top + (area.Bottom - area.Top) * (1.0 - LabelLinePosition);
-            rc.DrawText(
-                new ScreenPoint(sx + LabelPadding, labelY),
-                Label,
-                Color,
-                fontFamily: PlotModel.DefaultFont,
-                fontSize: PlotModel.DefaultFontSize,
-                fontWeight: FontWeights.Bold,
-                rotation: 0,
-                horizontalAlignment: HorizontalAlignment.Left,
-                verticalAlignment: VerticalAlignment.Top);
+            DrawRow(rc, rowX, rowY, nameRow);
+            rowY += Measure(rc, nameRow).Height;
         }
+
+        if (valueRow is not null)
+            DrawRow(rc, rowX, rowY, valueRow);
     }
+
+    private void DrawRow(IRenderContext rc, double x, double y, string text) =>
+        rc.DrawText(
+            new ScreenPoint(x, y),
+            text,
+            Color,
+            fontFamily: PlotModel!.DefaultFont,
+            fontSize: PlotModel.DefaultFontSize,
+            fontWeight: FontWeights.Bold,
+            rotation: 0,
+            horizontalAlignment: HorizontalAlignment.Left,
+            verticalAlignment: VerticalAlignment.Top);
+
+    private OxySize Measure(IRenderContext rc, string text) =>
+        rc.MeasureText(text, PlotModel!.DefaultFont, PlotModel.DefaultFontSize, FontWeights.Bold);
 
     /// <inheritdoc />
     public override OxyRect GetClippingRect()

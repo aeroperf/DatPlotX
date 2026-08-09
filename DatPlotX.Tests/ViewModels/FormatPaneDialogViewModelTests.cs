@@ -52,4 +52,36 @@ public class FormatPaneDialogViewModelTests
         model.XAxisMin.Should().Be(5.0);
         model.XAxisMax.Should().BeNull();
     }
+
+    [Fact]
+    public void LoadFrom_ReadsEventLineLabelSettings()
+    {
+        var model = new PlotPaneModel { ShowEventLineXValue = false, EventLineXValueDecimals = 4 };
+        var vm = new FormatPaneDialogViewModel();
+        vm.LoadFrom(model);
+
+        vm.ShowEventLineXValue.Should().BeFalse();
+        vm.EventLineXValueDecimals.Should().Be("4");
+    }
+
+    [Fact]
+    public void ApplyTo_WritesEventLineLabelSettings()
+    {
+        var model = new PlotPaneModel();
+        var vm = new FormatPaneDialogViewModel { ShowEventLineXValue = false, EventLineXValueDecimals = "3" };
+        vm.ApplyTo(model);
+
+        model.ShowEventLineXValue.Should().BeFalse();
+        model.EventLineXValueDecimals.Should().Be(3);
+    }
+
+    [Fact]
+    public void EventLineLabelPreview_TracksDecimalsAndToggle()
+    {
+        var vm = new FormatPaneDialogViewModel { EventLineXValueDecimals = "3" };
+        vm.EventLineLabelPreview.Should().Contain("218.171");
+
+        vm.ShowEventLineXValue = false;
+        vm.EventLineLabelPreview.Should().NotContain("218");
+    }
 }

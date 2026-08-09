@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using DatPlotX.Helpers;
 using DatPlotX.Models;
 using DatPlotX.ViewModels.PlotPane;
 using ScottPlot;
@@ -358,6 +359,26 @@ public partial class PlotPaneViewModel : ObservableObject, IDisposable
     public void ApplyFormatting()
     {
         _formattingService.ApplyFormatting();
+        RefreshEventLineLabels();
+    }
+
+    /// <summary>
+    /// Recompose every event-line label block against the current pane settings. Called after
+    /// formatting is applied so a change to the X-value toggle or its decimal places lands on
+    /// labels that already exist.
+    /// </summary>
+    public void RefreshEventLineLabels()
+    {
+        if (_globalEventLineLabels.Count == 0) return;
+
+        foreach (var (id, label) in _globalEventLineLabels)
+        {
+            if (!_eventLineLabelNames.TryGetValue(id, out var labelName)) continue;
+            double x = _globalEventLines.TryGetValue(id, out var line) ? line.X : label.Location.X;
+            label.LabelText = BuildEventLineLabelText(labelName, x);
+        }
+
+        TriggerPlotUpdate();
     }
 
     /// <summary>
@@ -466,7 +487,7 @@ public partial class PlotPaneViewModel : ObservableObject, IDisposable
         var yRange = PlotModel!.Axes.Left.Range;
         // Anchor just inside the top edge of the data area; UpperLeft alignment + small +X pixel
         // offset puts the label immediately to the right of the line, baseline at the top tick.
-        var textAnnotation = PlotModel.Add.Text(label, xPosition, yRange.Max);
+        var textAnnotation = PlotModel.Add.Text(BuildEventLineLabelText(label, xPosition), xPosition, yRange.Max);
         textAnnotation.LabelFontSize = 13f;
         textAnnotation.LabelFontColor = ScottPlot.Color.FromHex(colorHex);
         textAnnotation.LabelBold = true;
@@ -480,6 +501,19 @@ public partial class PlotPaneViewModel : ObservableObject, IDisposable
         textAnnotation.OffsetX = 4f;
         textAnnotation.OffsetY = 3f;
         return textAnnotation;
+    }
+
+    /// <summary>
+    /// Compose the event-line label block: the name, plus the X-axis value on a second row when
+    /// the pane's <see cref="PlotPaneModel.ShowEventLineXValue"/> is on. ScottPlot renders the
+    /// embedded newline as a second, left-aligned line — the same layout the Compact surface
+    /// draws for its event lines.
+    /// </summary>
+    private string BuildEventLineLabelText(string label, double xPosition)
+    {
+        var value = EventLineLabelFormatter.FormatOrNull(
+            xPosition, PaneModel.ShowEventLineXValue, PaneModel.EventLineXValueDecimals);
+        return value is null ? label : $"{label}\n{value}";
     }
 
     /// <summary>
@@ -698,6 +732,9 @@ public partial class PlotPaneViewModel : ObservableObject, IDisposable
         {
             var yMax = PlotModel?.Axes.Left.Range.Max ?? label.Location.Y;
             label.Location = new Coordinates(newXPosition, yMax);
+            // The X-value row has to track the drag, so recompose the block text in place.
+            if (_eventLineLabelNames.TryGetValue(eventLineId, out var labelName))
+                label.LabelText = BuildEventLineLabelText(labelName, newXPosition);
         }
 
         TriggerPlotUpdate();

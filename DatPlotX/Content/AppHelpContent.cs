@@ -108,6 +108,7 @@ public static class AppHelpContent
             "Drag a line horizontally — the move propagates to every pane via the shared X axis.",
             "Right-click directly on a line — delete confirmation.",
             "Event Lines > Clear All Event Lines (Ctrl+Shift+L) — remove every event line (asks for confirmation).",
+            "Each line's label shows its X-axis value on a second row. Right-click a pane > Format Pane > Event Line tab toggles that row and sets its decimal places (default 2).",
         ]),
         new SubHeadingBlock("Intersection Callouts & Statistics"),
         new ParagraphBlock(
@@ -130,7 +131,8 @@ public static class AppHelpContent
             "Right-click a pane > Format Pane... opens a per-pane formatting dialog with tabs for " +
             "Labels (title + axis labels + font), Grid (major / minor lines + appearance), X-Axis " +
             "(range, tick format, font), Y1-Axis and Y2-Axis (each with its own range + decimals), " +
-            "Background (plot + data area colours), and Legend (legend font size). Use the " +
+            "Background (plot + data area colours), Legend (legend font size), and Event Line " +
+            "(show the X-axis value under each event line's label, and its decimal places). Use the " +
             "ColorPill swatches for colours and the Min / Max range inputs to set manual axis ranges."),
         new SubHeadingBlock("Right-Click Pane Menu"),
         new ParagraphBlock(
@@ -196,6 +198,8 @@ public static class AppHelpContent
             "Right-click directly on an existing line (within 6 px) > Delete Event Line.",
             "Drag a line horizontally to move it; movement is clamped to the plot area.",
             "Right-click > Clear All Event Lines — remove every line on the surface.",
+            "Each line's label shows its X-axis value on a second row; toggle it and set its " +
+            "decimal places in Format Pane > Event Line.",
             "Event lines persist with the project file, and where one crosses a curve a Compact " +
             "intersection callout shows the Y value. (The top-level Event Lines menu and the " +
             "intersection CSV export are Stacked-only.)",
@@ -204,7 +208,8 @@ public static class AppHelpContent
         new ParagraphBlock(
             "Tools > Format Pane... (Ctrl+F, or right-click the surface > Format Pane...) configures " +
             "the surface globally: grid (major / minor lines, minor line style), X-axis (label, " +
-            "decimals, manual or auto-scale range, label font size + bold), and plot background " +
+            "decimals, manual or auto-scale range, label font size + bold), event lines (show the " +
+            "X-axis value under each label, and its decimal places), and plot background " +
             "color. Per-curve formatting lives in Curves > Manage Curve... Settings are saved with " +
             "the project file."),
         new SubHeadingBlock("Right-Click Surface Menu"),
@@ -214,7 +219,7 @@ public static class AppHelpContent
             "Clear All Curves — remove every curve (with confirmation).",
             "Add Event Line Here / Delete Event Line / Use as Segment Boundary / Clear All Event Lines — event-line controls. Use as Segment Boundary pairs two lines into a statistics segment.",
             "Set Scale to Default — auto-fit all axes to the data.",
-            "Format Pane... — gridlines, X-axis label and range, background color.",
+            "Format Pane... — gridlines, X-axis label and range, event line labels, background color.",
             "Export Image... — export the surface as PNG, JPEG, BMP, or SVG.",
         ]),
         new SubHeadingBlock("Statistics"),
@@ -458,7 +463,7 @@ public static class AppHelpContent
             "Item                   Shortcut    Mode      Description\n" +
             "──────────────────────────────────────────────────────────────────────\n" +
             "Show Hover Tooltips    Ctrl+T      All       Toggle the hover tooltip on every surface\n" +
-            "Format Pane...         Ctrl+F      Compact   Configure grid, X-axis, and background\n" +
+            "Format Pane...         Ctrl+F      Compact   Configure grid, X-axis, event lines, background\n" +
             "Configure Inputs...                Grouped   Pick grouping inputs and the X / Y columns\n" +
             "Settings...            Ctrl+,      All       Persistent preferences (e.g. default tooltip state)"),
         new SubHeadingBlock("Hover Tooltips"),

@@ -83,6 +83,10 @@ public sealed partial class FormatPaneDialogViewModel : ObservableObject
     [ObservableProperty] private string _legendFontSizeText = "14";
     [ObservableProperty] private string _legendPosition = "Inside upper-right";
 
+    [ObservableProperty] private bool _showEventLineXValue = true;
+    [ObservableProperty] private string _eventLineXValueDecimals = "2";
+    [ObservableProperty] private string _eventLineLabelPreview = string.Empty;
+
     public void LoadFrom(PlotPaneModel model)
     {
         TitleText = model.TitleText;
@@ -125,7 +129,11 @@ public sealed partial class FormatPaneDialogViewModel : ObservableObject
         LegendFontSizeText = model.LegendFontSize.ToString(CultureInfo.InvariantCulture);
         LegendPosition = LegendPositionToDisplay(model.LegendPosition);
 
+        ShowEventLineXValue = model.ShowEventLineXValue;
+        EventLineXValueDecimals = model.EventLineXValueDecimals.ToString(CultureInfo.InvariantCulture);
+
         UpdateFormatPreview();
+        UpdateEventLinePreview();
     }
 
     /// <summary>
@@ -182,6 +190,9 @@ public sealed partial class FormatPaneDialogViewModel : ObservableObject
         model.BackgroundColor = BackgroundColor;
         model.DataBackgroundColor = DataBackgroundColor;
 
+        model.ShowEventLineXValue = ShowEventLineXValue;
+        if (TryParseInt(EventLineXValueDecimals, out var evDecimals)) model.EventLineXValueDecimals = evDecimals;
+
         if (TryParseDouble(LegendFontSizeText, out var legFs)) model.LegendFontSize = legFs;
         model.LegendPosition = DisplayToLegendPosition(LegendPosition);
         // Keep the legacy ShowLegend bool in sync so existing curve-manager code that
@@ -213,6 +224,24 @@ public sealed partial class FormatPaneDialogViewModel : ObservableObject
     partial void OnXAxisDecimalPlacesChanged(string value) => UpdateFormatPreview();
     partial void OnY1AxisDecimalPlacesChanged(string value) => UpdateFormatPreview();
     partial void OnY2AxisDecimalPlacesChanged(string value) => UpdateFormatPreview();
+
+    partial void OnShowEventLineXValueChanged(bool value) => UpdateEventLinePreview();
+    partial void OnEventLineXValueDecimalsChanged(string value) => UpdateEventLinePreview();
+
+    /// <summary>
+    /// Two-row sample of what an event line's label block will look like: name on the first row,
+    /// the formatted X position on the second (omitted when the toggle is off).
+    /// </summary>
+    private void UpdateEventLinePreview()
+    {
+        const string sampleLabel = "E1";
+        const double sampleX = 218.171;
+        if (!int.TryParse(EventLineXValueDecimals, NumberStyles.Integer, CultureInfo.InvariantCulture, out int decimals))
+            decimals = Helpers.EventLineLabelFormatter.DefaultDecimals;
+
+        var value = Helpers.EventLineLabelFormatter.FormatOrNull(sampleX, ShowEventLineXValue, decimals);
+        EventLineLabelPreview = value is null ? sampleLabel : $"{sampleLabel}  ·  {value}";
+    }
 
     private void UpdateFormatPreview()
     {

@@ -229,6 +229,62 @@ public class CompactPlotViewModelTests
     }
 
     [Fact]
+    public void AddEventLine_DrawsXValueRowWithDefaultTwoDecimals()
+    {
+        var vm = new CompactPlotViewModel();
+        vm.SetData(BuildData(), "time");
+        vm.AddCurve(new CompactCurveModel { SourceColumn = "alt" });
+
+        vm.AddEventLine(50.1234d);
+
+        var annotation = vm.PlotModel.Annotations.OfType<CompactEventLineAnnotation>().Single();
+        annotation.ValueLabel.Should().Be("50.12");
+    }
+
+    [Fact]
+    public void ApplySettings_EventLineDecimals_RerendersValueRow()
+    {
+        var vm = new CompactPlotViewModel();
+        vm.SetData(BuildData(), "time");
+        vm.AddCurve(new CompactCurveModel { SourceColumn = "alt" });
+        vm.AddEventLine(50.1234d);
+
+        vm.ApplySettings(new CompactPaneSettings { EventLineXValueDecimals = 3 });
+
+        vm.PlotModel.Annotations.OfType<CompactEventLineAnnotation>().Single()
+            .ValueLabel.Should().Be("50.123");
+    }
+
+    [Fact]
+    public void ApplySettings_ShowEventLineXValueOff_SuppressesValueRow()
+    {
+        var vm = new CompactPlotViewModel();
+        vm.SetData(BuildData(), "time");
+        vm.AddCurve(new CompactCurveModel { SourceColumn = "alt" });
+        vm.AddEventLine(50d);
+
+        vm.ApplySettings(new CompactPaneSettings { ShowEventLineXValue = false });
+
+        var annotation = vm.PlotModel.Annotations.OfType<CompactEventLineAnnotation>().Single();
+        annotation.Label.Should().Be("E1");
+        annotation.ValueLabel.Should().BeNull();
+    }
+
+    [Fact]
+    public void MoveEventLine_UpdatesValueRowInPlace()
+    {
+        var vm = new CompactPlotViewModel();
+        vm.SetData(BuildData(), "time");
+        vm.AddCurve(new CompactCurveModel { SourceColumn = "alt" });
+        var id = vm.AddEventLine(50d);
+
+        vm.MoveEventLine(id, 61.5d);
+
+        vm.PlotModel.Annotations.OfType<CompactEventLineAnnotation>().Single()
+            .ValueLabel.Should().Be("61.50");
+    }
+
+    [Fact]
     public void AddEventLine_LabelCounter_Increments()
     {
         var vm = new CompactPlotViewModel();

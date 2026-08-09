@@ -159,6 +159,47 @@
                     </StackPanel>
                 </TabItem>
 
+                <!-- ── Event Line tab ───────────────────────────────── -->
+                <TabItem Header="Event Line">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="0,8,0,0">
+                            <Border Classes="dpx-section first">
+                                <StackPanel Spacing="10">
+                                    <TextBlock Classes="dpx-section-title upper" Text="LABEL"/>
+                                    <CheckBox x:Name="ShowEventLineXValueCheckBox" Classes="dpx"
+                                              Content="Show X-axis value under the label"/>
+                                    <Grid ColumnDefinitions="96,*" ColumnSpacing="12" x:Name="EventLineDecimalsRow">
+                                        <TextBlock Grid.Column="0" Classes="dpx-label" Text="Decimals"/>
+                                        <dpx:NumberStepper Grid.Column="1" x:Name="EventLineDecimalsStepper"
+                                                           Minimum="0" Maximum="6" Step="1"
+                                                           Decimals="0"
+                                                           HorizontalAlignment="Left"/>
+                                    </Grid>
+                                    <Grid ColumnDefinitions="96,*" ColumnSpacing="12">
+                                        <TextBlock Grid.Column="0" Classes="dpx-label" Text="Preview"
+                                                   VerticalAlignment="Top" Margin="0,4,0,0"/>
+                                        <Border Grid.Column="1"
+                                                Background="{StaticResource DpxSunken}"
+                                                BorderBrush="{StaticResource DpxBorder}"
+                                                BorderThickness="1"
+                                                CornerRadius="7"
+                                                Padding="10,8"
+                                                HorizontalAlignment="Left">
+                                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                                <Rectangle Width="2" Height="34"
+                                                           Fill="{StaticResource DpxText}"/>
+                                                <StackPanel x:Name="EventLinePreviewHost" Spacing="1"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </Grid>
+                                    <TextBlock Classes="dpx-hint"
+                                               Text="Applies to every event line on the Compact surface."/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+
                 <!-- ── Background tab ───────────────────────────────── -->
                 <TabItem Header="Background">
                     <ScrollViewer VerticalScrollBarVisibility="Auto">

@@ -109,6 +109,15 @@ public partial class FormatCompactPaneDialog : Window
                 SetBackgroundColor(dlg.SelectedColor);
         });
         ShowMinorGridCheckBox.IsCheckedChanged += (_, _) => UpdateMinorRowEnablement();
+        ShowEventLineXValueCheckBox.IsCheckedChanged += (_, _) =>
+        {
+            UpdateEventLineRowEnablement();
+            UpdateEventLinePreview();
+        };
+        EventLineDecimalsStepper.PropertyChanged += (_, e) =>
+        {
+            if (e.Property == NumberStepper.ValueProperty) UpdateEventLinePreview();
+        };
     }
 
     private void LoadIntoUi()
@@ -126,8 +135,53 @@ public partial class FormatCompactPaneDialog : Window
         RangeBox.Min.Text = _working.XAxisMin?.ToString(CultureInfo.InvariantCulture) ?? string.Empty;
         RangeBox.Max.Text = _working.XAxisMax?.ToString(CultureInfo.InvariantCulture) ?? string.Empty;
 
+        ShowEventLineXValueCheckBox.IsChecked = _working.ShowEventLineXValue;
+        EventLineDecimalsStepper.Value = Math.Clamp(
+            _working.EventLineXValueDecimals,
+            EventLineLabelFormatter.MinDecimals,
+            EventLineLabelFormatter.MaxDecimals);
+        UpdateEventLineRowEnablement();
+        UpdateEventLinePreview();
+
         SetBackgroundColor(_working.BackgroundColor);
     }
+
+    private void UpdateEventLineRowEnablement()
+    {
+        bool show = ShowEventLineXValueCheckBox.IsChecked == true;
+        EventLineDecimalsRow.IsEnabled = show;
+        EventLineDecimalsRow.Opacity = show ? 1.0 : 0.5;
+    }
+
+    /// <summary>
+    /// Mirror the on-plot label block: event line name on the first row, formatted X value on the
+    /// second (dropped when the toggle is off). Left-aligned, matching both render surfaces.
+    /// </summary>
+    private void UpdateEventLinePreview()
+    {
+        const string sampleLabel = "E1";
+        const double sampleX = 218.171;
+
+        EventLinePreviewHost.Children.Clear();
+        EventLinePreviewHost.Children.Add(BuildPreviewRow(sampleLabel));
+
+        var value = EventLineLabelFormatter.FormatOrNull(
+            sampleX,
+            ShowEventLineXValueCheckBox.IsChecked == true,
+            (int)Math.Round(EventLineDecimalsStepper.Value));
+        if (value is not null)
+            EventLinePreviewHost.Children.Add(BuildPreviewRow(value));
+    }
+
+    private static TextBlock BuildPreviewRow(string text) => new()
+    {
+        Text = text,
+        FontFamily = (FontFamily)Application.Current!.FindResource("DpxMonoFamily")!,
+        FontSize = 11.5,
+        FontWeight = FontWeight.Bold,
+        Foreground = (IBrush)Application.Current!.FindResource("DpxText")!,
+        HorizontalAlignment = HorizontalAlignment.Left,
+    };
 
     private void UpdateRangeRowEnablement()
     {
@@ -216,6 +270,9 @@ public partial class FormatCompactPaneDialog : Window
         _working.XAxisMin = TryParseDouble(RangeBox.Min.Text);
         _working.XAxisMax = TryParseDouble(RangeBox.Max.Text);
 
+        _working.ShowEventLineXValue = ShowEventLineXValueCheckBox.IsChecked == true;
+        _working.EventLineXValueDecimals = (int)Math.Round(EventLineDecimalsStepper.Value);
+
         _working.BackgroundColor = _bgColor;
 
         Result = _working;
@@ -243,5 +300,7 @@ public partial class FormatCompactPaneDialog : Window
         XAxisMax = s.XAxisMax,
         XAxisLabelFontSize = s.XAxisLabelFontSize,
         XAxisLabelBold = s.XAxisLabelBold,
+        ShowEventLineXValue = s.ShowEventLineXValue,
+        EventLineXValueDecimals = s.EventLineXValueDecimals,
     };
 }
